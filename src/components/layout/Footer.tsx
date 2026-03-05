@@ -57,19 +57,15 @@ export default function Footer() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-14 h-14 rounded-2xl bg-white shadow-lg shadow-primary/20 overflow-hidden flex items-center justify-center p-1">
+            <div className="mb-6">
+              <div className="w-40 h-16 rounded-2xl bg-white shadow-lg shadow-primary/20 overflow-hidden flex items-center justify-center p-2">
                 <Image
-                  src="/images/logo.png"
+                  src="/images/logo.svg"
                   alt="FINAB la solution"
-                  width={52}
-                  height={52}
+                  width={150}
+                  height={60}
                   className="object-contain"
                 />
-              </div>
-              <div>
-                <span className="text-2xl font-bold tracking-tight text-white">FINAB</span>
-                <span className="text-xs block text-primary-light font-medium -mt-0.5">la solution</span>
               </div>
             </div>
             <p className="text-white/50 text-sm leading-relaxed mb-6">

@@ -72,22 +72,18 @@ export default function Header() {
       >
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex items-center justify-between h-18">
-            {/* Logo with glow effect */}
-            <Link href="/" className="flex items-center gap-3 group relative">
+            {/* Logo */}
+            <Link href="/" className="flex items-center group relative">
               <div className="absolute -inset-3 rounded-full bg-primary/0 group-hover:bg-primary/10 transition-all duration-500 blur-xl" />
-              <div className="relative w-12 h-12 rounded-2xl bg-white shadow-md group-hover:shadow-xl group-hover:shadow-primary/30 transition-all duration-300 overflow-hidden flex items-center justify-center p-1">
+              <div className="relative h-14 w-auto rounded-2xl overflow-hidden flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
                 <Image
-                  src="/images/logo.png"
+                  src="/images/logo.svg"
                   alt="FINAB la solution"
-                  width={44}
-                  height={44}
+                  width={140}
+                  height={56}
                   className="object-contain"
                   priority
                 />
-              </div>
-              <div className="relative">
-                <span className={`text-xl font-bold tracking-tight transition-colors duration-300 ${isScrolled ? "text-white" : "text-dark"}`}>FINAB</span>
-                <span className={`text-xs block -mt-0.5 transition-colors duration-300 ${isScrolled ? "text-primary-light" : "text-primary"}`}>la solution</span>
               </div>
             </Link>
 
@@ -190,9 +186,8 @@ export default function Header() {
               className="lg:hidden fixed top-0 right-0 bottom-0 w-[85%] max-w-sm z-50 bg-white shadow-2xl"
             >
               <div className="flex items-center justify-between p-6 border-b">
-                <Link href="/" className="flex items-center gap-2" onClick={() => setIsMobileOpen(false)}>
-                  <Image src="/images/logo.png" alt="FINAB" width={36} height={36} className="rounded-xl" />
-                  <span className="font-bold text-lg text-dark">FINAB</span>
+                <Link href="/" className="flex items-center" onClick={() => setIsMobileOpen(false)}>
+                  <Image src="/images/logo.svg" alt="FINAB la solution" width={120} height={48} className="object-contain" />
                 </Link>
                 <button onClick={() => setIsMobileOpen(false)} className="p-2 rounded-xl hover:bg-gray-100 transition-colors" aria-label="Fermer">
                   <XIcon className="w-5 h-5" />

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <defs>
+    <clipPath id="circle">
+      <circle cx="200" cy="200" r="190"/>
+    </clipPath>
+  </defs>
+  <!-- White background circle -->
+  <circle cx="200" cy="200" r="195" fill="white" stroke="#e5e7eb" stroke-width="2"/>
+  <!-- Bar chart (green bars) -->
+  <rect x="80" y="160" width="28" height="80" rx="3" fill="#16a34a"/>
+  <rect x="115" y="130" width="28" height="110" rx="3" fill="#22c55e"/>
+  <rect x="150" y="95" width="28" height="145" rx="3" fill="#15803d"/>
+  <!-- Red arrow going up -->
+  <path d="M90 230 L165 110 L175 120 L105 235 Z" fill="#dc2626"/>
+  <polygon points="155,95 185,115 165,105" fill="#dc2626"/>
+  <!-- Africa continent (simplified) -->
+  <path d="M145 160 C140 145, 155 130, 170 125 C185 120, 200 125, 205 135 C210 145, 215 155, 210 170 C205 185, 215 200, 210 220 C205 240, 195 260, 180 275 C165 285, 160 280, 155 270 C150 260, 140 245, 138 230 C136 215, 145 195, 140 180 C138 170, 145 165, 145 160 Z" fill="#2563eb" opacity="0.8"/>
+  <!-- FINAB text -->
+  <text x="195" y="155" font-family="Arial, sans-serif" font-weight="900" font-size="52" fill="#0a0a0a">
+    <tspan fill="#16a34a">FIN</tspan><tspan fill="#dc2626">A</tspan><tspan fill="#0a0a0a">B</tspan>
+  </text>
+  <text x="195" y="195" font-family="Arial, sans-serif" font-weight="900" font-size="38" fill="#0a0a0a">LA</text>
+  <text x="195" y="235" font-family="Arial, sans-serif" font-weight="900" font-size="38" fill="#0a0a0a">SOLUTION</text>
+  <!-- Subtitle -->
+  <text x="200" y="270" font-family="Arial, sans-serif" font-style="italic" font-weight="600" font-size="18" fill="#16a34a" text-anchor="middle">La résurrection financière</text>
+  <!-- Afrique - Haiti -->
+  <text x="200" y="300" font-family="Arial, sans-serif" font-weight="700" font-size="22" fill="#dc2626" text-anchor="middle">Afrique - Haiti</text>
+</svg>
