@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { siteConfig, navigation } from "@/data/content";
 import { PhoneIcon, MailIcon, MapPinIcon, WhatsAppIcon } from "@/components/ui/Icons";
@@ -57,8 +58,14 @@ export default function Footer() {
             viewport={{ once: true }}
           >
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-primary-light flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-primary/20">
-                F
+              <div className="w-14 h-14 rounded-2xl bg-white shadow-lg shadow-primary/20 overflow-hidden flex items-center justify-center p-1">
+                <Image
+                  src="/images/logo.png"
+                  alt="FINAB la solution"
+                  width={52}
+                  height={52}
+                  className="object-contain"
+                />
               </div>
               <div>
                 <span className="text-2xl font-bold tracking-tight text-white">FINAB</span>

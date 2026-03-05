@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { navigation, siteConfig } from "@/data/content";
@@ -70,8 +71,15 @@ export default function Header() {
           <div className="flex items-center justify-between h-18">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3 group">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary-light flex items-center justify-center text-white font-bold text-lg shadow-md group-hover:shadow-lg group-hover:shadow-primary/30 transition-shadow">
-                F
+              <div className="w-12 h-12 rounded-2xl bg-white shadow-md group-hover:shadow-lg group-hover:shadow-primary/30 transition-shadow overflow-hidden flex items-center justify-center p-1">
+                <Image
+                  src="/images/logo.png"
+                  alt="FINAB la solution"
+                  width={44}
+                  height={44}
+                  className="object-contain"
+                  priority
+                />
               </div>
               <div>
                 <span className={`text-xl font-bold tracking-tight transition-colors duration-300 ${isScrolled ? "text-white" : "text-dark"}`}>FINAB</span>
