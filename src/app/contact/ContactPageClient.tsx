@@ -19,8 +19,10 @@ export default function ContactPageClient() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // In production, this would send to an API endpoint
-    console.log("Contact form:", formData);
+    const whatsappMessage = encodeURIComponent(
+      `*Nouveau message - FINAB Contact*\n\nNom: ${formData.name}\nEmail: ${formData.email}\nTéléphone: ${formData.phone}\nSujet: ${formData.subject}\nMessage: ${formData.message}`
+    );
+    window.open(`https://wa.me/14383345252?text=${whatsappMessage}`, "_blank");
     setSubmitted(true);
   };
 

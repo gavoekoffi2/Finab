@@ -26,7 +26,10 @@ export default function ReclamationsPageClient() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Reclamation:", formData, files);
+    const whatsappMessage = encodeURIComponent(
+      `*Réclamation FINAB*\n\nNom: ${formData.name}\nEmail: ${formData.email}\nTéléphone: ${formData.phone}\nN° Police: ${formData.policyNumber}\nCatégorie: ${formData.category}\nDescription: ${formData.description}`
+    );
+    window.open(`https://wa.me/14383345252?text=${whatsappMessage}`, "_blank");
     setSubmitted(true);
   };
 

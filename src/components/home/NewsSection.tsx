@@ -8,10 +8,10 @@ import { newsArticles } from "@/data/content";
 import { ArrowRightIcon } from "@/components/ui/Icons";
 
 const newsImages: Record<string, string> = {
-  "education-financiere-2025": "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&h=400&fit=crop",
-  "partenariat-afrique": "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=600&h=400&fit=crop",
-  "impots-canada-guide": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&h=400&fit=crop",
-  "recrutement-international": "https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?w=600&h=400&fit=crop",
+  "education-financiere-2025": "https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=600&h=400&fit=crop",
+  "partenariat-afrique": "https://images.unsplash.com/photo-1611432579699-484f7990b127?w=600&h=400&fit=crop",
+  "impots-canada-guide": "https://images.unsplash.com/photo-1554224155-8d2a70bba1cc?w=600&h=400&fit=crop",
+  "recrutement-international": "https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=600&h=400&fit=crop",
 };
 
 export default function NewsSection() {
@@ -29,7 +29,7 @@ export default function NewsSection() {
             <AnimatedCard key={article.id} delay={i * 0.1}>
               <div className="relative h-48 overflow-hidden group">
                 <Image
-                  src={newsImages[article.id] || "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&h=400&fit=crop"}
+                  src={newsImages[article.id] || "https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=600&h=400&fit=crop"}
                   alt={article.title}
                   fill
                   className="object-cover transition-transform duration-700 group-hover:scale-110"

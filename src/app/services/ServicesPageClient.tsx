@@ -81,7 +81,10 @@ export default function ServicesPageClient() {
 
   const handleRequestSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Service request:", requestForm, requestFiles);
+    const whatsappMessage = encodeURIComponent(
+      `*Demande de service FINAB*\n\nNom: ${requestForm.name}\nEmail: ${requestForm.email}\nTéléphone: ${requestForm.phone}\nService: ${requestForm.service}\nDescription: ${requestForm.description}`
+    );
+    window.open(`https://wa.me/14383345252?text=${whatsappMessage}`, "_blank");
     setRequestSubmitted(true);
   };
 

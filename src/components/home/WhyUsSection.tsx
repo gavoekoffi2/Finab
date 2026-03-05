@@ -15,10 +15,10 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 };
 
 const whyUsImages = [
-  "https://images.unsplash.com/photo-1526958097901-5e6d742d3371?w=400&h=300&fit=crop",
-  "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=400&h=300&fit=crop",
-  "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=400&h=300&fit=crop",
-  "https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?w=400&h=300&fit=crop",
+  "https://images.unsplash.com/photo-1573497620053-ea5300f94f21?w=400&h=300&fit=crop",
+  "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=400&h=300&fit=crop",
+  "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400&h=300&fit=crop",
+  "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=400&h=300&fit=crop",
 ];
 
 export default function WhyUsSection() {
@@ -29,10 +29,9 @@ export default function WhyUsSection() {
         <div className="absolute bottom-1/4 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl" />
       </div>
 
-      {/* Background image with low opacity */}
       <div className="absolute inset-0 opacity-[0.07]">
         <Image
-          src="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=1920&h=800&fit=crop"
+          src="https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1920&h=800&fit=crop"
           alt=""
           fill
           className="object-cover"
@@ -60,7 +59,6 @@ export default function WhyUsSection() {
                 whileHover={{ y: -8, scale: 1.02 }}
                 className="bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10 text-center group"
               >
-                {/* Card image */}
                 <div className="relative h-32 overflow-hidden">
                   <Image
                     src={whyUsImages[i]}
@@ -83,7 +81,6 @@ export default function WhyUsSection() {
           })}
         </div>
 
-        {/* Find an agent CTA */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -92,7 +89,7 @@ export default function WhyUsSection() {
         >
           <div className="absolute inset-0 opacity-10">
             <Image
-              src="https://images.unsplash.com/photo-1509099836639-18ba1795216d?w=1200&h=400&fit=crop"
+              src="https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=1200&h=400&fit=crop"
               alt=""
               fill
               className="object-cover"

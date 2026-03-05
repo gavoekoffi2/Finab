@@ -10,38 +10,38 @@ import { ArrowRightIcon } from "@/components/ui/Icons";
 
 const canadaImages: Record<string, { src: string; alt: string }> = {
   "education-financiere": {
-    src: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&h=500&fit=crop",
-    alt: "Éducation financière - Enfants africains à l'école",
+    src: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&h=500&fit=crop",
+    alt: "Éducation financière - Apprentissage et formation",
   },
   "declarations-impots": {
-    src: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&h=500&fit=crop",
-    alt: "Déclarations d'impôts - Documents financiers",
+    src: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&h=500&fit=crop",
+    alt: "Déclarations d'impôts - Consultation professionnelle",
   },
   "formation-recrutement": {
-    src: "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800&h=500&fit=crop",
-    alt: "Formation et recrutement - Professionnels africains",
+    src: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=500&fit=crop",
+    alt: "Formation et recrutement - Équipe professionnelle",
   },
 };
 
 const africaImages: Record<string, { src: string; alt: string }> = {
   "assurance-vie": {
-    src: "https://images.unsplash.com/photo-1536064479547-7ee40b74b807?w=600&h=400&fit=crop",
-    alt: "Assurance Vie - Famille africaine protégée",
+    src: "https://images.unsplash.com/photo-1516733968668-dbdce39c0651?w=600&h=400&fit=crop",
+    alt: "Assurance Vie - Famille africaine unie",
   },
   "assurance-sante": {
-    src: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&h=400&fit=crop",
-    alt: "Assurance Santé - Soins médicaux en Afrique",
+    src: "https://images.unsplash.com/photo-1584515933487-779824d29309?w=600&h=400&fit=crop",
+    alt: "Assurance Santé - Soins médicaux de qualité",
   },
   "micro-assurance": {
-    src: "https://images.unsplash.com/photo-1604594849809-dfedbc827105?w=600&h=400&fit=crop",
-    alt: "Micro-assurance - Marché africain",
+    src: "https://images.unsplash.com/photo-1459257831348-f0cdd359235f?w=600&h=400&fit=crop",
+    alt: "Micro-assurance - Petits entrepreneurs africains",
   },
   "assurance-voyage": {
-    src: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=600&h=400&fit=crop",
+    src: "https://images.unsplash.com/photo-1436491865332-7a61a109db05?w=600&h=400&fit=crop",
     alt: "Assurance Voyage - Voyager en toute sérénité",
   },
   "epargne-investissement": {
-    src: "https://images.unsplash.com/photo-1579621970795-87facc2f976d?w=600&h=400&fit=crop",
+    src: "https://images.unsplash.com/photo-1633158829585-23ba8f7c8caf?w=600&h=400&fit=crop",
     alt: "Épargne et investissement - Croissance financière",
   },
 };
@@ -50,7 +50,6 @@ export default function ProductsPreview() {
   return (
     <section className="py-24 bg-surface">
       <div className="max-w-7xl mx-auto px-6">
-        {/* Canada Products */}
         <SectionHeading
           badge="Produits Canada"
           title="Nos services au Canada"
@@ -62,7 +61,6 @@ export default function ProductsPreview() {
             const img = canadaImages[product.id];
             return (
               <AnimatedCard key={product.id} delay={i * 0.1}>
-                {/* Product image */}
                 {img && (
                   <div className="relative h-48 overflow-hidden group">
                     <Image
@@ -103,7 +101,6 @@ export default function ProductsPreview() {
           })}
         </div>
 
-        {/* Africa/Haiti Products */}
         <SectionHeading
           badge="Produits Afrique & Haïti"
           title="Nos services en Afrique et Haïti"
@@ -115,7 +112,6 @@ export default function ProductsPreview() {
             const img = africaImages[product.id];
             return (
               <AnimatedCard key={product.id} delay={i * 0.08}>
-                {/* Product image */}
                 {img && (
                   <div className="relative h-36 overflow-hidden group">
                     <Image
