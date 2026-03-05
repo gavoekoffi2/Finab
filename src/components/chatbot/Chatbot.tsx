@@ -92,8 +92,8 @@ export default function Chatbot() {
         animate={{ scale: 1 }}
         transition={{ delay: 1, type: "spring" }}
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 z-50 w-16 h-16 rounded-full bg-gradient-to-br from-primary to-primary-light shadow-xl hover:shadow-2xl transition-shadow flex items-center justify-center group cursor-pointer md:bottom-6"
-        style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 24px)" }}
+        className="fixed right-5 z-50 w-16 h-16 rounded-full bg-gradient-to-br from-primary to-primary-light shadow-xl hover:shadow-2xl transition-shadow flex items-center justify-center group cursor-pointer animate-pulse-ring"
+        style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 70px)" }}
         aria-label="Ouvrir le chat"
       >
         {/* African avatar */}
@@ -131,7 +131,8 @@ export default function Chatbot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.3 }}
-            className="fixed bottom-24 right-4 z-50 w-[360px] max-w-[calc(100vw-32px)] h-[520px] max-h-[70vh] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-gray-100"
+            className="fixed right-4 z-50 w-[360px] max-w-[calc(100vw-32px)] h-[520px] max-h-[60vh] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-gray-100"
+            style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 140px)" }}
           >
             {/* Header */}
             <div className="bg-gradient-to-r from-primary to-primary-light p-4 flex items-center gap-3">

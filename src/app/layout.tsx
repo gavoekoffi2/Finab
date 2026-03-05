@@ -1,9 +1,20 @@
 import type { Metadata } from "next";
+import localFont from "next/font/local";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import StickyBar from "@/components/layout/StickyBar";
+import DesktopStickyBar from "@/components/layout/DesktopStickyBar";
 import Chatbot from "@/components/chatbot/Chatbot";
+
+const inter = localFont({
+  src: [
+    { path: "./fonts/inter-latin.woff2", weight: "100 900", style: "normal" },
+  ],
+  variable: "--font-inter",
+  display: "swap",
+  fallback: ["system-ui", "-apple-system", "Segoe UI", "Roboto", "sans-serif"],
+});
 
 export const metadata: Metadata = {
   title: {
@@ -23,6 +34,8 @@ export const metadata: Metadata = {
     "Haïti",
     "Canada",
     "services financiers",
+    "micro-assurance",
+    "assurance vie",
   ],
   authors: [{ name: "FINAB la solution" }],
   creator: "FINAB la solution",
@@ -51,12 +64,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr">
-      <body className="antialiased">
+    <html lang="fr" className={inter.variable}>
+      <body className="antialiased font-sans">
         <Header />
         <main className="min-h-screen">{children}</main>
         <Footer />
         <StickyBar />
+        <DesktopStickyBar />
         <Chatbot />
       </body>
     </html>

@@ -1,17 +1,61 @@
 "use client";
 
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { siteConfig, navigation } from "@/data/content";
 import { PhoneIcon, MailIcon, MapPinIcon, WhatsAppIcon } from "@/components/ui/Icons";
 
 export default function Footer() {
   return (
-    <footer className="bg-primary-dark text-white">
+    <footer className="bg-primary-dark text-white relative overflow-hidden">
+      {/* Decorative top wave */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
+
+      {/* Background accent */}
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-accent/5 rounded-full blur-[120px]" />
+
+      {/* CTA Banner */}
+      <div className="border-b border-white/5">
+        <div className="max-w-7xl mx-auto px-6 py-12">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="flex flex-col md:flex-row items-center justify-between gap-6 bg-gradient-to-r from-accent/10 to-accent/5 rounded-2xl p-8 border border-accent/10"
+          >
+            <div>
+              <h3 className="text-xl md:text-2xl font-bold mb-1">Prêt à transformer votre avenir financier ?</h3>
+              <p className="text-white/50 text-sm">Contactez-nous dès aujourd&apos;hui pour un accompagnement personnalisé.</p>
+            </div>
+            <div className="flex gap-3 flex-shrink-0">
+              <Link
+                href="/services"
+                className="px-6 py-3 rounded-xl bg-accent text-primary-dark font-semibold text-sm hover:bg-accent-light transition-colors"
+              >
+                Demander un service
+              </Link>
+              <a
+                href={siteConfig.whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-6 py-3 rounded-xl bg-green-600 text-white font-semibold text-sm hover:bg-green-500 transition-colors flex items-center gap-2"
+              >
+                <WhatsAppIcon className="w-4 h-4" /> WhatsApp
+              </a>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+
       {/* Main Footer */}
       <div className="max-w-7xl mx-auto px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand */}
-          <div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
             <div className="flex items-center gap-3 mb-6">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-white/20 to-accent/50 flex items-center justify-center text-white font-bold text-lg">
                 F
@@ -21,7 +65,7 @@ export default function Footer() {
                 <span className="text-xs block text-white/60 -mt-0.5">la solution</span>
               </div>
             </div>
-            <p className="text-white/60 text-sm leading-relaxed mb-6">
+            <p className="text-white/50 text-sm leading-relaxed mb-6">
               La résurrection financière au service de votre avenir. Services financiers au Canada, en Afrique et en Haïti.
             </p>
             <div className="flex gap-3">
@@ -31,22 +75,27 @@ export default function Footer() {
                   href={url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center hover:bg-accent/30 transition-colors text-sm capitalize"
+                  className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:bg-accent/20 hover:border-accent/30 transition-all text-sm capitalize text-white/60 hover:text-white"
                   aria-label={platform}
                 >
                   {platform[0].toUpperCase()}
                 </a>
               ))}
             </div>
-          </div>
+          </motion.div>
 
           {/* Navigation */}
-          <div>
-            <h3 className="text-lg font-semibold mb-6">Navigation</h3>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+          >
+            <h3 className="text-sm font-semibold uppercase tracking-widest text-accent mb-6">Navigation</h3>
             <ul className="space-y-3">
               {navigation.map((item) => (
                 <li key={item.href}>
-                  <Link href={item.href} className="text-white/60 hover:text-accent transition-colors text-sm">
+                  <Link href={item.href} className="text-white/50 hover:text-white hover:translate-x-1 transition-all text-sm inline-block">
                     {item.label}
                   </Link>
                 </li>
@@ -56,69 +105,71 @@ export default function Footer() {
                   href={siteConfig.recruitmentUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-white/60 hover:text-accent transition-colors text-sm"
+                  className="text-white/50 hover:text-white transition-all text-sm inline-flex items-center gap-1"
                 >
-                  Nos Recrutements ↗
+                  Nos Recrutements
+                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
+                  </svg>
                 </a>
               </li>
             </ul>
-          </div>
+          </motion.div>
 
           {/* Services */}
-          <div>
-            <h3 className="text-lg font-semibold mb-6">Nos Services</h3>
-            <ul className="space-y-3 text-sm text-white/60">
-              <li>Éducation financière</li>
-              <li>Déclarations d&apos;impôts</li>
-              <li>Formation & Recrutement</li>
-              <li>Assurance Vie & Santé</li>
-              <li>Micro-assurance</li>
-              <li>Épargne & Investissement</li>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+          >
+            <h3 className="text-sm font-semibold uppercase tracking-widest text-accent mb-6">Nos Services</h3>
+            <ul className="space-y-3 text-sm text-white/50">
+              <li className="hover:text-white transition-colors"><Link href="/produits#education-financiere">Éducation financière</Link></li>
+              <li className="hover:text-white transition-colors"><Link href="/produits#declarations-impots">Déclarations d&apos;impôts</Link></li>
+              <li className="hover:text-white transition-colors"><Link href="/produits#formation-recrutement">Formation & Recrutement</Link></li>
+              <li className="hover:text-white transition-colors"><Link href="/produits#assurance-vie">Assurance Vie & Santé</Link></li>
+              <li className="hover:text-white transition-colors"><Link href="/produits#micro-assurance">Micro-assurance</Link></li>
+              <li className="hover:text-white transition-colors"><Link href="/produits#epargne-investissement">Épargne & Investissement</Link></li>
             </ul>
-          </div>
+          </motion.div>
 
           {/* Contact */}
-          <div>
-            <h3 className="text-lg font-semibold mb-6">Contact</h3>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+          >
+            <h3 className="text-sm font-semibold uppercase tracking-widest text-accent mb-6">Contact</h3>
             <ul className="space-y-4">
               <li>
-                <a href={`tel:${siteConfig.phone}`} className="flex items-center gap-3 text-white/60 hover:text-accent transition-colors text-sm">
-                  <PhoneIcon className="w-5 h-5 text-accent flex-shrink-0" />
+                <a href={`tel:${siteConfig.phone}`} className="flex items-center gap-3 text-white/50 hover:text-white transition-colors text-sm group">
+                  <PhoneIcon className="w-5 h-5 text-accent/70 group-hover:text-accent flex-shrink-0" />
                   {siteConfig.phone}
                 </a>
               </li>
               <li>
-                <a href={`mailto:${siteConfig.email}`} className="flex items-center gap-3 text-white/60 hover:text-accent transition-colors text-sm">
-                  <MailIcon className="w-5 h-5 text-accent flex-shrink-0" />
+                <a href={`mailto:${siteConfig.email}`} className="flex items-center gap-3 text-white/50 hover:text-white transition-colors text-sm group">
+                  <MailIcon className="w-5 h-5 text-accent/70 group-hover:text-accent flex-shrink-0" />
                   {siteConfig.email}
                 </a>
               </li>
-              <li className="flex items-center gap-3 text-white/60 text-sm">
-                <MapPinIcon className="w-5 h-5 text-accent flex-shrink-0" />
+              <li className="flex items-center gap-3 text-white/50 text-sm">
+                <MapPinIcon className="w-5 h-5 text-accent/70 flex-shrink-0" />
                 {siteConfig.address}
               </li>
-              <li>
-                <a
-                  href={siteConfig.whatsapp}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 mt-2 px-4 py-2.5 rounded-xl bg-green-600 text-white text-sm font-semibold hover:bg-green-500 transition-colors"
-                >
-                  <WhatsAppIcon className="w-5 h-5" />
-                  WhatsApp
-                </a>
-              </li>
             </ul>
-          </div>
+          </motion.div>
         </div>
       </div>
 
       {/* Bottom Bar */}
-      <div className="border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-white/40">
+      <div className="border-t border-white/5">
+        <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-white/30">
           <p>&copy; {new Date().getFullYear()} FINAB la solution. Tous droits réservés.</p>
           <p>
-            Fondée par <span className="text-accent/70">{siteConfig.ceo}</span>
+            Fondée par <span className="text-accent/60">{siteConfig.ceo}</span>
           </p>
         </div>
       </div>
