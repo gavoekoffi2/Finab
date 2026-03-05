@@ -19,7 +19,7 @@ export default function TestimonialsSection() {
   }, [nextTestimonial]);
 
   return (
-    <section className="py-24 bg-white relative overflow-hidden">
+    <section className="py-24 bg-surface-alt relative overflow-hidden">
       <div className="absolute top-0 left-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl" />
       <div className="absolute bottom-0 right-0 w-80 h-80 bg-primary/5 rounded-full blur-3xl" />
       <div className="absolute top-20 left-1/2 -translate-x-1/2 text-[200px] font-serif text-primary/[0.03] leading-none select-none pointer-events-none">
@@ -41,7 +41,7 @@ export default function TestimonialsSection() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -30, scale: 0.98 }}
               transition={{ duration: 0.5, ease: "easeOut" }}
-              className="bg-surface rounded-3xl p-8 md:p-12 text-center relative"
+              className="bg-white rounded-3xl p-8 md:p-12 text-center relative shadow-xl border border-gray-100"
             >
               <div className="absolute -top-5 left-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white text-lg font-serif">
                 &ldquo;
