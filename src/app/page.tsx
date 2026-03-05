@@ -1,6 +1,7 @@
 import HeroSection from "@/components/home/HeroSection";
 import WelcomeSection from "@/components/home/WelcomeSection";
 import ProductsPreview from "@/components/home/ProductsPreview";
+import ParcoursSection from "@/components/home/ParcoursSection";
 import GallerySection from "@/components/home/GallerySection";
 import StatsSection from "@/components/home/StatsSection";
 import TestimonialsSection from "@/components/home/TestimonialsSection";
@@ -15,9 +16,10 @@ export default function HomePage() {
       <WelcomeSection />
       <StatsSection />
       <ProductsPreview />
-      <GallerySection />
+      <ParcoursSection />
       <QuizSection />
       <TestimonialsSection />
+      <GallerySection />
       <NewsSection />
       <WhyUsSection />
     </>

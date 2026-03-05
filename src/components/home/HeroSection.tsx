@@ -1,127 +1,205 @@
 "use client";
 
-import dynamic from "next/dynamic";
-import { motion } from "framer-motion";
+import { useState, useEffect, useCallback } from "react";
+import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
 import Button from "@/components/ui/Button";
 import { siteConfig } from "@/data/content";
 
-const HeroSlider3D = dynamic(() => import("@/components/three/HeroSlider3D"), {
-  ssr: false,
-  loading: () => (
-    <div className="w-full h-[350px] md:h-[480px] flex items-center justify-center">
-      <div className="w-12 h-12 rounded-full border-4 border-accent/30 border-t-accent animate-spin" />
-    </div>
-  ),
-});
+const heroImages = [
+  {
+    src: "/images/hero/hero-children-1.jpg",
+    alt: "Enfants africains - FINAB soutient les communautés",
+    headline: "Ensemble, changeons des vies",
+    sub: "FINAB accompagne les familles vers la résilience financière",
+  },
+  {
+    src: "/images/hero/hero-children-2.jpg",
+    alt: "Sourires d'espoir - Communautés africaines",
+    headline: "L'espoir à travers l'éducation",
+    sub: "L'éducation financière comme levier de développement",
+  },
+  {
+    src: "/images/hero/hero-children-3.jpg",
+    alt: "Enfants de la communauté - Avenir meilleur",
+    headline: "Bâtir un avenir meilleur",
+    sub: "Protection et accompagnement pour chaque famille",
+  },
+  {
+    src: "/images/hero/hero-africa-1.jpg",
+    alt: "Communautés en Afrique - Solidarité FINAB",
+    headline: "La solidarité sans frontières",
+    sub: "Du Canada à l'Afrique, de l'Afrique à Haïti",
+  },
+];
 
 export default function HeroSection() {
+  const [current, setCurrent] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  const next = useCallback(() => {
+    setCurrent((p) => (p + 1) % heroImages.length);
+  }, []);
+
+  useEffect(() => {
+    setIsLoaded(true);
+    const interval = setInterval(next, 5500);
+    return () => clearInterval(interval);
+  }, [next]);
+
   return (
-    <section className="relative min-h-[92vh] flex items-center overflow-hidden bg-gradient-to-br from-primary-dark via-primary to-primary-light noise">
-      {/* Animated background orbs */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-[-10%] left-[-5%] w-[500px] h-[500px] bg-accent/10 rounded-full blur-[100px] animate-float" />
-        <div className="absolute bottom-[-15%] right-[-10%] w-[600px] h-[600px] bg-accent/5 rounded-full blur-[120px] animate-float-delayed" />
-        <div className="absolute top-1/2 left-1/3 w-[400px] h-[400px] bg-white/[0.02] rounded-full blur-[80px] animate-float-slow" />
-        {/* Subtle grid pattern */}
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-            backgroundSize: "60px 60px",
-          }}
-        />
-      </div>
+    <section className="relative min-h-[100vh] flex items-center overflow-hidden">
+      {/* Fullscreen image background slider */}
+      <AnimatePresence mode="sync">
+        <motion.div
+          key={current}
+          initial={{ scale: 1.1, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
+          className="absolute inset-0"
+        >
+          <Image
+            src={heroImages[current].src}
+            alt={heroImages[current].alt}
+            fill
+            className="object-cover"
+            priority={current === 0}
+            sizes="100vw"
+            quality={85}
+          />
+        </motion.div>
+      </AnimatePresence>
 
-      <div className="relative max-w-7xl mx-auto px-6 py-20 w-full">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left */}
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+      {/* Dark gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-r from-primary-dark/90 via-primary-dark/75 to-primary-dark/50" />
+      <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/80 via-transparent to-primary-dark/30" />
+
+      {/* Animated grain texture */}
+      <div className="absolute inset-0 noise" />
+
+      {/* Subtle grid pattern */}
+      <div
+        className="absolute inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+          backgroundSize: "60px 60px",
+        }}
+      />
+
+      {/* Content */}
+      <div className="relative max-w-7xl mx-auto px-6 py-24 w-full">
+        <div className="max-w-3xl">
+          {/* Live badge */}
+          <motion.span
+            initial={{ opacity: 0, y: 10 }}
+            animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+            transition={{ delay: 0.2 }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold glass text-accent mb-6"
           >
-            <motion.span
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold glass text-accent mb-6"
-            >
-              <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-              Canada &bull; Afrique &bull; Haïti
-            </motion.span>
+            <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+            Canada &bull; Afrique &bull; Haïti
+          </motion.span>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-[1.1] mb-6">
-              <motion.span
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="block"
-              >
-                {siteConfig.name}
-              </motion.span>
-              <motion.span
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.45 }}
-                className="block text-gradient mt-2 text-2xl md:text-3xl font-medium"
-              >
-                {siteConfig.tagline}
-              </motion.span>
-            </h1>
+          {/* Main title - always visible */}
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+            transition={{ delay: 0.3, duration: 0.8 }}
+            className="text-4xl md:text-5xl lg:text-7xl font-bold text-white leading-[1.05] mb-4"
+          >
+            {siteConfig.name}
+          </motion.h1>
 
-            <motion.p
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.55 }}
-              className="text-white/60 text-lg leading-relaxed mb-8 max-w-lg"
-            >
-              Votre partenaire de confiance pour l&apos;éducation financière, les assurances,
-              les déclarations d&apos;impôts et le recrutement international.
-            </motion.p>
-
+          {/* Dynamic subtitle based on current slide */}
+          <AnimatePresence mode="wait">
             <motion.div
+              key={current}
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.65 }}
-              className="flex flex-wrap gap-4"
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.5 }}
             >
-              <Button href="/contact" variant="accent" size="lg">
-                Nous contacter
-              </Button>
-              <Button href="/services" variant="outline" size="lg" className="border-white/20 text-white hover:bg-white/10 hover:text-white">
-                Découvrir nos services
-              </Button>
+              <p className="text-gradient text-xl md:text-2xl lg:text-3xl font-medium mb-4">
+                {heroImages[current].headline}
+              </p>
+              <p className="text-white/60 text-base md:text-lg leading-relaxed mb-8 max-w-xl">
+                {heroImages[current].sub}
+              </p>
             </motion.div>
+          </AnimatePresence>
 
-            {/* Quick stats */}
-            <div className="flex gap-8 mt-12 pt-8 border-t border-white/10">
-              {[
-                { value: "5000+", label: "Clients" },
-                { value: "3", label: "Continents" },
-                { value: "98%", label: "Satisfaction" },
-              ].map((stat, i) => (
-                <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.8 + i * 0.12 }}
-                >
-                  <div className="text-2xl md:text-3xl font-bold text-gradient">{stat.value}</div>
-                  <div className="text-white/40 text-sm mt-0.5">{stat.label}</div>
-                </motion.div>
-              ))}
-            </div>
+          {/* Tagline */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={isLoaded ? { opacity: 1 } : {}}
+            transition={{ delay: 0.6 }}
+            className="text-white/50 text-sm mb-8 italic"
+          >
+            &ldquo;{siteConfig.tagline}&rdquo;
+          </motion.p>
+
+          {/* CTA Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+            transition={{ delay: 0.7 }}
+            className="flex flex-wrap gap-4 mb-12"
+          >
+            <Button href="/contact" variant="accent" size="lg">
+              Nous contacter
+            </Button>
+            <Button href="/services" variant="outline" size="lg" className="border-white/20 text-white hover:bg-white/10 hover:text-white">
+              Découvrir nos services
+            </Button>
           </motion.div>
 
-          {/* Right */}
+          {/* Stats bar */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+            transition={{ delay: 0.9 }}
+            className="flex gap-8 pt-8 border-t border-white/10"
           >
-            <HeroSlider3D />
+            {[
+              { value: "5000+", label: "Clients" },
+              { value: "3", label: "Continents" },
+              { value: "98%", label: "Satisfaction" },
+            ].map((stat) => (
+              <div key={stat.label}>
+                <div className="text-2xl md:text-3xl font-bold text-gradient">{stat.value}</div>
+                <div className="text-white/40 text-sm mt-0.5">{stat.label}</div>
+              </div>
+            ))}
           </motion.div>
         </div>
+      </div>
+
+      {/* Image indicators (right side) */}
+      <div className="absolute right-6 md:right-12 top-1/2 -translate-y-1/2 flex flex-col gap-3 z-10">
+        {heroImages.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setCurrent(i)}
+            className={`transition-all duration-500 rounded-full cursor-pointer ${
+              i === current
+                ? "w-3 h-10 bg-accent"
+                : "w-3 h-3 bg-white/30 hover:bg-white/50"
+            }`}
+            aria-label={`Image ${i + 1}`}
+          />
+        ))}
+      </div>
+
+      {/* Progress bar at bottom */}
+      <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/5">
+        <motion.div
+          key={current}
+          initial={{ width: "0%" }}
+          animate={{ width: "100%" }}
+          transition={{ duration: 5.5, ease: "linear" }}
+          className="h-full bg-accent/70"
+        />
       </div>
 
       {/* Scroll indicator */}
@@ -142,7 +220,6 @@ export default function HeroSection() {
             className="w-1 bg-accent/70 rounded-full"
           />
         </motion.div>
-        <p className="text-white/30 text-[10px] text-center mt-2 tracking-widest uppercase">Scroll</p>
       </motion.div>
     </section>
   );
