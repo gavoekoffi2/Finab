@@ -35,6 +35,14 @@ export default function AnimatedCounter({
     const suffix = value.slice(numericMatch[0].length);
     const duration = 2000;
     const startTime = performance.now();
+    let rafId: number;
+
+    function formatNum(n: number) {
+      if (n >= 1000) {
+        return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + suffix;
+      }
+      return n + suffix;
+    }
 
     function animate(currentTime: number) {
       const elapsed = currentTime - startTime;
@@ -43,18 +51,19 @@ export default function AnimatedCounter({
       const eased = 1 - Math.pow(1 - progress, 3);
       const current = Math.round(eased * target);
 
-      if (target >= 1000) {
-        setDisplayValue(current.toLocaleString("fr-FR") + suffix);
-      } else {
-        setDisplayValue(current + suffix);
-      }
+      setDisplayValue(formatNum(current));
 
       if (progress < 1) {
-        requestAnimationFrame(animate);
+        rafId = requestAnimationFrame(animate);
+      } else {
+        // Ensure final value is exact
+        setDisplayValue(formatNum(target));
       }
     }
 
-    requestAnimationFrame(animate);
+    rafId = requestAnimationFrame(animate);
+
+    return () => cancelAnimationFrame(rafId);
   }, [isInView, value]);
 
   return (
