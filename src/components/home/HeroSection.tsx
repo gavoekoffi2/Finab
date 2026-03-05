@@ -8,26 +8,26 @@ import { siteConfig } from "@/data/content";
 
 const heroImages = [
   {
-    src: "/images/hero/hero-children-1.jpg",
-    alt: "Enfants africains - FINAB soutient les communautés",
+    src: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=1920&h=1080&fit=crop",
+    alt: "Homme africain professionnel - FINAB solutions financières",
     headline: "Ensemble, changeons des vies",
     sub: "FINAB accompagne les familles vers la résilience financière",
   },
   {
-    src: "/images/hero/hero-children-2.jpg",
-    alt: "Sourires d'espoir - Communautés africaines",
+    src: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=1920&h=1080&fit=crop",
+    alt: "Femme africaine business - Accompagnement FINAB",
     headline: "L'espoir à travers l'éducation",
     sub: "L'éducation financière comme levier de développement",
   },
   {
-    src: "/images/hero/hero-children-3.jpg",
-    alt: "Enfants de la communauté - Avenir meilleur",
+    src: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=1920&h=1080&fit=crop",
+    alt: "Femme africaine souriante - Communauté FINAB",
     headline: "Bâtir un avenir meilleur",
     sub: "Protection et accompagnement pour chaque famille",
   },
   {
-    src: "/images/hero/hero-africa-1.jpg",
-    alt: "Communautés en Afrique - Solidarité FINAB",
+    src: "https://images.unsplash.com/photo-1531891570158-e71b35a485bc?w=1920&h=1080&fit=crop",
+    alt: "Professionnel africain - Solidarité sans frontières",
     headline: "La solidarité sans frontières",
     sub: "Du Canada à l'Afrique, de l'Afrique à Haïti",
   },

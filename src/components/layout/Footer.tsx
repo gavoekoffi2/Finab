@@ -57,12 +57,12 @@ export default function Footer() {
             viewport={{ once: true }}
           >
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary-light flex items-center justify-center text-white font-bold text-lg">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-primary-light flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-primary/20">
                 F
               </div>
               <div>
-                <span className="text-xl font-bold tracking-tight">FINAB</span>
-                <span className="text-xs block text-white/60 -mt-0.5">la solution</span>
+                <span className="text-2xl font-bold tracking-tight text-white">FINAB</span>
+                <span className="text-xs block text-primary-light font-medium -mt-0.5">la solution</span>
               </div>
             </div>
             <p className="text-white/50 text-sm leading-relaxed mb-6">
