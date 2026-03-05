@@ -7,82 +7,82 @@ import SectionHeading from "@/components/ui/SectionHeading";
 
 const parcoursImages = [
   {
-    src: "/images/gallery/gallery-1.jpg",
+    src: "https://images.unsplash.com/photo-1531891570158-e71b35a485bc?w=800&q=80",
     title: "Séminaire de formation",
     description: "Nos séminaires d'éducation financière au service des communautés",
   },
   {
-    src: "/images/gallery/gallery-2.jpg",
+    src: "https://images.unsplash.com/photo-1573497620053-ea5300f94f21?w=800&q=80",
     title: "Accompagnement client",
     description: "Un suivi personnalisé pour chaque client FINAB",
   },
   {
-    src: "/images/gallery/gallery-3.jpg",
+    src: "https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=800&q=80",
     title: "Croissance et développement",
     description: "Ensemble, construisons un avenir financier solide",
   },
   {
-    src: "/images/gallery/gallery-4.jpg",
+    src: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=800&q=80",
     title: "Travail d'équipe",
     description: "Notre équipe dévouée au service de votre réussite",
   },
   {
-    src: "/images/gallery/gallery-5.jpg",
+    src: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80",
     title: "Partenariats stratégiques",
     description: "Des collaborations de haut niveau pour un impact maximal",
   },
   {
-    src: "/images/gallery/gallery-6.jpg",
+    src: "https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?w=800&q=80",
     title: "Formation continue",
     description: "L'apprentissage au cœur de notre mission",
   },
   {
-    src: "/images/gallery/gallery-7.jpg",
+    src: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=800&q=80",
     title: "Événements communautaires",
     description: "FINAB au cœur des communautés africaines et caribéennes",
   },
   {
-    src: "/images/gallery/gallery-8.jpg",
+    src: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=800&q=80",
     title: "Réunions partenaires",
     description: "Renforcer nos alliances pour mieux vous servir",
   },
   {
-    src: "/images/gallery/gallery-9.jpg",
+    src: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=800&q=80",
     title: "Ateliers pratiques",
     description: "Des ateliers concrets pour une autonomie financière",
   },
   {
-    src: "/images/gallery/gallery-10.jpg",
+    src: "https://images.unsplash.com/photo-1611432579699-484f7990b127?w=800&q=80",
     title: "Impact social",
     description: "Notre engagement pour le développement des communautés",
   },
   {
-    src: "/images/gallery/gallery-11.jpg",
+    src: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800&q=80",
     title: "Succès clients",
     description: "Chaque histoire de réussite nous inspire à faire plus",
   },
   {
-    src: "/images/gallery/gallery-12.jpg",
+    src: "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=800&q=80",
     title: "Conférences",
     description: "Partager notre expertise sur les scènes internationales",
   },
   {
-    src: "/images/gallery/gallery-13.jpg",
+    src: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80",
     title: "Nos bureaux",
     description: "Un environnement professionnel dédié à votre accompagnement",
   },
   {
-    src: "/images/gallery/gallery-14.jpg",
+    src: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=800&q=80",
     title: "Signature de partenariats",
     description: "Des accords stratégiques pour élargir nos services",
   },
   {
-    src: "/images/gallery/gallery-15.jpg",
+    src: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80",
     title: "Communauté FINAB",
     description: "Une grande famille unie par des valeurs communes",
   },
   {
-    src: "/images/gallery/gallery-16.jpg",
+    src: "https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=800&q=80",
     title: "Ensemble vers le succès",
     description: "La solidarité comme fondement de notre action",
   },
