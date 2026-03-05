@@ -19,17 +19,17 @@ export default function NewsSection() {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {newsArticles.map((article, i) => (
             <AnimatedCard key={article.id} delay={i * 0.1}>
-              <div className="h-48 bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
+              <div className="h-48 bg-gradient-to-br from-primary/20 to-primary-light/10 flex items-center justify-center">
                 <span className="text-6xl opacity-30">📰</span>
               </div>
               <div className="p-6">
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-accent/10 text-accent-dark">
+                  <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary-dark">
                     {article.category}
                   </span>
                   <span className="text-xs text-muted">{new Date(article.date).toLocaleDateString("fr-FR")}</span>
                 </div>
-                <h3 className="font-bold text-primary-dark mb-2 line-clamp-2">{article.title}</h3>
+                <h3 className="font-bold text-dark mb-2 line-clamp-2">{article.title}</h3>
                 <p className="text-sm text-muted line-clamp-3 mb-4">{article.excerpt}</p>
                 <Button href={`/actualites#${article.id}`} variant="ghost" size="sm" className="text-xs">
                   Lire la suite <ArrowRightIcon className="w-3 h-3 ml-1" />

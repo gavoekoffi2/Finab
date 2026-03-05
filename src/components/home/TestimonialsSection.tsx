@@ -20,7 +20,7 @@ export default function TestimonialsSection() {
 
   return (
     <section className="py-24 bg-white relative overflow-hidden">
-      <div className="absolute top-0 left-0 w-64 h-64 bg-accent/5 rounded-full blur-3xl" />
+      <div className="absolute top-0 left-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl" />
       <div className="absolute bottom-0 right-0 w-80 h-80 bg-primary/5 rounded-full blur-3xl" />
       <div className="absolute top-20 left-1/2 -translate-x-1/2 text-[200px] font-serif text-primary/[0.03] leading-none select-none pointer-events-none">
         &ldquo;
@@ -43,7 +43,7 @@ export default function TestimonialsSection() {
               transition={{ duration: 0.5, ease: "easeOut" }}
               className="bg-surface rounded-3xl p-8 md:p-12 text-center relative"
             >
-              <div className="absolute -top-5 left-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-accent flex items-center justify-center text-white text-lg font-serif">
+              <div className="absolute -top-5 left-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white text-lg font-serif">
                 &ldquo;
               </div>
 
@@ -56,7 +56,7 @@ export default function TestimonialsSection() {
                     transition={{ delay: 0.1 + i * 0.08 }}
                   >
                     <StarIcon
-                      className={`w-6 h-6 ${i < testimonials[active].rating ? "text-accent" : "text-gray-300"}`}
+                      className={`w-6 h-6 ${i < testimonials[active].rating ? "text-primary" : "text-gray-300"}`}
                       filled={i < testimonials[active].rating}
                     />
                   </motion.div>
@@ -68,11 +68,11 @@ export default function TestimonialsSection() {
               </blockquote>
 
               <div className="flex items-center justify-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold text-lg">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-primary-light flex items-center justify-center text-white font-bold text-lg">
                   {testimonials[active].name[0]}
                 </div>
                 <div className="text-left">
-                  <p className="font-bold text-primary-dark">{testimonials[active].name}</p>
+                  <p className="font-bold text-dark">{testimonials[active].name}</p>
                   <p className="text-muted text-sm">{testimonials[active].location}</p>
                 </div>
               </div>
@@ -91,7 +91,7 @@ export default function TestimonialsSection() {
               >
                 <span
                   className={`absolute inset-0 rounded-full transition-all duration-300 ${
-                    i === active ? "bg-accent" : "bg-primary/20 hover:bg-primary/40"
+                    i === active ? "bg-primary" : "bg-primary/20 hover:bg-primary/40"
                   }`}
                 />
               </button>

@@ -6,10 +6,10 @@ import { stats } from "@/data/content";
 
 export default function StatsSection() {
   return (
-    <section className="py-20 bg-primary-dark relative overflow-hidden noise">
+    <section className="py-20 bg-dark relative overflow-hidden noise">
       {/* Decorative background */}
       <div className="absolute inset-0">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-accent/10 rounded-full blur-[120px]" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/15 rounded-full blur-[120px]" />
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-primary-light/20 rounded-full blur-[120px]" />
         <div className="absolute inset-0 animate-shimmer" />
       </div>
@@ -19,7 +19,7 @@ export default function StatsSection() {
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center text-accent font-semibold text-sm tracking-widest uppercase mb-12"
+          className="text-center text-primary-light font-semibold text-sm tracking-widest uppercase mb-12"
         >
           FINAB en chiffres
         </motion.p>
@@ -46,7 +46,7 @@ export default function StatsSection() {
               whileInView={{ scaleX: 1 }}
               viewport={{ once: true }}
               transition={{ delay: 0.5 + i * 0.1 }}
-              className={`h-1 rounded-full ${i === 1 ? "w-12 bg-accent" : "w-6 bg-white/20"}`}
+              className={`h-1 rounded-full ${i === 1 ? "w-12 bg-primary-light" : "w-6 bg-white/20"}`}
             />
           ))}
         </div>

@@ -111,7 +111,7 @@ export default function Chatbot() {
             {/* Smile */}
             <path d="M16 20c0 0 2 3 4 3s4-3 4-3" stroke="#2C1810" strokeWidth="1.2" strokeLinecap="round" fill="none" />
             {/* Body */}
-            <path d="M12 26c0 0 2-2 8-2s8 2 8 2v8c0 2-2 4-4 4h-8c-2 0-4-2-4-4v-8z" fill="#D4A843" />
+            <path d="M12 26c0 0 2-2 8-2s8 2 8 2v8c0 2-2 4-4 4h-8c-2 0-4-2-4-4v-8z" fill="#16a34a" />
           </svg>
           {!isOpen && (
             <motion.span
@@ -197,7 +197,7 @@ export default function Chatbot() {
                     <button
                       key={faq.question}
                       onClick={() => handleQuickQuestion(faq.question)}
-                      className="block w-full text-left text-xs px-3 py-2 rounded-lg bg-accent/10 text-primary-dark hover:bg-accent/20 transition-colors cursor-pointer"
+                      className="block w-full text-left text-xs px-3 py-2 rounded-lg bg-primary/10 text-dark hover:bg-primary/20 transition-colors cursor-pointer"
                     >
                       {faq.question}
                     </button>
@@ -213,7 +213,7 @@ export default function Chatbot() {
                   onSubmit={handleLeadSubmit}
                   className="bg-surface rounded-xl p-4 space-y-3"
                 >
-                  <p className="text-xs font-semibold text-primary-dark">Laissez vos coordonnées :</p>
+                  <p className="text-xs font-semibold text-dark">Laissez vos coordonnées :</p>
                   <input
                     type="text"
                     placeholder="Votre nom"
@@ -251,7 +251,7 @@ export default function Chatbot() {
                   </select>
                   <button
                     type="submit"
-                    className="w-full py-2 rounded-lg bg-accent text-primary-dark font-semibold text-sm hover:bg-accent-light transition-colors"
+                    className="w-full py-2 rounded-lg bg-primary text-white font-semibold text-sm hover:bg-primary-light transition-colors"
                   >
                     Envoyer
                   </button>
@@ -293,12 +293,12 @@ export default function Chatbot() {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Écrivez votre message..."
-                  className="flex-1 px-4 py-2.5 rounded-xl border bg-surface text-sm focus:outline-none focus:ring-2 focus:ring-accent/50"
+                  className="flex-1 px-4 py-2.5 rounded-xl border bg-surface text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
                 />
                 <button
                   type="submit"
                   disabled={!input.trim()}
-                  className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center text-white hover:bg-accent-light transition-colors disabled:opacity-40 cursor-pointer"
+                  className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white hover:bg-primary-light transition-colors disabled:opacity-40 cursor-pointer"
                 >
                   <SendIcon className="w-4 h-4" />
                 </button>

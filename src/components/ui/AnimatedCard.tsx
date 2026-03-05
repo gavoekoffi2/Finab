@@ -21,8 +21,8 @@ export default function AnimatedCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-30px" }}
       transition={{ duration: 0.5, delay }}
-      whileHover={hover ? { y: -8, boxShadow: "0 25px 50px -12px rgba(0,0,0,0.15)" } : {}}
-      className={`bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 ${className}`}
+      whileHover={hover ? { y: -8, boxShadow: "0 0 30px rgba(22,163,74,0.15), 0 25px 50px -12px rgba(0,0,0,0.1)" } : {}}
+      className={`bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 card-glow ${className}`}
     >
       {children}
     </motion.div>

@@ -32,7 +32,7 @@ export default function ReclamationsPageClient() {
 
   return (
     <>
-      <section className="bg-gradient-to-br from-primary-dark via-primary to-primary-light py-20">
+      <section className="bg-gradient-to-br from-dark via-primary-dark to-primary py-20">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -65,10 +65,10 @@ export default function ReclamationsPageClient() {
                 transition={{ delay: i * 0.1 }}
                 className="text-center"
               >
-                <div className="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-4">
-                  <span className="text-xl font-bold text-accent-dark">{step.number}</span>
+                <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4">
+                  <span className="text-xl font-bold text-primary">{step.number}</span>
                 </div>
-                <h3 className="font-bold text-primary-dark mb-2">{step.title}</h3>
+                <h3 className="font-bold text-dark mb-2">{step.title}</h3>
                 <p className="text-sm text-muted">{step.description}</p>
               </motion.div>
             ))}
@@ -86,7 +86,7 @@ export default function ReclamationsPageClient() {
               className="bg-green-50 border border-green-200 rounded-2xl p-12 text-center"
             >
               <div className="text-5xl mb-4">✅</div>
-              <h3 className="text-2xl font-bold text-primary-dark mb-2">Réclamation soumise</h3>
+              <h3 className="text-2xl font-bold text-dark mb-2">Réclamation soumise</h3>
               <p className="text-muted mb-2">Votre réclamation a bien été enregistrée.</p>
               <p className="text-muted">Notre équipe vous contactera sous 48 heures ouvrables.</p>
               <button
@@ -95,7 +95,7 @@ export default function ReclamationsPageClient() {
                   setFormData({ name: "", email: "", phone: "", policyNumber: "", category: "", description: "" });
                   setFiles(null);
                 }}
-                className="mt-6 text-accent-dark font-semibold hover:underline cursor-pointer"
+                className="mt-6 text-primary font-semibold hover:underline cursor-pointer"
               >
                 Soumettre une autre réclamation
               </button>
@@ -112,56 +112,56 @@ export default function ReclamationsPageClient() {
               >
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-semibold text-primary-dark mb-2">Nom complet *</label>
+                    <label className="block text-sm font-semibold text-dark mb-2">Nom complet *</label>
                     <input
                       type="text"
                       required
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-accent/50"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
                       placeholder="Votre nom"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-primary-dark mb-2">Email *</label>
+                    <label className="block text-sm font-semibold text-dark mb-2">Email *</label>
                     <input
                       type="email"
                       required
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-accent/50"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
                       placeholder="votre@email.com"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-primary-dark mb-2">Téléphone</label>
+                    <label className="block text-sm font-semibold text-dark mb-2">Téléphone</label>
                     <input
                       type="tel"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-accent/50"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
                       placeholder="+1 (xxx) xxx-xxxx"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-primary-dark mb-2">N° de police / Réf.</label>
+                    <label className="block text-sm font-semibold text-dark mb-2">N° de police / Réf.</label>
                     <input
                       type="text"
                       value={formData.policyNumber}
                       onChange={(e) => setFormData({ ...formData, policyNumber: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-accent/50"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
                       placeholder="Numéro de police ou référence"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-primary-dark mb-2">Catégorie *</label>
+                  <label className="block text-sm font-semibold text-dark mb-2">Catégorie *</label>
                   <select
                     required
                     value={formData.category}
                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-accent/50"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
                   >
                     <option value="">Choisir une catégorie</option>
                     <option>Problème de service</option>
@@ -173,22 +173,22 @@ export default function ReclamationsPageClient() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-primary-dark mb-2">Description détaillée *</label>
+                  <label className="block text-sm font-semibold text-dark mb-2">Description détaillée *</label>
                   <textarea
                     required
                     rows={6}
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-accent/50 resize-none"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
                     placeholder="Décrivez votre réclamation en détail..."
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-primary-dark mb-2">
+                  <label className="block text-sm font-semibold text-dark mb-2">
                     Documents justificatifs
                   </label>
-                  <div className="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center hover:border-accent/50 transition-colors">
+                  <div className="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center hover:border-primary/50 transition-colors">
                     <input
                       type="file"
                       multiple
@@ -200,12 +200,12 @@ export default function ReclamationsPageClient() {
                     <label htmlFor="file-upload" className="cursor-pointer">
                       <div className="text-4xl mb-2">📎</div>
                       <p className="text-sm text-muted">
-                        <span className="font-semibold text-accent-dark">Cliquez pour téléverser</span> ou glissez vos fichiers ici
+                        <span className="font-semibold text-primary">Cliquez pour téléverser</span> ou glissez vos fichiers ici
                       </p>
                       <p className="text-xs text-muted mt-1">PDF, JPG, PNG, DOC (max 10 Mo par fichier)</p>
                     </label>
                     {files && files.length > 0 && (
-                      <div className="mt-4 text-sm text-primary-dark">
+                      <div className="mt-4 text-sm text-dark">
                         {Array.from(files).map((f) => (
                           <p key={f.name}>{f.name}</p>
                         ))}

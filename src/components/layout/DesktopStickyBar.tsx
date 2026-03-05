@@ -27,11 +27,11 @@ export default function DesktopStickyBar() {
           transition={{ duration: 0.3 }}
           className="fixed top-0 left-0 right-0 z-[60] hidden md:block"
         >
-          <div className="bg-primary-dark/95 backdrop-blur-lg border-b border-white/10">
+          <div className="bg-dark/95 backdrop-blur-lg border-b border-white/10">
             <div className="max-w-7xl mx-auto px-6 py-2 flex items-center justify-between">
               <div className="flex items-center gap-6">
                 <Link href="/" className="text-white font-bold text-sm tracking-tight">
-                  FINAB <span className="text-accent">la solution</span>
+                  FINAB <span className="text-primary-light">la solution</span>
                 </Link>
                 <span className="text-white/30">|</span>
                 <a
@@ -54,7 +54,7 @@ export default function DesktopStickyBar() {
                 </a>
                 <Link
                   href="/services"
-                  className="px-4 py-1.5 rounded-lg bg-accent text-primary-dark font-semibold text-xs hover:bg-accent-light transition-colors"
+                  className="px-4 py-1.5 rounded-lg bg-accent text-white font-semibold text-xs hover:bg-accent-light transition-colors"
                 >
                   Demander un service
                 </Link>

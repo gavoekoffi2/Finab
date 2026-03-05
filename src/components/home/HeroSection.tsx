@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import Button from "@/components/ui/Button";
@@ -33,9 +33,93 @@ const heroImages = [
   },
 ];
 
+// Typewriter hook
+function useTypewriter(texts: string[], typingSpeed = 60, pauseTime = 3000) {
+  const [displayText, setDisplayText] = useState("");
+  const [textIndex, setTextIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const currentText = texts[textIndex];
+    let timeout: NodeJS.Timeout;
+
+    if (!isDeleting && displayText === currentText) {
+      timeout = setTimeout(() => setIsDeleting(true), pauseTime);
+    } else if (isDeleting && displayText === "") {
+      setIsDeleting(false);
+      setTextIndex((prev) => (prev + 1) % texts.length);
+    } else {
+      const speed = isDeleting ? typingSpeed / 2 : typingSpeed;
+      timeout = setTimeout(() => {
+        setDisplayText(
+          isDeleting
+            ? currentText.substring(0, displayText.length - 1)
+            : currentText.substring(0, displayText.length + 1)
+        );
+      }, speed);
+    }
+
+    return () => clearTimeout(timeout);
+  }, [displayText, textIndex, isDeleting, texts, typingSpeed, pauseTime]);
+
+  return displayText;
+}
+
+// Floating particles
+function Particles() {
+  const particles = useMemo(() =>
+    Array.from({ length: 20 }, (_, i) => ({
+      id: i,
+      left: `${Math.random() * 100}%`,
+      top: `${Math.random() * 100}%`,
+      size: Math.random() * 4 + 2,
+      duration: Math.random() * 6 + 6,
+      delay: Math.random() * 4,
+      opacity: Math.random() * 0.3 + 0.1,
+    })),
+  []);
+
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {particles.map((p) => (
+        <div
+          key={p.id}
+          className="absolute rounded-full bg-primary-light particle"
+          style={{
+            left: p.left,
+            top: p.top,
+            width: p.size,
+            height: p.size,
+            opacity: p.opacity,
+            ["--duration" as string]: `${p.duration}s`,
+            ["--delay" as string]: `${p.delay}s`,
+          }}
+        />
+      ))}
+      {/* Geometric SVG shapes */}
+      <svg className="absolute top-1/4 right-1/4 w-32 h-32 text-primary/10 animate-float" viewBox="0 0 100 100" fill="none">
+        <polygon points="50,5 95,75 5,75" stroke="currentColor" strokeWidth="1" />
+      </svg>
+      <svg className="absolute bottom-1/3 left-1/6 w-24 h-24 text-primary-light/10 animate-float-delayed" viewBox="0 0 100 100" fill="none">
+        <rect x="10" y="10" width="80" height="80" rx="10" stroke="currentColor" strokeWidth="1" />
+      </svg>
+      <svg className="absolute top-1/3 right-1/6 w-20 h-20 text-primary/8 animate-float-slow" viewBox="0 0 100 100" fill="none">
+        <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="1" />
+      </svg>
+    </div>
+  );
+}
+
 export default function HeroSection() {
   const [current, setCurrent] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
+
+  const typewriterText = useTypewriter([
+    "Ensemble, changeons des vies",
+    "L'espoir à travers l'éducation",
+    "Bâtir un avenir meilleur",
+    "La solidarité sans frontières",
+  ]);
 
   const next = useCallback(() => {
     setCurrent((p) => (p + 1) % heroImages.length);
@@ -71,18 +155,21 @@ export default function HeroSection() {
         </motion.div>
       </AnimatePresence>
 
-      {/* Dark gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-primary-dark/90 via-primary-dark/75 to-primary-dark/50" />
-      <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/80 via-transparent to-primary-dark/30" />
+      {/* Gradient overlay: green-dark → black */}
+      <div className="absolute inset-0 bg-gradient-to-r from-dark/90 via-primary-dark/80 to-dark/60" />
+      <div className="absolute inset-0 bg-gradient-to-t from-dark/85 via-transparent to-navy/50" />
 
-      {/* Animated grain texture */}
+      {/* Noise texture */}
       <div className="absolute inset-0 noise" />
 
-      {/* Subtle grid pattern */}
+      {/* Floating particles + geometric SVGs */}
+      <Particles />
+
+      {/* Subtle grid */}
       <div
         className="absolute inset-0 opacity-[0.03]"
         style={{
-          backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+          backgroundImage: `linear-gradient(rgba(34,197,94,0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(34,197,94,0.2) 1px, transparent 1px)`,
           backgroundSize: "60px 60px",
         }}
       />
@@ -95,13 +182,13 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 10 }}
             animate={isLoaded ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.2 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold glass text-accent mb-6"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold glass text-primary-light mb-6"
           >
-            <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-primary-light animate-pulse" />
             Canada &bull; Afrique &bull; Haïti
           </motion.span>
 
-          {/* Main title - always visible */}
+          {/* Main title */}
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={isLoaded ? { opacity: 1, y: 0 } : {}}
@@ -111,23 +198,29 @@ export default function HeroSection() {
             {siteConfig.name}
           </motion.h1>
 
-          {/* Dynamic subtitle based on current slide */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={current}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.5 }}
-            >
-              <p className="text-gradient text-xl md:text-2xl lg:text-3xl font-medium mb-4">
-                {heroImages[current].headline}
-              </p>
-              <p className="text-white/60 text-base md:text-lg leading-relaxed mb-8 max-w-xl">
+          {/* Typewriter subtitle */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={isLoaded ? { opacity: 1 } : {}}
+            transition={{ delay: 0.5 }}
+          >
+            <p className="text-primary-light text-xl md:text-2xl lg:text-3xl font-medium mb-2 min-h-[2.5em]">
+              {typewriterText}
+              <span className="typewriter-cursor text-primary-light">|</span>
+            </p>
+            <AnimatePresence mode="wait">
+              <motion.p
+                key={current}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.5 }}
+                className="text-white/60 text-base md:text-lg leading-relaxed mb-8 max-w-xl"
+              >
                 {heroImages[current].sub}
-              </p>
-            </motion.div>
-          </AnimatePresence>
+              </motion.p>
+            </AnimatePresence>
+          </motion.div>
 
           {/* Tagline */}
           <motion.p
@@ -183,7 +276,7 @@ export default function HeroSection() {
             onClick={() => setCurrent(i)}
             className={`transition-all duration-500 rounded-full cursor-pointer ${
               i === current
-                ? "w-3 h-10 bg-accent"
+                ? "w-3 h-10 bg-primary-light"
                 : "w-3 h-3 bg-white/30 hover:bg-white/50"
             }`}
             aria-label={`Image ${i + 1}`}
@@ -198,7 +291,7 @@ export default function HeroSection() {
           initial={{ width: "0%" }}
           animate={{ width: "100%" }}
           transition={{ duration: 5.5, ease: "linear" }}
-          className="h-full bg-accent/70"
+          className="h-full bg-primary/70"
         />
       </div>
 
@@ -217,7 +310,7 @@ export default function HeroSection() {
           <motion.div
             animate={{ height: [6, 14, 6], opacity: [0.5, 1, 0.5] }}
             transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-            className="w-1 bg-accent/70 rounded-full"
+            className="w-1 bg-primary-light/70 rounded-full"
           />
         </motion.div>
       </motion.div>

@@ -7,7 +7,7 @@ import { newsArticles } from "@/data/content";
 export default function ActualitesPageClient() {
   return (
     <>
-      <section className="bg-gradient-to-br from-primary-dark via-primary to-primary-light py-20">
+      <section className="bg-gradient-to-br from-dark via-primary-dark to-primary py-20">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -33,12 +33,12 @@ export default function ActualitesPageClient() {
             {newsArticles.map((article, i) => (
               <AnimatedCard key={article.id} delay={i * 0.1}>
                 <div id={article.id} className="md:flex">
-                  <div className="md:w-1/3 h-48 md:h-auto bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center flex-shrink-0">
+                  <div className="md:w-1/3 h-48 md:h-auto bg-gradient-to-br from-primary/20 to-primary-light/20 flex items-center justify-center flex-shrink-0">
                     <span className="text-6xl opacity-30">📰</span>
                   </div>
                   <div className="p-6 md:p-8 flex-1">
                     <div className="flex items-center gap-2 mb-3">
-                      <span className="px-3 py-1 rounded-full text-xs font-semibold bg-accent/10 text-accent-dark">
+                      <span className="px-3 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary">
                         {article.category}
                       </span>
                       <span className="text-xs text-muted">
@@ -49,7 +49,7 @@ export default function ActualitesPageClient() {
                         })}
                       </span>
                     </div>
-                    <h2 className="text-xl font-bold text-primary-dark mb-3">{article.title}</h2>
+                    <h2 className="text-xl font-bold text-dark mb-3">{article.title}</h2>
                     <p className="text-muted leading-relaxed">{article.excerpt}</p>
                   </div>
                 </div>

@@ -1,15 +1,17 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-primary: #1B3A5C;
-  --color-primary-light: #2A5580;
-  --color-primary-dark: #0F2440;
-  --color-accent: #D4A843;
-  --color-accent-light: #E8C46A;
-  --color-accent-dark: #B8922E;
-  --color-surface: #F8F6F3;
-  --color-surface-alt: #EFEAE4;
-  --color-dark: #1A1A1A;
+  --color-primary: #16a34a;
+  --color-primary-light: #22c55e;
+  --color-primary-dark: #15803d;
+  --color-accent: #dc2626;
+  --color-accent-light: #ef4444;
+  --color-accent-dark: #b91c1c;
+  --color-surface: #f8faf8;
+  --color-surface-alt: #f1f5f1;
+  --color-dark: #0a0a0a;
+  --color-dark-alt: #111827;
+  --color-navy: #0f172a;
   --color-muted: #6B7280;
   --font-heading: 'Inter', system-ui, sans-serif;
   --font-body: 'Inter', system-ui, sans-serif;
@@ -29,7 +31,7 @@ body {
 }
 
 ::selection {
-  background: var(--color-accent);
+  background: var(--color-primary);
   color: white;
 }
 
@@ -110,7 +112,7 @@ main {
   position: absolute;
   inset: -4px;
   border-radius: 50%;
-  border: 2px solid var(--color-accent);
+  border: 2px solid var(--color-primary);
   animation: pulseRing 2s ease-out infinite;
 }
 
@@ -128,7 +130,7 @@ main {
 
 /* Text gradient animation */
 .text-gradient {
-  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-light), var(--color-accent));
+  background: linear-gradient(135deg, var(--color-primary-light), #4ade80, var(--color-primary-light));
   background-size: 200% 200%;
   animation: gradientShift 4s ease infinite;
   -webkit-background-clip: text;
@@ -155,7 +157,7 @@ main {
 
 /* Focus visible styles for accessibility */
 :focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -163,4 +165,36 @@ main {
 /* Smooth input transitions */
 input, textarea, select {
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Typewriter cursor blink */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.typewriter-cursor {
+  animation: blink 1s step-end infinite;
+}
+
+/* Floating particles */
+@keyframes particleFloat {
+  0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
+  25% { transform: translateY(-30px) translateX(10px); opacity: 0.7; }
+  50% { transform: translateY(-60px) translateX(-10px); opacity: 0.5; }
+  75% { transform: translateY(-30px) translateX(15px); opacity: 0.7; }
+}
+
+.particle {
+  animation: particleFloat var(--duration, 8s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+/* Card green glow on hover */
+.card-glow {
+  transition: all 0.3s ease;
+}
+
+.card-glow:hover {
+  box-shadow: 0 0 30px rgba(22, 163, 74, 0.15), 0 25px 50px -12px rgba(0, 0, 0, 0.1);
 }

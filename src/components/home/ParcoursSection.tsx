@@ -120,11 +120,11 @@ export default function ParcoursSection() {
   };
 
   return (
-    <section className="py-24 bg-primary-dark relative overflow-hidden">
+    <section className="py-24 bg-navy relative overflow-hidden">
       {/* Background effects */}
       <div className="absolute inset-0">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-accent/5 rounded-full blur-[120px]" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-primary-light/10 rounded-full blur-[120px]" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/8 rounded-full blur-[120px]" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-primary-light/5 rounded-full blur-[120px]" />
       </div>
 
       <div className="max-w-7xl mx-auto px-6 relative">
@@ -175,7 +175,7 @@ export default function ParcoursSection() {
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.4 }}
                 >
-                  <span className="text-accent text-sm font-semibold tracking-widest uppercase">
+                  <span className="text-primary-light text-sm font-semibold tracking-widest uppercase">
                     {String(current + 1).padStart(2, "0")} / {String(parcoursImages.length).padStart(2, "0")}
                   </span>
                   <h3 className="text-2xl md:text-3xl font-bold text-white mt-2">
@@ -211,7 +211,7 @@ export default function ParcoursSection() {
                 initial={{ width: "0%" }}
                 animate={{ width: "100%" }}
                 transition={{ duration: isHovered ? 99999 : 4, ease: "linear" }}
-                className="h-full bg-accent"
+                className="h-full bg-primary-light"
               />
             </div>
           </div>
@@ -235,7 +235,7 @@ export default function ParcoursSection() {
                 onClick={() => setCurrent(slide.index)}
                 className={`relative flex-shrink-0 rounded-xl overflow-hidden cursor-pointer transition-all duration-500 ${
                   slide.index === current
-                    ? "w-[200px] h-[120px] md:w-[260px] md:h-[150px] ring-2 ring-accent ring-offset-2 ring-offset-primary-dark"
+                    ? "w-[200px] h-[120px] md:w-[260px] md:h-[150px] ring-2 ring-primary-light ring-offset-2 ring-offset-navy"
                     : "w-[140px] h-[90px] md:w-[180px] md:h-[110px] opacity-50 hover:opacity-80"
                 }`}
                 whileHover={{ scale: 1.05 }}
@@ -250,7 +250,7 @@ export default function ParcoursSection() {
                   quality={60}
                 />
                 {slide.index === current && (
-                  <div className="absolute inset-0 bg-accent/10 border-b-2 border-accent" />
+                  <div className="absolute inset-0 bg-primary-light/10 border-b-2 border-accent" />
                 )}
                 {slide.index !== current && (
                   <div className="absolute inset-0 bg-black/30" />
@@ -267,7 +267,7 @@ export default function ParcoursSection() {
               key={i}
               onClick={() => setCurrent(i)}
               className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
-                i === current ? "w-6 bg-accent" : "w-1.5 bg-white/20 hover:bg-white/40"
+                i === current ? "w-6 bg-primary-light" : "w-1.5 bg-white/20 hover:bg-white/40"
               }`}
               aria-label={`Image ${i + 1}`}
             />

@@ -15,10 +15,10 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 
 export default function WhyUsSection() {
   return (
-    <section className="py-24 bg-primary-dark relative overflow-hidden">
+    <section className="py-24 bg-navy relative overflow-hidden">
       <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-0 w-64 h-64 bg-accent/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-0 w-64 h-64 bg-accent/5 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 left-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl" />
       </div>
 
       <div className="max-w-7xl mx-auto px-6 relative">
@@ -42,7 +42,7 @@ export default function WhyUsSection() {
                 whileHover={{ y: -5 }}
                 className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 text-center"
               >
-                <div className="w-16 h-16 rounded-2xl bg-accent/20 flex items-center justify-center text-accent mx-auto mb-6">
+                <div className="w-16 h-16 rounded-2xl bg-primary/20 flex items-center justify-center text-primary-light mx-auto mb-6">
                   <Icon className="w-8 h-8" />
                 </div>
                 <h3 className="text-lg font-bold text-white mb-3">{item.title}</h3>
@@ -57,7 +57,7 @@ export default function WhyUsSection() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center bg-gradient-to-r from-accent/20 to-accent/10 rounded-3xl p-12 border border-accent/20"
+          className="text-center bg-gradient-to-r from-accent/20 to-accent-dark/20 rounded-3xl p-12 border border-accent/20"
         >
           <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
             Prêt à commencer ?

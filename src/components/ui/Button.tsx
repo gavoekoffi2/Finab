@@ -30,10 +30,10 @@ export default function Button({
     "inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-300 cursor-pointer";
 
   const variants = {
-    primary: "bg-primary text-white hover:bg-primary-light shadow-lg hover:shadow-xl",
-    secondary: "bg-accent text-white hover:bg-accent-light shadow-lg hover:shadow-xl",
+    primary: "bg-primary text-white hover:bg-primary-light shadow-lg hover:shadow-xl hover:shadow-primary/20",
+    secondary: "bg-accent text-white hover:bg-accent-light shadow-lg hover:shadow-xl hover:shadow-accent/20",
     outline: "border-2 border-primary text-primary hover:bg-primary hover:text-white",
-    accent: "bg-accent text-primary-dark hover:bg-accent-light shadow-lg hover:shadow-xl",
+    accent: "bg-accent text-white hover:bg-accent-light shadow-lg hover:shadow-xl hover:shadow-accent/30",
     ghost: "text-primary hover:bg-primary/10",
   };
 

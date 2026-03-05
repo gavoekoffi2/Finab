@@ -26,12 +26,12 @@ export default function SectionHeading({
       className={`mb-16 ${center ? "text-center" : ""}`}
     >
       {badge && (
-        <span className="inline-block px-4 py-1.5 rounded-full text-sm font-semibold tracking-wide uppercase bg-accent/15 text-accent-dark mb-4">
+        <span className="inline-block px-4 py-1.5 rounded-full text-sm font-semibold tracking-wide uppercase bg-primary/10 text-primary mb-4">
           {badge}
         </span>
       )}
       <h2
-        className={`text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 ${light ? "text-white" : "text-primary-dark"}`}
+        className={`text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 ${light ? "text-white" : "text-dark"}`}
       >
         {title}
       </h2>
@@ -40,7 +40,7 @@ export default function SectionHeading({
           {subtitle}
         </p>
       )}
-      <div className={`mt-6 h-1 w-20 rounded-full bg-accent ${center ? "mx-auto" : ""}`} />
+      <div className={`mt-6 h-1 w-20 rounded-full bg-primary ${center ? "mx-auto" : ""}`} />
     </motion.div>
   );
 }

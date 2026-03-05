@@ -7,12 +7,12 @@ import { PhoneIcon, MailIcon, MapPinIcon, WhatsAppIcon } from "@/components/ui/I
 
 export default function Footer() {
   return (
-    <footer className="bg-primary-dark text-white relative overflow-hidden">
+    <footer className="bg-dark text-white relative overflow-hidden">
       {/* Decorative top wave */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
 
       {/* Background accent */}
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-accent/5 rounded-full blur-[120px]" />
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-[120px]" />
 
       {/* CTA Banner */}
       <div className="border-b border-white/5">
@@ -21,7 +21,7 @@ export default function Footer() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="flex flex-col md:flex-row items-center justify-between gap-6 bg-gradient-to-r from-accent/10 to-accent/5 rounded-2xl p-8 border border-accent/10"
+            className="flex flex-col md:flex-row items-center justify-between gap-6 bg-gradient-to-r from-accent/15 to-accent-dark/10 rounded-2xl p-8 border border-accent/15"
           >
             <div>
               <h3 className="text-xl md:text-2xl font-bold mb-1">Prêt à transformer votre avenir financier ?</h3>
@@ -30,7 +30,7 @@ export default function Footer() {
             <div className="flex gap-3 flex-shrink-0">
               <Link
                 href="/services"
-                className="px-6 py-3 rounded-xl bg-accent text-primary-dark font-semibold text-sm hover:bg-accent-light transition-colors"
+                className="px-6 py-3 rounded-xl bg-accent text-white font-semibold text-sm hover:bg-accent-light transition-colors"
               >
                 Demander un service
               </Link>
@@ -57,7 +57,7 @@ export default function Footer() {
             viewport={{ once: true }}
           >
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-white/20 to-accent/50 flex items-center justify-center text-white font-bold text-lg">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary-light flex items-center justify-center text-white font-bold text-lg">
                 F
               </div>
               <div>
@@ -75,7 +75,7 @@ export default function Footer() {
                   href={url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:bg-accent/20 hover:border-accent/30 transition-all text-sm capitalize text-white/60 hover:text-white"
+                  className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:bg-primary/20 hover:border-primary/30 transition-all text-sm capitalize text-white/60 hover:text-white"
                   aria-label={platform}
                 >
                   {platform[0].toUpperCase()}
@@ -91,7 +91,7 @@ export default function Footer() {
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
           >
-            <h3 className="text-sm font-semibold uppercase tracking-widest text-accent mb-6">Navigation</h3>
+            <h3 className="text-sm font-semibold uppercase tracking-widest text-primary-light mb-6">Navigation</h3>
             <ul className="space-y-3">
               {navigation.map((item) => (
                 <li key={item.href}>
@@ -123,7 +123,7 @@ export default function Footer() {
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
           >
-            <h3 className="text-sm font-semibold uppercase tracking-widest text-accent mb-6">Nos Services</h3>
+            <h3 className="text-sm font-semibold uppercase tracking-widest text-primary-light mb-6">Nos Services</h3>
             <ul className="space-y-3 text-sm text-white/50">
               <li className="hover:text-white transition-colors"><Link href="/produits#education-financiere">Éducation financière</Link></li>
               <li className="hover:text-white transition-colors"><Link href="/produits#declarations-impots">Déclarations d&apos;impôts</Link></li>
@@ -141,22 +141,22 @@ export default function Footer() {
             viewport={{ once: true }}
             transition={{ delay: 0.3 }}
           >
-            <h3 className="text-sm font-semibold uppercase tracking-widest text-accent mb-6">Contact</h3>
+            <h3 className="text-sm font-semibold uppercase tracking-widest text-primary-light mb-6">Contact</h3>
             <ul className="space-y-4">
               <li>
                 <a href={`tel:${siteConfig.phone}`} className="flex items-center gap-3 text-white/50 hover:text-white transition-colors text-sm group">
-                  <PhoneIcon className="w-5 h-5 text-accent/70 group-hover:text-accent flex-shrink-0" />
+                  <PhoneIcon className="w-5 h-5 text-primary/70 group-hover:text-primary-light flex-shrink-0" />
                   {siteConfig.phone}
                 </a>
               </li>
               <li>
                 <a href={`mailto:${siteConfig.email}`} className="flex items-center gap-3 text-white/50 hover:text-white transition-colors text-sm group">
-                  <MailIcon className="w-5 h-5 text-accent/70 group-hover:text-accent flex-shrink-0" />
+                  <MailIcon className="w-5 h-5 text-primary/70 group-hover:text-primary-light flex-shrink-0" />
                   {siteConfig.email}
                 </a>
               </li>
               <li className="flex items-center gap-3 text-white/50 text-sm">
-                <MapPinIcon className="w-5 h-5 text-accent/70 flex-shrink-0" />
+                <MapPinIcon className="w-5 h-5 text-primary/70 flex-shrink-0" />
                 {siteConfig.address}
               </li>
             </ul>
@@ -169,7 +169,7 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-white/30">
           <p>&copy; {new Date().getFullYear()} FINAB la solution. Tous droits réservés.</p>
           <p>
-            Fondée par <span className="text-accent/60">{siteConfig.ceo}</span>
+            Fondée par <span className="text-primary-light/60">{siteConfig.ceo}</span>
           </p>
         </div>
       </div>

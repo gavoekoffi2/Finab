@@ -117,7 +117,7 @@ export default function ServicesPageClient() {
   return (
     <>
       {/* Header */}
-      <section className="bg-gradient-to-br from-primary-dark via-primary to-primary-light py-20">
+      <section className="bg-gradient-to-br from-dark via-primary-dark to-primary py-20">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -199,12 +199,12 @@ export default function ServicesPageClient() {
                   {currentProducts.map((product, i) => (
                     <AnimatedCard key={product.id} delay={i * 0.08}>
                       <div className="p-8">
-                        <h3 className="text-xl font-bold text-primary-dark mb-3">{product.title}</h3>
+                        <h3 className="text-xl font-bold text-dark mb-3">{product.title}</h3>
                         <p className="text-muted leading-relaxed mb-4">{product.description}</p>
                         <ul className="space-y-2 mb-6">
                           {product.features.map((f) => (
                             <li key={f} className="flex items-center gap-2 text-sm text-muted">
-                              <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+                              <span className="w-1.5 h-1.5 rounded-full bg-primary" />
                               {f}
                             </li>
                           ))}
@@ -243,7 +243,7 @@ export default function ServicesPageClient() {
                 {requestSubmitted ? (
                   <div className="bg-green-50 border border-green-200 rounded-2xl p-12 text-center">
                     <div className="text-5xl mb-4">✅</div>
-                    <h3 className="text-2xl font-bold text-primary-dark mb-2">Demande envoyée !</h3>
+                    <h3 className="text-2xl font-bold text-dark mb-2">Demande envoyée !</h3>
                     <p className="text-muted mb-2">Votre ticket de service a été créé avec succès.</p>
                     <p className="text-muted mb-6">Suivez son évolution dans l&apos;onglet &quot;Suivi&quot;.</p>
                     <div className="flex justify-center gap-4">
@@ -270,41 +270,41 @@ export default function ServicesPageClient() {
                     <form onSubmit={handleRequestSubmit} className="bg-white rounded-2xl p-8 md:p-12 shadow-sm space-y-6">
                       <div className="grid md:grid-cols-2 gap-6">
                         <div>
-                          <label className="block text-sm font-semibold text-primary-dark mb-2">Nom complet *</label>
+                          <label className="block text-sm font-semibold text-dark mb-2">Nom complet *</label>
                           <input
                             type="text"
                             required
                             value={requestForm.name}
                             onChange={(e) => setRequestForm({ ...requestForm, name: e.target.value })}
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-accent/50"
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-semibold text-primary-dark mb-2">Email *</label>
+                          <label className="block text-sm font-semibold text-dark mb-2">Email *</label>
                           <input
                             type="email"
                             required
                             value={requestForm.email}
                             onChange={(e) => setRequestForm({ ...requestForm, email: e.target.value })}
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-accent/50"
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-semibold text-primary-dark mb-2">Téléphone</label>
+                          <label className="block text-sm font-semibold text-dark mb-2">Téléphone</label>
                           <input
                             type="tel"
                             value={requestForm.phone}
                             onChange={(e) => setRequestForm({ ...requestForm, phone: e.target.value })}
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-accent/50"
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-semibold text-primary-dark mb-2">Service souhaité *</label>
+                          <label className="block text-sm font-semibold text-dark mb-2">Service souhaité *</label>
                           <select
                             required
                             value={requestForm.service}
                             onChange={(e) => setRequestForm({ ...requestForm, service: e.target.value })}
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-accent/50"
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
                           >
                             <option value="">Choisir un service</option>
                             <optgroup label="Canada">
@@ -321,23 +321,23 @@ export default function ServicesPageClient() {
                         </div>
                       </div>
                       <div>
-                        <label className="block text-sm font-semibold text-primary-dark mb-2">Description de votre besoin *</label>
+                        <label className="block text-sm font-semibold text-dark mb-2">Description de votre besoin *</label>
                         <textarea
                           required
                           rows={5}
                           value={requestForm.description}
                           onChange={(e) => setRequestForm({ ...requestForm, description: e.target.value })}
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-accent/50 resize-none"
+                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
                           placeholder="Décrivez votre besoin en détail..."
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-semibold text-primary-dark mb-2">Pièces jointes</label>
+                        <label className="block text-sm font-semibold text-dark mb-2">Pièces jointes</label>
                         <input
                           type="file"
                           multiple
                           onChange={(e) => setRequestFiles(e.target.files)}
-                          className="w-full text-sm text-muted file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-accent/10 file:text-accent-dark hover:file:bg-accent/20"
+                          className="w-full text-sm text-muted file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
                         />
                       </div>
                       <div className="flex flex-wrap gap-4">
@@ -393,7 +393,7 @@ export default function ServicesPageClient() {
                                 {statusLabels[ticket.status].label}
                               </span>
                             </div>
-                            <h3 className="text-lg font-bold text-primary-dark">{ticket.service}</h3>
+                            <h3 className="text-lg font-bold text-dark">{ticket.service}</h3>
                           </div>
                           <span className="text-sm text-muted">
                             {new Date(ticket.date).toLocaleDateString("fr-FR")}
@@ -457,12 +457,12 @@ export default function ServicesPageClient() {
                       value={newMessage}
                       onChange={(e) => setNewMessage(e.target.value)}
                       placeholder="Votre message..."
-                      className="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-accent/50 text-sm"
+                      className="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
                     />
                     <button
                       type="submit"
                       disabled={!newMessage.trim()}
-                      className="w-12 h-12 rounded-xl bg-accent flex items-center justify-center text-white hover:bg-accent-light transition-colors disabled:opacity-40 cursor-pointer"
+                      className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-white hover:bg-primary-light transition-colors disabled:opacity-40 cursor-pointer"
                     >
                       <SendIcon className="w-5 h-5" />
                     </button>
