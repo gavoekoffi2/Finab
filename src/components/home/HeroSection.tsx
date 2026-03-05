@@ -1,35 +1,41 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
 import Button from "@/components/ui/Button";
 import { siteConfig } from "@/data/content";
 
 const heroImages = [
   {
-    src: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=1920&h=1080&fit=crop",
-    alt: "Homme africain professionnel - FINAB solutions financières",
+    src: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1920&h=1080&fit=crop",
+    alt: "Enfants africains - FINAB solidarité et espoir",
     headline: "Ensemble, changeons des vies",
     sub: "FINAB accompagne les familles vers la résilience financière",
   },
   {
-    src: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=1920&h=1080&fit=crop",
-    alt: "Femme africaine business - Accompagnement FINAB",
+    src: "https://images.unsplash.com/photo-1509099836639-18ba1795216d?w=1920&h=1080&fit=crop",
+    alt: "Enfants d'Afrique - L'espoir d'un avenir meilleur",
     headline: "L'espoir à travers l'éducation",
     sub: "L'éducation financière comme levier de développement",
   },
   {
-    src: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=1920&h=1080&fit=crop",
-    alt: "Femme africaine souriante - Communauté FINAB",
+    src: "https://images.unsplash.com/photo-1542810634-71277d95dcbb?w=1920&h=1080&fit=crop",
+    alt: "Enfant africain souriant - Bâtir l'avenir avec FINAB",
     headline: "Bâtir un avenir meilleur",
     sub: "Protection et accompagnement pour chaque famille",
   },
   {
-    src: "https://images.unsplash.com/photo-1531891570158-e71b35a485bc?w=1920&h=1080&fit=crop",
-    alt: "Professionnel africain - Solidarité sans frontières",
+    src: "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=1920&h=1080&fit=crop",
+    alt: "Communauté unie - Solidarité FINAB sans frontières",
     headline: "La solidarité sans frontières",
     sub: "Du Canada à l'Afrique, de l'Afrique à Haïti",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1504432842672-1a79f78e4084?w=1920&h=1080&fit=crop",
+    alt: "Village africain - Maisons et communautés unies",
+    headline: "Des communautés résilientes",
+    sub: "Construire ensemble des ponts entre les continents",
   },
 ];
 
@@ -65,17 +71,17 @@ function useTypewriter(texts: string[], typingSpeed = 60, pauseTime = 3000) {
   return displayText;
 }
 
-// Floating particles
+// Floating particles with 3D depth
 function Particles() {
   const particles = useMemo(() =>
-    Array.from({ length: 20 }, (_, i) => ({
+    Array.from({ length: 25 }, (_, i) => ({
       id: i,
       left: `${Math.random() * 100}%`,
       top: `${Math.random() * 100}%`,
       size: Math.random() * 4 + 2,
       duration: Math.random() * 6 + 6,
       delay: Math.random() * 4,
-      opacity: Math.random() * 0.3 + 0.1,
+      opacity: Math.random() * 0.4 + 0.1,
     })),
   []);
 
@@ -96,7 +102,6 @@ function Particles() {
           }}
         />
       ))}
-      {/* Geometric SVG shapes */}
       <svg className="absolute top-1/4 right-1/4 w-32 h-32 text-primary/10 animate-float" viewBox="0 0 100 100" fill="none">
         <polygon points="50,5 95,75 5,75" stroke="currentColor" strokeWidth="1" />
       </svg>
@@ -113,12 +118,22 @@ function Particles() {
 export default function HeroSection() {
   const [current, setCurrent] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
+  const heroRef = useRef<HTMLElement>(null);
+
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const imageX = useTransform(mouseX, [-0.5, 0.5], [15, -15]);
+  const imageY = useTransform(mouseY, [-0.5, 0.5], [10, -10]);
+  const contentX = useTransform(mouseX, [-0.5, 0.5], [-8, 8]);
+  const contentY = useTransform(mouseY, [-0.5, 0.5], [-5, 5]);
 
   const typewriterText = useTypewriter([
     "Ensemble, changeons des vies",
     "L'espoir à travers l'éducation",
     "Bâtir un avenir meilleur",
     "La solidarité sans frontières",
+    "Des communautés résilientes",
   ]);
 
   const next = useCallback(() => {
@@ -131,17 +146,31 @@ export default function HeroSection() {
     return () => clearInterval(interval);
   }, [next]);
 
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!heroRef.current) return;
+    const rect = heroRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    mouseX.set(x);
+    mouseY.set(y);
+  }, [mouseX, mouseY]);
+
   return (
-    <section className="relative min-h-[100vh] flex items-center overflow-hidden">
-      {/* Fullscreen image background slider */}
+    <section
+      ref={heroRef}
+      onMouseMove={handleMouseMove}
+      className="relative h-[100vh] flex items-center overflow-hidden"
+    >
+      {/* Fullscreen image background slider with parallax */}
       <AnimatePresence mode="sync">
         <motion.div
           key={current}
-          initial={{ scale: 1.1, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
+          initial={{ scale: 1.15, opacity: 0 }}
+          animate={{ scale: 1.05, opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
-          className="absolute inset-0"
+          transition={{ duration: 1.4, ease: "easeOut" }}
+          className="absolute inset-[-20px]"
+          style={{ x: imageX, y: imageY }}
         >
           <Image
             src={heroImages[current].src}
@@ -150,14 +179,14 @@ export default function HeroSection() {
             className="object-cover"
             priority={current === 0}
             sizes="100vw"
-            quality={85}
+            quality={90}
           />
         </motion.div>
       </AnimatePresence>
 
-      {/* Gradient overlay: green-dark → black */}
-      <div className="absolute inset-0 bg-gradient-to-r from-dark/90 via-primary-dark/80 to-dark/60" />
-      <div className="absolute inset-0 bg-gradient-to-t from-dark/85 via-transparent to-navy/50" />
+      {/* Light gradient overlay - transparent enough to see images clearly */}
+      <div className="absolute inset-0 bg-gradient-to-r from-dark/60 via-dark/30 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-dark/70 via-transparent to-dark/20" />
 
       {/* Noise texture */}
       <div className="absolute inset-0 noise" />
@@ -167,22 +196,25 @@ export default function HeroSection() {
 
       {/* Subtle grid */}
       <div
-        className="absolute inset-0 opacity-[0.03]"
+        className="absolute inset-0 opacity-[0.02]"
         style={{
           backgroundImage: `linear-gradient(rgba(34,197,94,0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(34,197,94,0.2) 1px, transparent 1px)`,
           backgroundSize: "60px 60px",
         }}
       />
 
-      {/* Content */}
-      <div className="relative max-w-7xl mx-auto px-6 py-24 w-full">
+      {/* Content with parallax */}
+      <motion.div
+        className="relative max-w-7xl mx-auto px-6 py-24 w-full"
+        style={{ x: contentX, y: contentY }}
+      >
         <div className="max-w-3xl">
           {/* Live badge */}
           <motion.span
             initial={{ opacity: 0, y: 10 }}
             animate={isLoaded ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.2 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold glass text-primary-light mb-6"
+            className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-semibold glass text-white mb-6 border border-white/20"
           >
             <span className="w-2 h-2 rounded-full bg-primary-light animate-pulse" />
             Canada &bull; Afrique &bull; Haïti
@@ -193,7 +225,7 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 30 }}
             animate={isLoaded ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.3, duration: 0.8 }}
-            className="text-4xl md:text-5xl lg:text-7xl font-bold text-white leading-[1.05] mb-4"
+            className="text-4xl md:text-5xl lg:text-7xl font-bold text-white leading-[1.05] mb-4 drop-shadow-2xl"
           >
             {siteConfig.name}
           </motion.h1>
@@ -204,7 +236,7 @@ export default function HeroSection() {
             animate={isLoaded ? { opacity: 1 } : {}}
             transition={{ delay: 0.5 }}
           >
-            <p className="text-primary-light text-xl md:text-2xl lg:text-3xl font-medium mb-2 min-h-[2.5em]">
+            <p className="text-primary-light text-xl md:text-2xl lg:text-3xl font-medium mb-2 min-h-[2.5em] drop-shadow-lg">
               {typewriterText}
               <span className="typewriter-cursor text-primary-light">|</span>
             </p>
@@ -215,7 +247,7 @@ export default function HeroSection() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.5 }}
-                className="text-white/60 text-base md:text-lg leading-relaxed mb-8 max-w-xl"
+                className="text-white/80 text-base md:text-lg leading-relaxed mb-8 max-w-xl drop-shadow-md"
               >
                 {heroImages[current].sub}
               </motion.p>
@@ -227,7 +259,7 @@ export default function HeroSection() {
             initial={{ opacity: 0 }}
             animate={isLoaded ? { opacity: 1 } : {}}
             transition={{ delay: 0.6 }}
-            className="text-white/50 text-sm mb-8 italic"
+            className="text-white/70 text-sm mb-8 italic drop-shadow-md"
           >
             &ldquo;{siteConfig.tagline}&rdquo;
           </motion.p>
@@ -242,7 +274,7 @@ export default function HeroSection() {
             <Button href="/contact" variant="accent" size="lg">
               Nous contacter
             </Button>
-            <Button href="/services" variant="outline" size="lg" className="border-white/20 text-white hover:bg-white/10 hover:text-white">
+            <Button href="/services" variant="outline" size="lg" className="border-white/30 text-white hover:bg-white/15 hover:text-white backdrop-blur-sm">
               Découvrir nos services
             </Button>
           </motion.div>
@@ -252,7 +284,7 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={isLoaded ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.9 }}
-            className="flex gap-8 pt-8 border-t border-white/10"
+            className="flex gap-8 pt-8 border-t border-white/20"
           >
             {[
               { value: "5000+", label: "Clients" },
@@ -260,38 +292,58 @@ export default function HeroSection() {
               { value: "98%", label: "Satisfaction" },
             ].map((stat) => (
               <div key={stat.label}>
-                <div className="text-2xl md:text-3xl font-bold text-gradient">{stat.value}</div>
-                <div className="text-white/40 text-sm mt-0.5">{stat.label}</div>
+                <div className="text-2xl md:text-3xl font-bold text-gradient drop-shadow-lg">{stat.value}</div>
+                <div className="text-white/60 text-sm mt-0.5">{stat.label}</div>
               </div>
             ))}
           </motion.div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Image indicators (right side) */}
       <div className="absolute right-6 md:right-12 top-1/2 -translate-y-1/2 flex flex-col gap-3 z-10">
-        {heroImages.map((_, i) => (
+        {heroImages.map((img, i) => (
           <button
             key={i}
             onClick={() => setCurrent(i)}
-            className={`transition-all duration-500 rounded-full cursor-pointer ${
+            className={`transition-all duration-500 rounded-full cursor-pointer group relative ${
               i === current
-                ? "w-3 h-10 bg-primary-light"
-                : "w-3 h-3 bg-white/30 hover:bg-white/50"
+                ? "w-3 h-12 bg-primary-light shadow-lg shadow-primary/30"
+                : "w-3 h-3 bg-white/40 hover:bg-white/60"
             }`}
-            aria-label={`Image ${i + 1}`}
-          />
+            aria-label={img.alt}
+          >
+            {i === current && (
+              <span className="absolute -left-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full border-2 border-primary-light/30 animate-pulse" />
+            )}
+          </button>
         ))}
       </div>
 
+      {/* Current slide caption overlay - bottom right */}
+      <div className="absolute bottom-20 right-6 md:right-12 z-10 hidden md:block">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={current}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            className="glass rounded-2xl px-6 py-4 max-w-xs border border-white/10"
+          >
+            <p className="text-white/90 text-sm font-medium">{heroImages[current].headline}</p>
+            <p className="text-white/50 text-xs mt-1">{heroImages[current].alt}</p>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
       {/* Progress bar at bottom */}
-      <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/5">
+      <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10">
         <motion.div
           key={current}
           initial={{ width: "0%" }}
           animate={{ width: "100%" }}
           transition={{ duration: 5.5, ease: "linear" }}
-          className="h-full bg-primary/70"
+          className="h-full bg-gradient-to-r from-primary to-primary-light"
         />
       </div>
 
@@ -305,7 +357,7 @@ export default function HeroSection() {
         <motion.div
           animate={{ y: [0, 8, 0] }}
           transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-          className="w-6 h-10 rounded-full border-2 border-white/20 flex justify-center pt-2"
+          className="w-6 h-10 rounded-full border-2 border-white/30 flex justify-center pt-2"
         >
           <motion.div
             animate={{ height: [6, 14, 6], opacity: [0.5, 1, 0.5] }}

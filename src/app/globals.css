@@ -198,3 +198,103 @@ input, textarea, select {
 .card-glow:hover {
   box-shadow: 0 0 30px rgba(22, 163, 74, 0.15), 0 25px 50px -12px rgba(0, 0, 0, 0.1);
 }
+
+/* 3D Tilt effect on scroll */
+@keyframes tiltIn {
+  from {
+    opacity: 0;
+    transform: perspective(800px) rotateY(8deg) translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: perspective(800px) rotateY(0deg) translateX(0);
+  }
+}
+
+.animate-tilt-in {
+  animation: tiltIn 0.8s ease-out forwards;
+}
+
+/* Reveal from bottom with 3D perspective */
+@keyframes reveal3D {
+  from {
+    opacity: 0;
+    transform: perspective(600px) rotateX(10deg) translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: perspective(600px) rotateX(0deg) translateY(0);
+  }
+}
+
+.animate-reveal-3d {
+  animation: reveal3D 0.7s ease-out forwards;
+}
+
+/* Scale up from center */
+@keyframes scaleReveal {
+  from {
+    opacity: 0;
+    transform: scale(0.85) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-scale-reveal {
+  animation: scaleReveal 0.6s ease-out forwards;
+}
+
+/* Image hover zoom with 3D tilt */
+.image-3d-hover {
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+  transform-style: preserve-3d;
+}
+
+.image-3d-hover:hover {
+  transform: perspective(800px) rotateY(-3deg) rotateX(2deg) scale(1.02);
+  box-shadow: 15px 15px 30px rgba(0, 0, 0, 0.15), -5px -5px 15px rgba(22, 163, 74, 0.1);
+}
+
+/* Slide in from sides */
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-left {
+  animation: slideInLeft 0.6s ease-out forwards;
+}
+
+.animate-slide-right {
+  animation: slideInRight 0.6s ease-out forwards;
+}
+
+/* Glow border animation */
+@keyframes glowBorder {
+  0%, 100% { box-shadow: 0 0 5px rgba(22, 163, 74, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(22, 163, 74, 0.6), 0 0 40px rgba(22, 163, 74, 0.2); }
+}
+
+.animate-glow-border {
+  animation: glowBorder 3s ease-in-out infinite;
+}

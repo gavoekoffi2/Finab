@@ -8,7 +8,7 @@ export const siteConfig = {
   whatsapp: "https://wa.me/14383954332",
   address: "Montréal, QC, Canada",
   recruitmentUrl: "https://finabrecrutement.com",
-  ceo: "Koffi Abraham AKPOBI",
+  ceo: "Abraham Koffi AKPOBI",
   social: {
     facebook: "https://www.facebook.com/finablasolution",
     linkedin: "https://www.linkedin.com/company/finablasolution",
@@ -267,7 +267,7 @@ export const chatbotFAQ = [
   {
     question: "Qui est le fondateur de FINAB ?",
     answer:
-      "FINAB a été fondé par Koffi Abraham AKPOBI, un visionnaire engagé pour la résurrection financière des communautés africaines et caribéennes.",
+      "FINAB a été fondé par Abraham Koffi AKPOBI, un visionnaire engagé pour la résurrection financière des communautés africaines et caribéennes.",
   },
   {
     question: "Comment soumettre une réclamation ?",
@@ -337,5 +337,5 @@ export const aboutContent = {
     },
   ],
   history:
-    "Fondée par Koffi Abraham AKPOBI, FINAB la solution est née de la volonté de créer un pont entre le Canada et les communautés africaines et caribéennes. Face aux défis financiers rencontrés par les diasporas, FINAB propose des solutions adaptées qui tiennent compte des réalités de chaque continent. Depuis sa création, l'entreprise n'a cessé de croître, ajoutant constamment de nouveaux services pour répondre aux besoins de ses clients.",
+    "Fondée par Abraham Koffi AKPOBI, FINAB la solution est née de la volonté de créer un pont entre le Canada et les communautés africaines et caribéennes. Face aux défis financiers rencontrés par les diasporas, FINAB propose des solutions adaptées qui tiennent compte des réalités de chaque continent. Depuis sa création, l'entreprise n'a cessé de croître, ajoutant constamment de nouveaux services pour répondre aux besoins de ses clients.",
 };

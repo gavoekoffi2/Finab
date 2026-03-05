@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { stats } from "@/data/content";
@@ -42,22 +43,39 @@ export default function WelcomeSection() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="grid grid-cols-2 gap-6"
+            className="relative"
           >
-            {stats.map((stat, i) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                whileHover={{ scale: 1.05 }}
-                className="bg-surface rounded-2xl p-6 text-center"
-              >
-                <div className="text-3xl md:text-4xl font-bold text-primary mb-2">{stat.value}</div>
-                <div className="text-sm text-muted">{stat.label}</div>
-              </motion.div>
-            ))}
+            {/* Main image */}
+            <div className="relative rounded-3xl overflow-hidden shadow-xl group mb-6">
+              <div className="aspect-[4/3] relative">
+                <Image
+                  src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800&h=600&fit=crop"
+                  alt="Équipe africaine professionnelle travaillant ensemble"
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/30 to-transparent" />
+            </div>
+
+            {/* Stats grid overlay */}
+            <div className="grid grid-cols-2 gap-4">
+              {stats.map((stat, i) => (
+                <motion.div
+                  key={stat.label}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  whileHover={{ scale: 1.05 }}
+                  className="bg-surface rounded-2xl p-5 text-center hover:shadow-md transition-all"
+                >
+                  <div className="text-3xl md:text-4xl font-bold text-primary mb-2">{stat.value}</div>
+                  <div className="text-sm text-muted">{stat.label}</div>
+                </motion.div>
+              ))}
+            </div>
           </motion.div>
         </div>
       </div>

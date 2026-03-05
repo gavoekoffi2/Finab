@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { whyUs } from "@/data/content";
@@ -13,12 +14,29 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   award: AwardIcon,
 };
 
+const whyUsImages = [
+  "https://images.unsplash.com/photo-1526958097901-5e6d742d3371?w=400&h=300&fit=crop",
+  "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=400&h=300&fit=crop",
+  "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=400&h=300&fit=crop",
+  "https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?w=400&h=300&fit=crop",
+];
+
 export default function WhyUsSection() {
   return (
     <section className="py-24 bg-navy relative overflow-hidden">
       <div className="absolute inset-0">
         <div className="absolute top-1/4 left-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl" />
+      </div>
+
+      {/* Background image with low opacity */}
+      <div className="absolute inset-0 opacity-[0.07]">
+        <Image
+          src="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=1920&h=800&fit=crop"
+          alt=""
+          fill
+          className="object-cover"
+        />
       </div>
 
       <div className="max-w-7xl mx-auto px-6 relative">
@@ -39,14 +57,27 @@ export default function WhyUsSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1, duration: 0.5 }}
-                whileHover={{ y: -5 }}
-                className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 text-center"
+                whileHover={{ y: -8, scale: 1.02 }}
+                className="bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10 text-center group"
               >
-                <div className="w-16 h-16 rounded-2xl bg-primary/20 flex items-center justify-center text-primary-light mx-auto mb-6">
-                  <Icon className="w-8 h-8" />
+                {/* Card image */}
+                <div className="relative h-32 overflow-hidden">
+                  <Image
+                    src={whyUsImages[i]}
+                    alt={item.title}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    sizes="(max-width: 768px) 50vw, 25vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-navy/90 to-navy/20" />
+                  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 w-14 h-14 rounded-2xl bg-primary/20 backdrop-blur-sm flex items-center justify-center text-primary-light border border-primary/30">
+                    <Icon className="w-7 h-7" />
+                  </div>
                 </div>
-                <h3 className="text-lg font-bold text-white mb-3">{item.title}</h3>
-                <p className="text-white/60 text-sm leading-relaxed">{item.description}</p>
+                <div className="p-6 pt-4">
+                  <h3 className="text-lg font-bold text-white mb-3">{item.title}</h3>
+                  <p className="text-white/60 text-sm leading-relaxed">{item.description}</p>
+                </div>
               </motion.div>
             );
           })}
@@ -57,21 +88,31 @@ export default function WhyUsSection() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center bg-gradient-to-r from-accent/20 to-accent-dark/20 rounded-3xl p-12 border border-accent/20"
+          className="text-center bg-gradient-to-r from-accent/20 to-accent-dark/20 rounded-3xl p-12 border border-accent/20 relative overflow-hidden"
         >
-          <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
-            Prêt à commencer ?
-          </h3>
-          <p className="text-white/60 mb-8 max-w-lg mx-auto">
-            Trouvez un agent FINAB près de chez vous ou contactez-nous directement pour un accompagnement personnalisé.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Button href="/contact" variant="accent" size="lg">
-              Trouver un agent
-            </Button>
-            <Button href="/services" variant="outline" size="lg" className="border-white/30 text-white hover:bg-white/10 hover:text-white">
-              Demander un service
-            </Button>
+          <div className="absolute inset-0 opacity-10">
+            <Image
+              src="https://images.unsplash.com/photo-1509099836639-18ba1795216d?w=1200&h=400&fit=crop"
+              alt=""
+              fill
+              className="object-cover"
+            />
+          </div>
+          <div className="relative">
+            <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
+              Prêt à commencer ?
+            </h3>
+            <p className="text-white/60 mb-8 max-w-lg mx-auto">
+              Trouvez un agent FINAB près de chez vous ou contactez-nous directement pour un accompagnement personnalisé.
+            </p>
+            <div className="flex flex-wrap justify-center gap-4">
+              <Button href="/contact" variant="accent" size="lg">
+                Trouver un agent
+              </Button>
+              <Button href="/services" variant="outline" size="lg" className="border-white/30 text-white hover:bg-white/10 hover:text-white">
+                Demander un service
+              </Button>
+            </div>
           </div>
         </motion.div>
       </div>

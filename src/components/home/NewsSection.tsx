@@ -1,10 +1,18 @@
 "use client";
 
+import Image from "next/image";
 import SectionHeading from "@/components/ui/SectionHeading";
 import AnimatedCard from "@/components/ui/AnimatedCard";
 import Button from "@/components/ui/Button";
 import { newsArticles } from "@/data/content";
 import { ArrowRightIcon } from "@/components/ui/Icons";
+
+const newsImages: Record<string, string> = {
+  "education-financiere-2025": "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&h=400&fit=crop",
+  "partenariat-afrique": "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=600&h=400&fit=crop",
+  "impots-canada-guide": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&h=400&fit=crop",
+  "recrutement-international": "https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?w=600&h=400&fit=crop",
+};
 
 export default function NewsSection() {
   return (
@@ -19,14 +27,21 @@ export default function NewsSection() {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {newsArticles.map((article, i) => (
             <AnimatedCard key={article.id} delay={i * 0.1}>
-              <div className="h-48 bg-gradient-to-br from-primary/20 to-primary-light/10 flex items-center justify-center">
-                <span className="text-6xl opacity-30">📰</span>
+              <div className="relative h-48 overflow-hidden group">
+                <Image
+                  src={newsImages[article.id] || "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&h=400&fit=crop"}
+                  alt={article.title}
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-110"
+                  sizes="(max-width: 768px) 100vw, 25vw"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-dark/50 to-transparent" />
+                <div className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-semibold bg-primary/90 text-white backdrop-blur-sm">
+                  {article.category}
+                </div>
               </div>
               <div className="p-6">
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary-dark">
-                    {article.category}
-                  </span>
                   <span className="text-xs text-muted">{new Date(article.date).toLocaleDateString("fr-FR")}</span>
                 </div>
                 <h3 className="font-bold text-dark mb-2 line-clamp-2">{article.title}</h3>
