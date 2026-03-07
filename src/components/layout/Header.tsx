@@ -77,10 +77,10 @@ export default function Header() {
               <div className="absolute -inset-3 rounded-full bg-primary/0 group-hover:bg-primary/10 transition-all duration-500 blur-xl" />
               <div className="relative h-14 w-auto rounded-2xl overflow-hidden flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
                 <Image
-                  src="/images/logo.svg"
+                  src="/images/logo.png"
                   alt="FINAB la solution"
                   width={140}
-                  height={56}
+                  height={140}
                   className="object-contain"
                   priority
                 />
@@ -187,7 +187,7 @@ export default function Header() {
             >
               <div className="flex items-center justify-between p-6 border-b">
                 <Link href="/" className="flex items-center" onClick={() => setIsMobileOpen(false)}>
-                  <Image src="/images/logo.svg" alt="FINAB la solution" width={120} height={48} className="object-contain" />
+                  <Image src="/images/logo.png" alt="FINAB la solution" width={120} height={120} className="object-contain" />
                 </Link>
                 <button onClick={() => setIsMobileOpen(false)} className="p-2 rounded-xl hover:bg-gray-100 transition-colors" aria-label="Fermer">
                   <XIcon className="w-5 h-5" />

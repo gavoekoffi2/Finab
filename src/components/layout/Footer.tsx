@@ -60,10 +60,10 @@ export default function Footer() {
             <div className="mb-6">
               <div className="w-40 h-16 rounded-2xl bg-white shadow-lg shadow-primary/20 overflow-hidden flex items-center justify-center p-2">
                 <Image
-                  src="/images/logo.svg"
+                  src="/images/logo.png"
                   alt="FINAB la solution"
                   width={150}
-                  height={60}
+                  height={150}
                   className="object-contain"
                 />
               </div>
