@@ -9,21 +9,15 @@ import { siteConfig } from "@/data/content";
 const heroImages = [
   {
     src: "/images/hero1.jpg",
-    alt: "Enfants africains - FINAB solidarité et espoir",
-    headline: "Ensemble, changeons des vies",
+    alt: "Enfant africain - FINAB solidarité",
+    headline: "Ensemble pour l'Afrique",
     sub: "FINAB accompagne les familles vers la résilience financière",
   },
   {
     src: "/images/hero2.jpg",
-    alt: "Professionnels africains - Partenariat FINAB",
-    headline: "L'expertise au service de l'Afrique",
-    sub: "Des solutions financières adaptées à vos besoins",
-  },
-  {
-    src: "/images/hero3.jpg",
-    alt: "Abraham AKPOBI - CEO FINAB La Solution",
-    headline: "La résurrection financière",
-    sub: "Abraham AKPOBI et l'équipe FINAB à votre service",
+    alt: "Koffi Abraham AKPOBI - Senior Vice President FINAB",
+    headline: "Koffi Abraham AKPOBI",
+    sub: "Senior Vice President - Votre partenaire de confiance",
   },
 ];
 
