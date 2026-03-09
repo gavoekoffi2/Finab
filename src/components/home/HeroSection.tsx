@@ -9,15 +9,15 @@ import { siteConfig } from "@/data/content";
 const heroImages = [
   {
     src: "/images/hero1.jpg",
-    alt: "Enfant africain - FINAB solidarité",
+    alt: "Enfants africains - FINAB solidarité",
     headline: "Ensemble pour l'Afrique",
     sub: "FINAB accompagne les familles vers la résilience financière",
   },
   {
     src: "/images/hero2.jpg",
-    alt: "Koffi Abraham AKPOBI - Senior Vice President FINAB",
-    headline: "Koffi Abraham AKPOBI",
-    sub: "Senior Vice President - Votre partenaire de confiance",
+    alt: "Communauté africaine unie - Partenariat FINAB",
+    headline: "La solidarité sans frontières",
+    sub: "Du Canada à l'Afrique, de l'Afrique à Haïti",
   },
 ];
 
