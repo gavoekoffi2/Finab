@@ -25,7 +25,7 @@ const canadaImages: Record<string, { src: string; alt: string }> = {
 
 const africaImages: Record<string, { src: string; alt: string }> = {
   "assurance-vie": {
-    src: "https://images.unsplash.com/photo-1516733968668-dbdce39c0651?w=600&h=400&fit=crop",
+    src: "/images/assurance-vie.jpg",
     alt: "Assurance Vie - Famille africaine unie",
   },
   "assurance-sante": {
@@ -37,7 +37,7 @@ const africaImages: Record<string, { src: string; alt: string }> = {
     alt: "Micro-assurance - Petits entrepreneurs africains",
   },
   "assurance-voyage": {
-    src: "https://images.unsplash.com/photo-1436491865332-7a61a109db05?w=600&h=400&fit=crop",
+    src: "/images/assurance-voyage.jpg",
     alt: "Assurance Voyage - Voyager en toute sérénité",
   },
   "epargne-investissement": {
