@@ -9,15 +9,21 @@ import { siteConfig } from "@/data/content";
 const heroImages = [
   {
     src: "/images/hero1.jpg",
-    alt: "Enfants africains - FINAB solidarité",
+    alt: "Professionnels africains - FINAB ensemble",
     headline: "Ensemble pour l'Afrique",
     sub: "FINAB accompagne les familles vers la résilience financière",
   },
   {
     src: "/images/hero2.jpg",
-    alt: "Communauté africaine unie - Partenariat FINAB",
-    headline: "La solidarité sans frontières",
-    sub: "Du Canada à l'Afrique, de l'Afrique à Haïti",
+    alt: "Leader africain - Koffi Abraham AKPOBI",
+    headline: "Leadership et Excellence",
+    sub: "Koffi Abraham AKPOBI - Votre partenaire de confiance",
+  },
+  {
+    src: "/images/hero3.jpg",
+    alt: "Accompagnement africain - Conseil FINAB",
+    headline: "Accompagnement Personnalisé",
+    sub: "Des solutions adaptées à vos besoins",
   },
 ];
 
