@@ -8,34 +8,22 @@ import { siteConfig } from "@/data/content";
 
 const heroImages = [
   {
-    src: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1920&h=1080&fit=crop",
-    alt: "Enfants africains - FINAB solidarité et espoir",
+    src: "/images/hero1.jpg",
+    alt: "Enfant africain - FINAB solidarité et espoir",
     headline: "Ensemble, changeons des vies",
     sub: "FINAB accompagne les familles vers la résilience financière",
   },
   {
-    src: "https://images.unsplash.com/photo-1509099836639-18ba1795216d?w=1920&h=1080&fit=crop",
-    alt: "Enfants d'Afrique - L'espoir d'un avenir meilleur",
-    headline: "L'espoir à travers l'éducation",
-    sub: "L'éducation financière comme levier de développement",
+    src: "/images/hero4.jpg",
+    alt: "Unité Africains et Européens - Partenariat FINAB",
+    headline: "L'union fait la force",
+    sub: "Collaboration entre l'Afrique, Haïti et le Canada",
   },
   {
-    src: "https://images.unsplash.com/photo-1542810634-71277d95dcbb?w=1920&h=1080&fit=crop",
-    alt: "Enfant africain souriant - Bâtir l'avenir avec FINAB",
-    headline: "Bâtir un avenir meilleur",
-    sub: "Protection et accompagnement pour chaque famille",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=1920&h=1080&fit=crop",
-    alt: "Communauté unie - Solidarité FINAB sans frontières",
-    headline: "La solidarité sans frontières",
-    sub: "Du Canada à l'Afrique, de l'Afrique à Haïti",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1504432842672-1a79f78e4084?w=1920&h=1080&fit=crop",
-    alt: "Village africain - Maisons et communautés unies",
-    headline: "Des communautés résilientes",
-    sub: "Construire ensemble des ponts entre les continents",
+    src: "/images/hero5.jpg",
+    alt: "Famille et communauté - Solidarité FINAB",
+    headline: "Des communautés unies",
+    sub: "Construire ensemble un avenir meilleur",
   },
 ];
 
