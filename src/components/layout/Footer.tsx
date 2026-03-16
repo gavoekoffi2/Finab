@@ -172,7 +172,7 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-white/30">
           <p>&copy; {new Date().getFullYear()} FINAB la solution. Tous droits réservés.</p>
           <p>
-            Fondée par <span className="text-primary-light/60">{siteConfig.ceo}</span>
+            Designed by <span className="text-primary-light/60">Pro Digital Business</span>
           </p>
         </div>
       </div>
