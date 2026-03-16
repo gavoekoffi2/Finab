@@ -8,6 +8,7 @@ import TestimonialsSection from "@/components/home/TestimonialsSection";
 import NewsSection from "@/components/home/NewsSection";
 import QuizSection from "@/components/home/QuizSection";
 import WhyUsSection from "@/components/home/WhyUsSection";
+import ClientReviewsSection from "@/components/home/ClientReviewsSection";
 
 export default function HomePage() {
   return (
@@ -22,6 +23,7 @@ export default function HomePage() {
       <GallerySection />
       <NewsSection />
       <WhyUsSection />
+      <ClientReviewsSection />
     </>
   );
 }
