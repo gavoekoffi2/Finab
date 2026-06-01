@@ -7,82 +7,82 @@ import SectionHeading from "@/components/ui/SectionHeading";
 
 const parcoursImages = [
   {
-    src: "/images/generated/soutien-aux-enfants-b29685.jpg",
+    src: "/images/photos/soutien-aux-enfants-b29685.jpg",
     title: "Soutien aux enfants",
     description: "Notre engagement pour l'avenir des enfants africains et haïtiens",
   },
   {
-    src: "/images/generated/soutien-aux-enfants-254137.jpg",
+    src: "/images/photos/soutien-aux-enfants-254137.jpg",
     title: "Espoir et résilience",
     description: "Accompagner les communautés vers un avenir meilleur",
   },
   {
-    src: "/images/generated/espoir-et-resilience-459175.jpg",
+    src: "/images/photos/espoir-et-resilience-459175.jpg",
     title: "Éducation pour tous",
     description: "L'éducation financière comme clé du développement",
   },
   {
-    src: "/images/generated/education-pour-tous-de93cc.jpg",
+    src: "/images/photos/education-pour-tous-de93cc.jpg",
     title: "Solidarité communautaire",
     description: "Ensemble, nous construisons des ponts entre les continents",
   },
   {
-    src: "/images/generated/solidarite-communautaire-7f8100.jpg",
+    src: "/images/photos/solidarite-communautaire-7f8100.jpg",
     title: "Leadership africain",
     description: "Des leaders engagés pour le changement",
   },
   {
-    src: "/images/generated/leadership-africain-625606.jpg",
+    src: "/images/photos/leadership-africain-625606.jpg",
     title: "Formation professionnelle",
     description: "Développer les compétences pour l'autonomie financière",
   },
   {
-    src: "/images/generated/formation-professionnelle-242def.jpg",
+    src: "/images/photos/formation-professionnelle-242def.jpg",
     title: "Excellence professionnelle",
     description: "FINAB au service de votre réussite",
   },
   {
-    src: "/images/generated/excellence-professionnelle-d9c6d9.jpg",
+    src: "/images/photos/excellence-professionnelle-d9c6d9.jpg",
     title: "Accompagnement personnalisé",
     description: "Un suivi sur mesure pour chaque client",
   },
   {
-    src: "/images/generated/accompagnement-personnalise-326b1a.jpg",
+    src: "/images/photos/accompagnement-personnalise-326b1a.jpg",
     title: "Sourire et confiance",
     description: "La satisfaction de nos clients, notre plus grande fierté",
   },
   {
-    src: "/images/generated/sourire-et-confiance-cba7b3.jpg",
+    src: "/images/photos/sourire-et-confiance-cba7b3.jpg",
     title: "Villages et communautés",
     description: "Renforcer les communautés locales à travers la finance",
   },
   {
-    src: "/images/generated/villages-et-communautes-7978b2.jpg",
+    src: "/images/photos/villages-et-communautes-7978b2.jpg",
     title: "Éducation des jeunes",
     description: "Investir dans la jeunesse pour un avenir durable",
   },
   {
-    src: "/images/generated/education-des-jeunes-cb1ad9.jpg",
+    src: "/images/photos/education-des-jeunes-cb1ad9.jpg",
     title: "Familles unies",
     description: "Protéger les familles avec des solutions adaptées",
   },
   {
-    src: "/images/generated/familles-unies-d58566.jpg",
+    src: "/images/photos/familles-unies-d58566.jpg",
     title: "Protection familiale",
     description: "L'assurance au service de la tranquillité d'esprit",
   },
   {
-    src: "/images/generated/protection-familiale-1c7e00.jpg",
+    src: "/images/photos/protection-familiale-1c7e00.jpg",
     title: "Réunions communautaires",
     description: "Partager les connaissances et les ressources",
   },
   {
-    src: "/images/generated/reunions-communautaires-39c35b.jpg",
+    src: "/images/photos/reunions-communautaires-39c35b.jpg",
     title: "Santé pour tous",
     description: "Des solutions de santé accessibles à chacun",
   },
   {
-    src: "/images/generated/sante-pour-tous-ae042a.jpg",
+    src: "/images/photos/sante-pour-tous-ae042a.jpg",
     title: "Croissance financière",
     description: "Épargner et investir pour un avenir solide",
   },

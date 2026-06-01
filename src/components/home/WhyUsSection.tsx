@@ -15,10 +15,10 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 };
 
 const whyUsImages = [
-  "/images/generated/pourquoi-choisir-finab-9711c4.jpg",
-  "/images/generated/pourquoi-choisir-finab-4018e2.jpg",
-  "/images/generated/pourquoi-choisir-finab-d43fda.jpg",
-  "/images/generated/pourquoi-choisir-finab-5c53e5.jpg",
+  "/images/photos/pourquoi-choisir-finab-9711c4.jpg",
+  "/images/photos/pourquoi-choisir-finab-4018e2.jpg",
+  "/images/photos/pourquoi-choisir-finab-d43fda.jpg",
+  "/images/photos/pourquoi-choisir-finab-5c53e5.jpg",
 ];
 
 export default function WhyUsSection() {
@@ -31,7 +31,7 @@ export default function WhyUsSection() {
 
       <div className="absolute inset-0 opacity-[0.07]">
         <Image
-          src="/images/generated/pourquoi-choisir-finab-6a68c6.jpg"
+          src="/images/photos/pourquoi-choisir-finab-6a68c6.jpg"
           alt=""
           fill
           className="object-cover"
@@ -89,7 +89,7 @@ export default function WhyUsSection() {
         >
           <div className="absolute inset-0 opacity-10">
             <Image
-              src="/images/generated/pourquoi-choisir-finab-193088.jpg"
+              src="/images/photos/pourquoi-choisir-finab-193088.jpg"
               alt=""
               fill
               className="object-cover"

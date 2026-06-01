@@ -6,18 +6,18 @@ import { motion, AnimatePresence } from "framer-motion";
 import SectionHeading from "@/components/ui/SectionHeading";
 
 const galleryItems = [
-  { id: 1, src: "/images/generated/seminaire-de-formation-e44ee2.jpg", title: "Séminaire de formation", category: "Formation" },
-  { id: 2, src: "/images/generated/seminaire-de-formation-34a0fc.jpg", title: "Accompagnement client", category: "Services" },
-  { id: 3, src: "/images/generated/seminaire-de-formation-3a57ae.jpg", title: "Développement financier", category: "Services" },
-  { id: 4, src: "/images/generated/seminaire-de-formation-f4c654.jpg", title: "Travail d'équipe FINAB", category: "Équipe" },
-  { id: 5, src: "/images/generated/seminaire-de-formation-ee76c6.jpg", title: "Rencontres partenaires", category: "Partenaires" },
-  { id: 6, src: "/images/generated/seminaire-de-formation-c8d126.jpg", title: "Atelier de formation", category: "Formation" },
-  { id: 7, src: "/images/generated/seminaire-de-formation-516e22.jpg", title: "Événement communautaire", category: "Communauté" },
-  { id: 8, src: "/images/generated/seminaire-de-formation-e40b99.jpg", title: "Réunion stratégique", category: "Équipe" },
-  { id: 9, src: "/images/generated/seminaire-de-formation-d08bc2.jpg", title: "Workshop pratique", category: "Formation" },
-  { id: 10, src: "/images/generated/accompagnement-client-c2b2cd.jpg", title: "Impact communautaire", category: "Communauté" },
-  { id: 11, src: "/images/generated/developpement-financier-910702.jpg", title: "Histoires de succès", category: "Services" },
-  { id: 12, src: "/images/generated/travail-d-equipe-finab-4e8605.jpg", title: "Conférence FINAB", category: "Partenaires" },
+  { id: 1, src: "/images/photos/seminaire-de-formation-e44ee2.jpg", title: "Séminaire de formation", category: "Formation" },
+  { id: 2, src: "/images/photos/seminaire-de-formation-34a0fc.jpg", title: "Accompagnement client", category: "Services" },
+  { id: 3, src: "/images/photos/seminaire-de-formation-3a57ae.jpg", title: "Développement financier", category: "Services" },
+  { id: 4, src: "/images/photos/seminaire-de-formation-f4c654.jpg", title: "Travail d'équipe FINAB", category: "Équipe" },
+  { id: 5, src: "/images/photos/seminaire-de-formation-ee76c6.jpg", title: "Rencontres partenaires", category: "Partenaires" },
+  { id: 6, src: "/images/photos/seminaire-de-formation-c8d126.jpg", title: "Atelier de formation", category: "Formation" },
+  { id: 7, src: "/images/photos/seminaire-de-formation-516e22.jpg", title: "Événement communautaire", category: "Communauté" },
+  { id: 8, src: "/images/photos/seminaire-de-formation-e40b99.jpg", title: "Réunion stratégique", category: "Équipe" },
+  { id: 9, src: "/images/photos/seminaire-de-formation-d08bc2.jpg", title: "Workshop pratique", category: "Formation" },
+  { id: 10, src: "/images/photos/accompagnement-client-c2b2cd.jpg", title: "Impact communautaire", category: "Communauté" },
+  { id: 11, src: "/images/photos/developpement-financier-910702.jpg", title: "Histoires de succès", category: "Services" },
+  { id: 12, src: "/images/photos/travail-d-equipe-finab-4e8605.jpg", title: "Conférence FINAB", category: "Partenaires" },
 ];
 
 const categories = ["Tous", "Formation", "Services", "Équipe", "Partenaires", "Communauté"];

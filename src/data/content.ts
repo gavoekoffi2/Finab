@@ -190,7 +190,7 @@ export const newsArticles = [
       "Découvrez pourquoi l'éducation financière est devenue un pilier essentiel pour la réussite économique des communautés africaines et caribéennes.",
     date: "2025-03-15",
     category: "Éducation",
-    image: "/images/generated/education-financiere-2025-632640.jpg",
+    image: "/images/photos/education-financiere-2025-632640.jpg",
   },
   {
     id: "partenariat-afrique",
@@ -199,7 +199,7 @@ export const newsArticles = [
       "Nouveau partenariat stratégique pour offrir des solutions d'assurance et de micro-finance dans cinq nouveaux pays.",
     date: "2025-02-28",
     category: "Expansion",
-    image: "/images/generated/partenariat-afrique-620699.jpg",
+    image: "/images/photos/partenariat-afrique-620699.jpg",
   },
   {
     id: "impots-canada-guide",
@@ -208,7 +208,7 @@ export const newsArticles = [
       "Tout ce que vous devez savoir pour votre première déclaration de revenus au Canada. Conseils, délais et erreurs à éviter.",
     date: "2025-01-20",
     category: "Fiscalité",
-    image: "/images/generated/impots-au-canada-37955e.jpg",
+    image: "/images/photos/impots-au-canada-37955e.jpg",
   },
   {
     id: "recrutement-international",
@@ -217,7 +217,7 @@ export const newsArticles = [
       "Les opportunités d'emploi pour les travailleurs qualifiés venant d'Afrique et d'Haïti sont en forte croissance.",
     date: "2024-12-10",
     category: "Recrutement",
-    image: "/images/generated/recrutement-international-4e56a5.jpg",
+    image: "/images/photos/recrutement-international-4e56a5.jpg",
   },
 ];
 

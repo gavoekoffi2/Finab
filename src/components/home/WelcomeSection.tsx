@@ -49,7 +49,7 @@ export default function WelcomeSection() {
             <div className="relative rounded-3xl overflow-hidden shadow-xl group mb-6">
               <div className="aspect-[4/3] relative">
                 <Image
-                  src="/images/generated/equipe-africaine-professionnelle-travaillant-ensemble-4534d8.jpg"
+                  src="/images/photos/equipe-africaine-professionnelle-travaillant-ensemble-4534d8.jpg"
                   alt="Équipe africaine professionnelle travaillant ensemble"
                   fill
                   className="object-cover transition-transform duration-700 group-hover:scale-105"

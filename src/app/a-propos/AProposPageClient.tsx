@@ -12,7 +12,7 @@ export default function AProposPageClient() {
       <section className="bg-gradient-to-br from-dark via-primary-dark to-primary py-20 relative overflow-hidden">
         <div className="absolute inset-0 opacity-20">
           <Image
-            src="/images/generated/communaute-finab-513ca3.jpg"
+            src="/images/photos/communaute-finab-513ca3.jpg"
             alt="Communauté FINAB"
             fill
             className="object-cover"
@@ -107,7 +107,7 @@ export default function AProposPageClient() {
             >
               <div className="absolute top-0 right-0 w-40 h-40 opacity-10 transition-transform duration-500 group-hover:scale-125">
                 <Image
-                  src="/images/generated/equipe-finab-961ba3.jpg"
+                  src="/images/photos/equipe-finab-961ba3.jpg"
                   alt=""
                   fill
                   className="object-cover rounded-bl-3xl"
@@ -131,7 +131,7 @@ export default function AProposPageClient() {
             >
               <div className="absolute top-0 right-0 w-40 h-40 opacity-10 transition-transform duration-500 group-hover:scale-125">
                 <Image
-                  src="/images/generated/equipe-finab-32742e.jpg"
+                  src="/images/photos/equipe-finab-32742e.jpg"
                   alt=""
                   fill
                   className="object-cover rounded-bl-3xl"
@@ -190,10 +190,10 @@ export default function AProposPageClient() {
           />
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { src: "/images/generated/equipe-direction-7aeb02.jpg", label: "Équipe direction" },
-              { src: "/images/generated/equipe-direction-ed46bb.jpg", label: "Conseil financier" },
-              { src: "/images/generated/equipe-direction-90978c.jpg", label: "Service client" },
-              { src: "/images/generated/equipe-direction-4b31d6.jpg", label: "Formation" },
+              { src: "/images/photos/equipe-direction-7aeb02.jpg", label: "Équipe direction" },
+              { src: "/images/photos/equipe-direction-ed46bb.jpg", label: "Conseil financier" },
+              { src: "/images/photos/equipe-direction-90978c.jpg", label: "Service client" },
+              { src: "/images/photos/equipe-direction-4b31d6.jpg", label: "Formation" },
             ].map((item, i) => (
               <motion.div
                 key={i}
@@ -224,7 +224,7 @@ export default function AProposPageClient() {
       <section className="py-20 bg-primary-dark relative overflow-hidden">
         <div className="absolute inset-0 opacity-15">
           <Image
-            src="/images/generated/communaute-finab-canada-afrique-haiti-4037e9.jpg"
+            src="/images/photos/communaute-finab-canada-afrique-haiti-4037e9.jpg"
             alt=""
             fill
             className="object-cover"

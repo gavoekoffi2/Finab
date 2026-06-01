@@ -8,10 +8,10 @@ import { newsArticles } from "@/data/content";
 import { ArrowRightIcon } from "@/components/ui/Icons";
 
 const newsImages: Record<string, string> = {
-  "education-financiere-2025": "/images/generated/actualite-finab-81824c.jpg",
-  "partenariat-afrique": "/images/generated/actualite-finab-40ddef.jpg",
-  "impots-canada-guide": "/images/generated/actualite-finab-9226e1.jpg",
-  "recrutement-international": "/images/generated/actualite-finab-c8c2a4.jpg",
+  "education-financiere-2025": "/images/photos/actualite-finab-81824c.jpg",
+  "partenariat-afrique": "/images/photos/actualite-finab-40ddef.jpg",
+  "impots-canada-guide": "/images/photos/actualite-finab-9226e1.jpg",
+  "recrutement-international": "/images/photos/actualite-finab-c8c2a4.jpg",
 };
 
 export default function NewsSection() {
@@ -29,7 +29,7 @@ export default function NewsSection() {
             <AnimatedCard key={article.id} delay={i * 0.1}>
               <div className="relative h-48 overflow-hidden group">
                 <Image
-                  src={newsImages[article.id] || "/images/generated/actualite-finab-81824c.jpg"}
+                  src={newsImages[article.id] || "/images/photos/actualite-finab-81824c.jpg"}
                   alt={article.title}
                   fill
                   className="object-cover transition-transform duration-700 group-hover:scale-110"

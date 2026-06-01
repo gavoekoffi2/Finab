@@ -10,15 +10,15 @@ import { ArrowRightIcon } from "@/components/ui/Icons";
 
 const canadaImages: Record<string, { src: string; alt: string }> = {
   "education-financiere": {
-    src: "/images/generated/education-financiere-apprentissage-et-formation-14465d.jpg",
+    src: "/images/photos/education-financiere-apprentissage-et-formation-14465d.jpg",
     alt: "Éducation financière - Apprentissage et formation",
   },
   "declarations-impots": {
-    src: "/images/generated/education-financiere-apprentissage-et-formation-eb4e97.jpg",
+    src: "/images/photos/education-financiere-apprentissage-et-formation-eb4e97.jpg",
     alt: "Déclarations d'impôts - Consultation professionnelle",
   },
   "formation-recrutement": {
-    src: "/images/generated/education-financiere-apprentissage-et-formation-eaa682.jpg",
+    src: "/images/photos/education-financiere-apprentissage-et-formation-eaa682.jpg",
     alt: "Formation et recrutement - Équipe professionnelle",
   },
 };
@@ -29,11 +29,11 @@ const africaImages: Record<string, { src: string; alt: string }> = {
     alt: "Assurance Vie - Famille africaine unie",
   },
   "assurance-sante": {
-    src: "/images/generated/assurance-vie-famille-africaine-unie-7b2b1f.jpg",
+    src: "/images/photos/assurance-vie-famille-africaine-unie-7b2b1f.jpg",
     alt: "Assurance Santé - Soins médicaux de qualité",
   },
   "micro-assurance": {
-    src: "/images/generated/assurance-vie-famille-africaine-unie-70af45.jpg",
+    src: "/images/photos/assurance-vie-famille-africaine-unie-70af45.jpg",
     alt: "Micro-assurance - Petits entrepreneurs africains",
   },
   "assurance-voyage": {
@@ -41,7 +41,7 @@ const africaImages: Record<string, { src: string; alt: string }> = {
     alt: "Assurance Voyage - Voyager en toute sérénité",
   },
   "epargne-investissement": {
-    src: "/images/generated/micro-assurance-petits-entrepreneurs-africains-ed53a2.jpg",
+    src: "/images/photos/micro-assurance-petits-entrepreneurs-africains-ed53a2.jpg",
     alt: "Épargne et investissement - Croissance financière",
   },
 };
