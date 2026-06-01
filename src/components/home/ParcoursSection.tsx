@@ -7,82 +7,82 @@ import SectionHeading from "@/components/ui/SectionHeading";
 
 const parcoursImages = [
   {
-    src: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=800&q=80",
+    src: "/images/generated/soutien-aux-enfants-b29685.jpg",
     title: "Soutien aux enfants",
     description: "Notre engagement pour l'avenir des enfants africains et haïtiens",
   },
   {
-    src: "https://images.unsplash.com/photo-1509099836639-18ba1795216d?w=800&q=80",
+    src: "/images/generated/soutien-aux-enfants-254137.jpg",
     title: "Espoir et résilience",
     description: "Accompagner les communautés vers un avenir meilleur",
   },
   {
-    src: "https://images.unsplash.com/photo-1542810634-71277d95dcbb?w=800&q=80",
+    src: "/images/generated/espoir-et-resilience-459175.jpg",
     title: "Éducation pour tous",
     description: "L'éducation financière comme clé du développement",
   },
   {
-    src: "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=800&q=80",
+    src: "/images/generated/education-pour-tous-de93cc.jpg",
     title: "Solidarité communautaire",
     description: "Ensemble, nous construisons des ponts entre les continents",
   },
   {
-    src: "https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?w=800&q=80",
+    src: "/images/generated/solidarite-communautaire-7f8100.jpg",
     title: "Leadership africain",
     description: "Des leaders engagés pour le changement",
   },
   {
-    src: "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800&q=80",
+    src: "/images/generated/leadership-africain-625606.jpg",
     title: "Formation professionnelle",
     description: "Développer les compétences pour l'autonomie financière",
   },
   {
-    src: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=800&q=80",
+    src: "/images/generated/formation-professionnelle-242def.jpg",
     title: "Excellence professionnelle",
     description: "FINAB au service de votre réussite",
   },
   {
-    src: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=800&q=80",
+    src: "/images/generated/excellence-professionnelle-d9c6d9.jpg",
     title: "Accompagnement personnalisé",
     description: "Un suivi sur mesure pour chaque client",
   },
   {
-    src: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=800&q=80",
+    src: "/images/generated/accompagnement-personnalise-326b1a.jpg",
     title: "Sourire et confiance",
     description: "La satisfaction de nos clients, notre plus grande fierté",
   },
   {
-    src: "https://images.unsplash.com/photo-1504432842672-1a79f78e4084?w=800&q=80",
+    src: "/images/generated/sourire-et-confiance-cba7b3.jpg",
     title: "Villages et communautés",
     description: "Renforcer les communautés locales à travers la finance",
   },
   {
-    src: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&q=80",
+    src: "/images/generated/villages-et-communautes-7978b2.jpg",
     title: "Éducation des jeunes",
     description: "Investir dans la jeunesse pour un avenir durable",
   },
   {
-    src: "https://images.unsplash.com/photo-1526958097901-5e6d742d3371?w=800&q=80",
+    src: "/images/generated/education-des-jeunes-cb1ad9.jpg",
     title: "Familles unies",
     description: "Protéger les familles avec des solutions adaptées",
   },
   {
-    src: "https://images.unsplash.com/photo-1536064479547-7ee40b74b807?w=800&q=80",
+    src: "/images/generated/familles-unies-d58566.jpg",
     title: "Protection familiale",
     description: "L'assurance au service de la tranquillité d'esprit",
   },
   {
-    src: "https://images.unsplash.com/photo-1531891570158-e71b35a485bc?w=800&q=80",
+    src: "/images/generated/protection-familiale-1c7e00.jpg",
     title: "Réunions communautaires",
     description: "Partager les connaissances et les ressources",
   },
   {
-    src: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80",
+    src: "/images/generated/reunions-communautaires-39c35b.jpg",
     title: "Santé pour tous",
     description: "Des solutions de santé accessibles à chacun",
   },
   {
-    src: "https://images.unsplash.com/photo-1579621970795-87facc2f976d?w=800&q=80",
+    src: "/images/generated/sante-pour-tous-ae042a.jpg",
     title: "Croissance financière",
     description: "Épargner et investir pour un avenir solide",
   },

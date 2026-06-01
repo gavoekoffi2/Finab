@@ -10,15 +10,15 @@ import { ArrowRightIcon } from "@/components/ui/Icons";
 
 const canadaImages: Record<string, { src: string; alt: string }> = {
   "education-financiere": {
-    src: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&h=500&fit=crop",
+    src: "/images/generated/education-financiere-apprentissage-et-formation-14465d.jpg",
     alt: "Éducation financière - Apprentissage et formation",
   },
   "declarations-impots": {
-    src: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&h=500&fit=crop",
+    src: "/images/generated/education-financiere-apprentissage-et-formation-eb4e97.jpg",
     alt: "Déclarations d'impôts - Consultation professionnelle",
   },
   "formation-recrutement": {
-    src: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=500&fit=crop",
+    src: "/images/generated/education-financiere-apprentissage-et-formation-eaa682.jpg",
     alt: "Formation et recrutement - Équipe professionnelle",
   },
 };
@@ -29,11 +29,11 @@ const africaImages: Record<string, { src: string; alt: string }> = {
     alt: "Assurance Vie - Famille africaine unie",
   },
   "assurance-sante": {
-    src: "https://images.unsplash.com/photo-1584515933487-779824d29309?w=600&h=400&fit=crop",
+    src: "/images/generated/assurance-vie-famille-africaine-unie-7b2b1f.jpg",
     alt: "Assurance Santé - Soins médicaux de qualité",
   },
   "micro-assurance": {
-    src: "https://images.unsplash.com/photo-1459257831348-f0cdd359235f?w=600&h=400&fit=crop",
+    src: "/images/generated/assurance-vie-famille-africaine-unie-70af45.jpg",
     alt: "Micro-assurance - Petits entrepreneurs africains",
   },
   "assurance-voyage": {
@@ -41,7 +41,7 @@ const africaImages: Record<string, { src: string; alt: string }> = {
     alt: "Assurance Voyage - Voyager en toute sérénité",
   },
   "epargne-investissement": {
-    src: "https://images.unsplash.com/photo-1633158829585-23ba8f7c8caf?w=600&h=400&fit=crop",
+    src: "/images/generated/micro-assurance-petits-entrepreneurs-africains-ed53a2.jpg",
     alt: "Épargne et investissement - Croissance financière",
   },
 };

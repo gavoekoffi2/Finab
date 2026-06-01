@@ -15,10 +15,10 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 };
 
 const whyUsImages = [
-  "https://images.unsplash.com/photo-1573497620053-ea5300f94f21?w=400&h=300&fit=crop",
-  "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=400&h=300&fit=crop",
-  "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400&h=300&fit=crop",
-  "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=400&h=300&fit=crop",
+  "/images/generated/pourquoi-choisir-finab-9711c4.jpg",
+  "/images/generated/pourquoi-choisir-finab-4018e2.jpg",
+  "/images/generated/pourquoi-choisir-finab-d43fda.jpg",
+  "/images/generated/pourquoi-choisir-finab-5c53e5.jpg",
 ];
 
 export default function WhyUsSection() {
@@ -31,7 +31,7 @@ export default function WhyUsSection() {
 
       <div className="absolute inset-0 opacity-[0.07]">
         <Image
-          src="https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1920&h=800&fit=crop"
+          src="/images/generated/pourquoi-choisir-finab-6a68c6.jpg"
           alt=""
           fill
           className="object-cover"
@@ -89,7 +89,7 @@ export default function WhyUsSection() {
         >
           <div className="absolute inset-0 opacity-10">
             <Image
-              src="https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=1200&h=400&fit=crop"
+              src="/images/generated/pourquoi-choisir-finab-193088.jpg"
               alt=""
               fill
               className="object-cover"

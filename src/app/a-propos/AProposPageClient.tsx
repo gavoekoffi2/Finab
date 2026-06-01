@@ -12,7 +12,7 @@ export default function AProposPageClient() {
       <section className="bg-gradient-to-br from-dark via-primary-dark to-primary py-20 relative overflow-hidden">
         <div className="absolute inset-0 opacity-20">
           <Image
-            src="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=1920&h=600&fit=crop"
+            src="/images/generated/communaute-finab-513ca3.jpg"
             alt="Communauté FINAB"
             fill
             className="object-cover"
@@ -107,7 +107,7 @@ export default function AProposPageClient() {
             >
               <div className="absolute top-0 right-0 w-40 h-40 opacity-10 transition-transform duration-500 group-hover:scale-125">
                 <Image
-                  src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=400&h=400&fit=crop"
+                  src="/images/generated/equipe-finab-961ba3.jpg"
                   alt=""
                   fill
                   className="object-cover rounded-bl-3xl"
@@ -131,7 +131,7 @@ export default function AProposPageClient() {
             >
               <div className="absolute top-0 right-0 w-40 h-40 opacity-10 transition-transform duration-500 group-hover:scale-125">
                 <Image
-                  src="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=400&h=400&fit=crop"
+                  src="/images/generated/equipe-finab-32742e.jpg"
                   alt=""
                   fill
                   className="object-cover rounded-bl-3xl"
@@ -190,10 +190,10 @@ export default function AProposPageClient() {
           />
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { src: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop", label: "Équipe direction" },
-              { src: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&h=400&fit=crop", label: "Conseil financier" },
-              { src: "https://images.unsplash.com/photo-1531891570158-e71b35a485bc?w=400&h=400&fit=crop", label: "Service client" },
-              { src: "https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?w=400&h=400&fit=crop", label: "Formation" },
+              { src: "/images/generated/equipe-direction-7aeb02.jpg", label: "Équipe direction" },
+              { src: "/images/generated/equipe-direction-ed46bb.jpg", label: "Conseil financier" },
+              { src: "/images/generated/equipe-direction-90978c.jpg", label: "Service client" },
+              { src: "/images/generated/equipe-direction-4b31d6.jpg", label: "Formation" },
             ].map((item, i) => (
               <motion.div
                 key={i}
@@ -224,7 +224,7 @@ export default function AProposPageClient() {
       <section className="py-20 bg-primary-dark relative overflow-hidden">
         <div className="absolute inset-0 opacity-15">
           <Image
-            src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1920&h=400&fit=crop"
+            src="/images/generated/communaute-finab-canada-afrique-haiti-4037e9.jpg"
             alt=""
             fill
             className="object-cover"
