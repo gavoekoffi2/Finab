@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     title: "Votre prochaine opportunité professionnelle commence ici",
     description:
       "Une rencontre d'information pour comprendre le parcours, les conditions et les prochaines étapes.",
-    images: ["/images/team/abraham-akpobi.jpg"],
+    images: ["/images/team/partner-opportunity.jpg"],
   },
 };
 
@@ -93,7 +93,7 @@ export default function OpportuniteAssurancePage() {
             <div className="opportunity-visual-orbit opportunity-orbit-two" />
             <div className="opportunity-photo-frame">
               <Image
-                src="/images/team/abraham-akpobi.jpg"
+                src="/images/team/partner-opportunity.jpg"
                 alt="Professionnel FINAB en entretien"
                 fill
                 priority
