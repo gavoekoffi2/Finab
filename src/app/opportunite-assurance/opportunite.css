@@ -175,3 +175,23 @@
   .opportunity-cta-section { padding: 95px 0 80px; }
   .opportunity-footer-note .opportunity-container { align-items: flex-start; flex-direction: column; gap: 16px; }
 }
+
+.booking-form { width: min(760px, 100%); margin-top: 30px; padding: 28px; border: 1px solid rgba(255,255,255,.16); border-radius: 18px; background: rgba(4, 34, 29, .64); text-align: left; }
+.booking-form-heading h3 { margin: 14px 0 6px; color: #fff; font-size: 28px; letter-spacing: -.04em; }
+.booking-form-heading p { margin: 0 0 22px; color: rgba(255,255,255,.6); font-size: 12px; }
+.booking-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+.booking-form label { display: flex; flex-direction: column; gap: 7px; color: rgba(255,255,255,.75); font-size: 11px; font-weight: 700; }
+.booking-form input, .booking-form select, .booking-form textarea { width: 100%; border: 1px solid rgba(255,255,255,.18); border-radius: 8px; outline: 0; padding: 12px 13px; color: #fff; background: rgba(255,255,255,.08); font: inherit; font-weight: 400; }
+.booking-form input::placeholder, .booking-form textarea::placeholder { color: rgba(255,255,255,.4); }
+.booking-form select option { color: #102f2a; }
+.booking-form input:focus, .booking-form select:focus, .booking-form textarea:focus { border-color: var(--opportunity-green); box-shadow: 0 0 0 3px rgba(181,228,59,.14); }
+.booking-message { margin-top: 14px; }
+.booking-message textarea { resize: vertical; }
+.booking-form > .opportunity-button { margin-top: 19px; border: 0; cursor: pointer; }
+.booking-form > .opportunity-button:disabled { cursor: wait; opacity: .6; }
+.booking-error { margin: 14px 0 0; color: #ffb3a9; font-size: 13px; }
+.booking-success { width: min(580px, 100%); margin-top: 30px; padding: 35px 28px; border: 1px solid rgba(181,228,59,.38); border-radius: 18px; background: rgba(4, 34, 29, .64); text-align: center; }
+.booking-success > span { display: inline-grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; color: var(--opportunity-deep); background: var(--opportunity-green); font-size: 24px; font-weight: 900; }
+.booking-success h3 { margin: 15px 0 6px; color: #fff; font-size: 24px; }
+.booking-success p { margin: 0; color: rgba(255,255,255,.68); font-size: 14px; line-height: 1.6; }
+@media (max-width: 600px) { .booking-form { padding: 20px 16px; } .booking-grid { grid-template-columns: 1fr; } }

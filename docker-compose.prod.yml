@@ -1,0 +1,23 @@
+services:
+  finablasolution:
+    build:
+      context: /home/finablasolution
+      dockerfile: Dockerfile.prod
+    container_name: finablasolution
+    restart: unless-stopped
+    env_file:
+      - /opt/finablasolution/.env
+    volumes:
+      - /opt/finablasolution/data:/app/data
+    networks:
+      - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.finablasolution.rule=Host(`finablasolution.cloud`) || Host(`www.finablasolution.cloud`)"
+      - "traefik.http.routers.finablasolution.entrypoints=websecure"
+      - "traefik.http.routers.finablasolution.tls.certresolver=letsencrypt"
+      - "traefik.http.services.finablasolution.loadbalancer.server.port=3000"
+
+networks:
+  web:
+    external: true

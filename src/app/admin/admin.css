@@ -1,0 +1,43 @@
+.admin-shell { min-height: calc(100vh - 120px); display: grid; place-items: center; padding: 70px 20px; background: #eef4ee; color: #123a32; }
+.admin-login-card { width: min(460px, 100%); padding: 42px; border: 1px solid #dce7df; border-radius: 20px; background: #fff; box-shadow: 0 20px 60px rgba(16,47,42,.1); }
+.admin-kicker { color: #6f8b7f; font-size: 10px; font-weight: 900; letter-spacing: .16em; text-transform: uppercase; }
+.admin-login-card h1, .dashboard-header h1 { margin: 13px 0 10px; font-size: clamp(2rem, 5vw, 3.1rem); letter-spacing: -.06em; }
+.admin-login-card p { color: #6e7d77; line-height: 1.65; }
+.admin-login-card form { display: grid; gap: 17px; margin: 28px 0; }
+.admin-login-card label { display: grid; gap: 7px; color: #355b4f; font-size: 12px; font-weight: 800; }
+.admin-login-card input, .create-user-form input, .create-user-form select { width: 100%; border: 1px solid #d5e1d9; border-radius: 8px; padding: 12px 13px; outline: 0; color: #123a32; background: #fbfdfb; font: inherit; }
+.admin-login-card input:focus, .create-user-form input:focus, .create-user-form select:focus { border-color: #9bc83a; box-shadow: 0 0 0 3px rgba(181,228,59,.2); }
+.admin-login-card button, .dashboard-panel-title button, .create-user-form button, .row-action { border: 0; border-radius: 999px; padding: 12px 19px; color: #123a32; background: #b5e43b; cursor: pointer; font-weight: 900; }
+.admin-login-card button:disabled { opacity: .6; cursor: wait; }
+.admin-login-card a { color: #658477; font-size: 12px; text-decoration: none; }
+.admin-error { color: #b3473c; font-size: 12px; }
+.dashboard-shell { min-height: calc(100vh - 120px); padding: 54px max(24px, calc((100% - 1160px) / 2)); background: #eef4ee; color: #123a32; }
+.dashboard-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 30px; margin-bottom: 35px; }
+.dashboard-header h1 { margin-bottom: 0; }
+.admin-ghost-button { border: 1px solid #cadbd0; border-radius: 999px; padding: 11px 17px; color: #45675a; background: transparent; cursor: pointer; font-weight: 800; }
+.dashboard-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+.dashboard-stats div, .dashboard-panel { border: 1px solid #dce7df; border-radius: 14px; background: #fff; box-shadow: 0 10px 35px rgba(16,47,42,.05); }
+.dashboard-stats div { padding: 22px; }
+.dashboard-stats span { display: block; color: #6f8b7f; font-size: 11px; }
+.dashboard-stats strong { display: block; margin-top: 8px; font-size: 34px; letter-spacing: -.06em; }
+.dashboard-panel { padding: 25px; margin-top: 20px; overflow: hidden; }
+.dashboard-panel-title { display: flex; justify-content: space-between; align-items: center; gap: 15px; margin-bottom: 24px; }
+.dashboard-panel-title h2 { margin: 8px 0 0; font-size: 25px; letter-spacing: -.05em; }
+.dashboard-panel-title button { font-size: 11px; }
+.dashboard-empty { padding: 28px 0; color: #6e7d77; }
+.appointment-table { overflow-x: auto; }
+.appointment-row { min-width: 870px; display: grid; grid-template-columns: 1.2fr 1fr 1.35fr 1fr .7fr; align-items: center; gap: 15px; padding: 15px 0; border-top: 1px solid #e5ede7; color: #45675a; font-size: 12px; }
+.appointment-row strong, .appointment-row small { display: block; }
+.appointment-row strong { color: #123a32; }
+.appointment-row small { margin-top: 5px; color: #7d9288; font-size: 10px; }
+.appointment-row a { color: #397e66; }
+.appointment-head { border-top: 0; color: #799084; font-size: 10px; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; }
+.appointment-row select { border: 1px solid #d5e1d9; border-radius: 6px; padding: 7px; color: #355b4f; background: #fbfdfb; font-size: 11px; }
+.row-action { padding: 8px 12px; font-size: 10px; }
+.create-user-form { display: grid; grid-template-columns: repeat(5, 1fr); gap: 9px; padding: 17px; margin-bottom: 18px; border-radius: 10px; background: #f3f8f3; }
+.create-user-form button { font-size: 11px; }
+.create-user-form .admin-error { grid-column: 1 / -1; }
+.user-list { display: grid; gap: 9px; }
+.user-list div { display: flex; justify-content: space-between; gap: 15px; padding: 13px; border-top: 1px solid #e5ede7; font-size: 12px; }
+.user-list span { color: #789187; }
+@media (max-width: 760px) { .dashboard-shell { padding: 35px 17px; } .dashboard-header { flex-direction: column; } .dashboard-stats { grid-template-columns: repeat(2, 1fr); } .dashboard-panel { padding: 18px; } .create-user-form { grid-template-columns: 1fr; } .user-list div { flex-direction: column; gap: 5px; } }
