@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import BookingForm from "./BookingForm";
 import "./opportunite.css";
 
 export const metadata: Metadata = {
@@ -14,8 +15,6 @@ export const metadata: Metadata = {
     images: ["/images/team/partner-opportunity.jpg"],
   },
 };
-
-const calendarUrl = process.env.NEXT_PUBLIC_FINAB_CALENDAR_URL || "#reservation";
 
 const requirements = [
   {
@@ -76,7 +75,7 @@ export default function OpportuniteAssurancePage() {
               Découvrez un parcours structuré pour vous former, obtenir votre permis et bâtir une activité dans les services financiers — avec un accompagnement clair à chaque étape.
             </p>
             <div className="opportunity-actions">
-              <a className="opportunity-button opportunity-button-primary" href={calendarUrl}>
+              <a className="opportunity-button opportunity-button-primary" href="#reservation">
                 Réserver mon appel d&apos;information <ArrowIcon />
               </a>
               <a className="opportunity-text-link" href="#parcours">
@@ -187,10 +186,7 @@ export default function OpportuniteAssurancePage() {
           <div className="opportunity-eyebrow"><span className="opportunity-eyebrow-line" /> VOTRE PROCHAINE ÉTAPE</div>
           <h2>Vous avez des questions ?<br /><em>Commençons par une conversation.</em></h2>
           <p>Réservez un appel d&apos;information pour comprendre le parcours, les conditions et les prochaines étapes. Vous repartirez avec une vision claire — sans pression.</p>
-          <a className="opportunity-button opportunity-button-light" href={calendarUrl}>
-            Je veux en savoir plus <ArrowIcon />
-          </a>
-          <span className="opportunity-cta-caption">Choisissez le moment qui vous convient.</span>
+          <BookingForm />
         </div>
       </section>
 
