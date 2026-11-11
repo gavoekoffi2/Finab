@@ -4,7 +4,6 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import SectionHeading from "@/components/ui/SectionHeading";
 import PageHero from "@/components/immersive/PageHero";
-import ParallaxImage from "@/components/immersive/ParallaxImage";
 import Reveal from "@/components/immersive/Reveal";
 import SplitText from "@/components/immersive/SplitText";
 import AnimatedCounter from "@/components/ui/AnimatedCounter";
@@ -56,12 +55,21 @@ export default function AProposPageClient() {
             <div className="absolute -right-6 -top-6 h-40 w-40 rounded-full bg-primary/20 blur-3xl" />
             <div className="absolute -bottom-6 -left-6 h-48 w-48 rounded-full bg-accent/15 blur-3xl" />
             <div className="relative overflow-hidden rounded-[2rem] shadow-[0_50px_100px_-40px_rgba(22,163,74,0.5)]">
-              <ParallaxImage
-                src="/images/team/abraham-akpobi.jpg"
-                alt="Abraham Koffi AKPOBI - Fondateur et CEO de FINAB la solution"
-                className="aspect-[4/5]"
-                imageClassName="object-top"
-              />
+              <motion.div
+                initial={{ opacity: 0, scale: 1.08 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 1.4, ease: EASE }}
+                className="group relative aspect-[3/4]"
+              >
+                <Image
+                  src="/images/hero2.jpg"
+                  alt="Abraham Koffi AKPOBI - Fondateur et CEO de FINAB la solution"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover transition-transform duration-[1.4s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105"
+                />
+              </motion.div>
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/95 via-ink/60 to-transparent p-8 text-white">
                 <h3 className="text-2xl font-bold">Abraham Koffi AKPOBI</h3>
                 <p className="font-medium text-primary-light">Fondateur & CEO</p>
