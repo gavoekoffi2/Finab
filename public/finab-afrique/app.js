@@ -54,7 +54,7 @@
     document.querySelector('#step-counter').textContent = `ÉTAPE ${index + 1} SUR 6`;
     document.querySelector('#progress').value = index + 1;
     previous.hidden = index === 0;
-    next.textContent = index === steps.length - 1 ? (collectionOpen ? (paymentVerified ? 'Envoyer ma candidature' : (paymentSessionId ? 'Vérifier le paiement' : `Payer ${configuredFeeCad || '…'} CAD et envoyer`)) : 'Candidatures fermées') : 'Continuer →';
+    next.textContent = index === steps.length - 1 ? (collectionOpen ? (paymentVerified ? 'Envoyer ma candidature' : (paymentSessionId ? 'Vérifier le paiement' : `Payer ${configuredFeeCad || '60,42'} $ CAD et envoyer`)) : 'Candidatures fermées') : 'Continuer →';
     next.disabled = !configLoaded || (index === steps.length - 1 && !collectionOpen);
     reset.disabled = false;
     error.hidden = true;
@@ -345,7 +345,7 @@
         if (policyNode && config.paymentTermsVersion) policyNode.textContent += ` (version ${config.paymentTermsVersion}).`;
       }
     } catch { collectionOpen = false; }
-    const amountCad = config && /^\d+\.\d{2}$/.test(String(config.feeCad)) ? String(config.feeCad).replace('.', ',') : '';
+    const amountCad = config && /^\d+\.\d{2}$/.test(String(config.feeCad)) ? String(config.feeCad).replace('.', ',') : '60,42';
     configuredFeeCad = amountCad;
     const amountXof = config && Number(config.feeXof) === 25000 ? Number(config.feeXof).toLocaleString('fr-FR') : '25 000';
     const cadNode = document.querySelector('#fee-cad');
@@ -354,19 +354,19 @@
     const xofStepNode = document.querySelector('#fee-xof-step');
     const rateNode = document.querySelector('#fee-rate');
     const rateStepNode = document.querySelector('#fee-rate-step');
-    if (cadNode) cadNode.textContent = amountCad ? `${amountCad} CAD` : 'Montant CAD à confirmer';
+    if (cadNode) cadNode.textContent = `${amountCad} $ CAD`;
     if (xofNode) xofNode.textContent = `${amountXof} F CFA`;
-    if (cadStepNode) cadStepNode.textContent = amountCad ? `${amountCad} CAD` : 'Montant CAD à confirmer avant activation';
+    if (cadStepNode) cadStepNode.textContent = `${amountCad} $ CAD`;
     if (xofStepNode) xofStepNode.textContent = `${amountXof} F CFA`;
-    if (rateNode) rateNode.textContent = amountCad ? `Montant fixe débité en CAD. Les frais éventuels de carte ou de conversion appliqués par votre banque peuvent varier.` : 'Le montant fixe en CAD sera confirmé et affiché avant toute activation du paiement.';
-    if (rateStepNode) rateStepNode.textContent = amountCad ? `La référence métier est ${amountXof} XOF ; le montant débité est fixé en CAD, sans conversion dynamique au moment du paiement.` : 'Le montant fixe en CAD et sa correspondance avec les 25 000 XOF de référence restent à valider avant activation.';
+    if (rateNode) rateNode.textContent = `Équivalent indicatif au taux de référence du 10 novembre 2026 (1 CAD = 413,80 XOF). Le débit Stripe reste fixe à ${amountCad} $ CAD; votre banque peut appliquer des frais de carte ou de conversion.`;
+    if (rateStepNode) rateStepNode.textContent = `Référence métier : ${amountXof} XOF. Équivalence indicative au taux de référence du 10 novembre 2026; le débit reste fixe à ${amountCad} $ CAD, sans conversion dynamique au paiement.`;
     configLoaded = true;
     document.querySelector('#availability').textContent = collectionOpen
       ? 'Candidatures ouvertes · frais d’étude obligatoires avant envoi'
       : (config?.paymentReady === false ? 'Candidatures suspendues · paiement sécurisé non configuré' : 'Candidatures non ouvertes · consultation du parcours uniquement');
     document.querySelector('#demo-warning').textContent = collectionOpen
-      ? `Frais d’étude de dossier : ${amountCad || 'montant à confirmer'} CAD (référence : ${amountXof} F CFA). Le débit est en CAD. Vos réponses restent temporairement dans ce navigateur et ne sont transmises à FINAB qu’après confirmation du paiement par Stripe côté serveur. Le paiement ne garantit ni sélection ni recrutement.`
-      : `Aucune candidature ne peut être envoyée pour le moment. Les frais de référence sont de ${amountXof} F CFA ; le montant fixe encaissé en CAD sera confirmé avant activation. Le paiement ne garantit ni sélection ni recrutement.`;
+      ? `Frais obligatoires d’étude de dossier : ${amountCad} $ CAD (${amountXof} F CFA). Vos réponses restent temporairement dans ce navigateur et ne sont transmises à FINAB qu’après confirmation du paiement Stripe côté serveur. Le paiement ne garantit ni sélection ni recrutement.`
+      : `Candidatures temporairement fermées : les frais obligatoires seront de ${amountCad} $ CAD (${amountXof} F CFA). Stripe et les conditions ne sont pas encore activés; aucune candidature ne peut être envoyée. À l’ouverture, le paiement devra être confirmé côté serveur. Les frais ne garantissent ni sélection ni recrutement.`;
     clearDemo(false);
     const params = new URLSearchParams(location.search);
     const isReturn = params.get('payment') === 'return';

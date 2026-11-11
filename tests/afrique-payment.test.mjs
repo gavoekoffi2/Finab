@@ -12,7 +12,7 @@ const testEnv = {
   STRIPE_SECRET_KEY: "sk_test_examplekey123",
   STRIPE_ENVIRONMENT: "test",
   STRIPE_WEBHOOK_SECRET: "whsec_test_secret123",
-  FINAB_AFRIQUE_FEE_CAD_CENTS: "4257",
+  FINAB_AFRIQUE_FEE_CAD_CENTS: "6042",
   FINAB_AFRIQUE_FEE_CAD_APPROVED: "true",
 };
 
@@ -23,7 +23,7 @@ function paidSession(overrides = {}) {
     status: "complete",
     payment_status: "paid",
     currency: "cad",
-    amount_total: 4257,
+    amount_total: 6042,
     livemode: false,
     client_reference_id: submissionId,
     metadata: { submission_id: submissionId, fee_type: "dossier_review", fee_currency: "CAD", reference_amount_xof: "25000" },
@@ -34,29 +34,29 @@ function paidSession(overrides = {}) {
 test("keeps the XOF reference separate from a fixed, approved CAD checkout amount", () => {
   assert.equal(payment.DOSSIER_FEE_XOF, 25000);
   assert.equal(payment.PAYMENT_CURRENCY, "CAD");
-  assert.equal(payment.configuredCadAmountCents(testEnv), 4257);
+  assert.equal(payment.configuredCadAmountCents(testEnv), 6042);
   assert.equal(payment.configuredCadAmountCents({ ...testEnv, FINAB_AFRIQUE_FEE_CAD_CENTS: "" }), 0);
   assert.equal(payment.configuredCadAmountCents({ ...testEnv, FINAB_AFRIQUE_FEE_CAD_CENTS: "1" }), 0);
 });
 
 test("Stripe Checkout is fixed in CAD, linked to the application, and uses the hosted success placeholder", () => {
-  const form = payment.buildStripeCheckoutForm({ submissionId, successUrl, cancelUrl: successUrl, amountCadCents: 4257 });
+  const form = payment.buildStripeCheckoutForm({ submissionId, successUrl, cancelUrl: successUrl, amountCadCents: 6042 });
   assert.equal(form.get("mode"), "payment");
   assert.equal(form.get("line_items[0][price_data][currency]"), "cad");
-  assert.equal(form.get("line_items[0][price_data][unit_amount]"), "4257");
+  assert.equal(form.get("line_items[0][price_data][unit_amount]"), "6042");
   assert.equal(form.get("client_reference_id"), submissionId);
   assert.equal(form.get("metadata[submission_id]"), submissionId);
   assert.match(form.get("success_url"), /session_id=\{CHECKOUT_SESSION_ID\}/);
   assert.match(form.get("line_items[0][price_data][product_data][description]"), /ne garantit/i);
-  assert.throws(() => payment.buildStripeCheckoutForm({ submissionId, successUrl: "https://attacker.example/", cancelUrl: successUrl, amountCadCents: 4257 }));
+  assert.throws(() => payment.buildStripeCheckoutForm({ submissionId, successUrl: "https://attacker.example/", cancelUrl: successUrl, amountCadCents: 6042 }));
 });
 
 test("only exact paid CAD Checkout sessions for this application verify", () => {
   const valid = paidSession();
-  const expected = { sessionId: valid.id, submissionId, amountCadCents: 4257, environment: "test" };
+  const expected = { sessionId: valid.id, submissionId, amountCadCents: 6042, environment: "test" };
   assert.equal(payment.isVerifiedStripeCheckoutSession(valid, expected), true);
   assert.equal(payment.isVerifiedStripeCheckoutSession({ ...valid, payment_status: "unpaid" }, expected), false);
-  assert.equal(payment.isVerifiedStripeCheckoutSession({ ...valid, amount_total: 4258 }, expected), false);
+  assert.equal(payment.isVerifiedStripeCheckoutSession({ ...valid, amount_total: 6043 }, expected), false);
   assert.equal(payment.isVerifiedStripeCheckoutSession({ ...valid, currency: "usd" }, expected), false);
   assert.equal(payment.isVerifiedStripeCheckoutSession({ ...valid, livemode: true }, expected), false);
   assert.equal(payment.isVerifiedStripeCheckoutSession({ ...valid, metadata: { ...valid.metadata, submission_id: "other" } }, expected), false);
