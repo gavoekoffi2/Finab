@@ -3,249 +3,235 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import SectionHeading from "@/components/ui/SectionHeading";
-import { aboutContent, siteConfig, stats } from "@/data/content";
+import PageHero from "@/components/immersive/PageHero";
+import Reveal from "@/components/immersive/Reveal";
+import SplitText from "@/components/immersive/SplitText";
+import AnimatedCounter from "@/components/ui/AnimatedCounter";
+import { aboutContent, stats } from "@/data/content";
+
+const EASE = [0.16, 1, 0.3, 1] as const;
+
+const team = [
+  { src: "/images/photos/equipe-direction-7aeb02.jpg", label: "Équipe direction" },
+  { src: "/images/photos/equipe-direction-ed46bb.jpg", label: "Conseil financier" },
+  { src: "/images/photos/equipe-direction-90978c.jpg", label: "Service client" },
+  { src: "/images/photos/equipe-direction-4b31d6.jpg", label: "Formation" },
+];
 
 export default function AProposPageClient() {
   return (
     <>
-      {/* Header with background image */}
-      <section className="bg-gradient-to-br from-dark via-primary-dark to-primary py-20 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
-          <Image
-            src="/images/photos/communaute-finab-513ca3.jpg"
-            alt="Communauté FINAB"
-            fill
-            className="object-cover"
-          />
-        </div>
-        <div className="max-w-7xl mx-auto px-6 text-center relative">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-5xl font-bold text-white mb-4"
-          >
-            À propos de FINAB
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-white/70 text-lg max-w-2xl mx-auto"
-          >
-            Notre histoire, notre mission et nos valeurs
-          </motion.p>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="À propos"
+        title="À propos de FINAB"
+        highlight={["FINAB"]}
+        subtitle="Notre histoire, notre mission et nos valeurs"
+        image="/images/hero/hero-children-3.jpg"
+        imageAlt="Communauté FINAB"
+      />
 
-      {/* Founder / History */}
-      <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-            >
-              <span className="inline-block px-4 py-1.5 rounded-full text-sm font-semibold bg-primary/10 text-primary mb-4">
-                Notre histoire
-              </span>
-              <h2 className="text-3xl md:text-4xl font-bold text-dark mb-6">
-                Une vision née de la solidarité
-              </h2>
-              <p className="text-muted leading-relaxed mb-6">{aboutContent.history}</p>
-              <div className="bg-surface rounded-2xl p-6 border-l-4 border-primary">
-                <p className="font-semibold text-dark mb-1">Fondateur & CEO</p>
-                <p className="text-xl font-bold text-primary">Abraham Koffi AKPOBI</p>
+      {/* Histoire & fondateur */}
+      <section className="bg-cream py-28 md:py-36">
+        <div className="mx-auto grid max-w-7xl items-center gap-16 px-6 md:grid-cols-2 md:gap-20">
+          <div>
+            <span className="eyebrow mb-6 text-primary">Notre histoire</span>
+            <SplitText
+              text="Une vision née de la solidarité"
+              highlight={["solidarité"]}
+              className="text-4xl font-bold leading-[1.02] tracking-[-0.035em] text-ink md:text-5xl lg:text-6xl"
+            />
+            <Reveal delay={0.15}>
+              <p className="mt-8 text-lg leading-relaxed text-muted">{aboutContent.history}</p>
+            </Reveal>
+            <Reveal delay={0.25}>
+              <div className="mt-10 rounded-3xl border-l-4 border-primary bg-white p-7 shadow-[0_20px_60px_-30px_rgba(5,13,9,0.3)]">
+                <p className="eyebrow mb-2 text-muted">Fondateur & CEO</p>
+                <p className="display-italic text-3xl text-primary">Abraham Koffi AKPOBI</p>
               </div>
-            </motion.div>
+            </Reveal>
+          </div>
 
-            {/* Founder Photo */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="relative"
-            >
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl shadow-primary/20 group">
-                <div className="aspect-[4/5] relative">
-                  <Image
-                    src="/images/team/abraham-akpobi.jpg"
-                    alt="Abraham Koffi AKPOBI - Fondateur et CEO de FINAB la solution"
-                    fill
-                    className="object-cover object-top transition-transform duration-700 group-hover:scale-105"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                  />
-                </div>
-                {/* Overlay card at bottom */}
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-dark/90 via-dark/60 to-transparent p-8">
-                  <h3 className="text-2xl font-bold text-white">Abraham Koffi AKPOBI</h3>
-                  <p className="text-primary-light font-medium">Fondateur & CEO</p>
-                  <p className="text-white/60 text-sm mt-2">
-                    Visionnaire engagé pour la résurrection financière des communautés africaines et caribéennes
-                  </p>
-                </div>
-                {/* Decorative border */}
-                <div className="absolute inset-0 rounded-3xl border-2 border-primary/20 group-hover:border-primary/40 transition-colors" />
+          <div className="relative">
+            <div className="absolute -right-6 -top-6 h-40 w-40 rounded-full bg-primary/20 blur-3xl" />
+            <div className="absolute -bottom-6 -left-6 h-48 w-48 rounded-full bg-accent/15 blur-3xl" />
+            <div className="relative overflow-hidden rounded-[2rem] shadow-[0_50px_100px_-40px_rgba(22,163,74,0.5)]">
+              <motion.div
+                initial={{ opacity: 0, scale: 1.08 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 1.4, ease: EASE }}
+                className="group relative aspect-[3/4]"
+              >
+                <Image
+                  src="/images/hero2.jpg"
+                  alt="Abraham Koffi AKPOBI - Fondateur et CEO de FINAB la solution"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover transition-transform duration-[1.4s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105"
+                />
+              </motion.div>
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/95 via-ink/60 to-transparent p-8 text-white">
+                <h3 className="text-2xl font-bold">Abraham Koffi AKPOBI</h3>
+                <p className="font-medium text-primary-light">Fondateur & CEO</p>
+                <p className="mt-2 text-sm text-white/65">
+                  Visionnaire engagé pour la résurrection financière des communautés africaines et caribéennes
+                </p>
               </div>
-              {/* Decorative elements */}
-              <div className="absolute -top-4 -right-4 w-24 h-24 bg-primary/10 rounded-full blur-2xl" />
-              <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-accent/10 rounded-full blur-2xl" />
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Mission & Vision */}
-      <section className="py-24 bg-surface">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid md:grid-cols-2 gap-12">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="bg-white rounded-3xl p-10 shadow-sm relative overflow-hidden group"
-            >
-              <div className="absolute top-0 right-0 w-40 h-40 opacity-10 transition-transform duration-500 group-hover:scale-125">
-                <Image
-                  src="/images/photos/equipe-finab-961ba3.jpg"
-                  alt=""
-                  fill
-                  className="object-cover rounded-bl-3xl"
-                />
-              </div>
-              <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 relative">
-                <svg className="w-8 h-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <section className="relative overflow-hidden bg-ink py-28 text-white md:py-36">
+        <div className="absolute inset-0 opacity-15">
+          <Image src="/images/photos/communaute-finab-513ca3.jpg" alt="" fill sizes="100vw" className="object-cover" />
+        </div>
+        <div className="film-grain" />
+        <div className="relative mx-auto grid max-w-7xl gap-6 px-6 md:grid-cols-2">
+          {[
+            {
+              title: "Notre Mission",
+              text: aboutContent.mission,
+              image: "/images/photos/equipe-finab-961ba3.jpg",
+              icon: (
+                <>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 0115 0z" />
-                </svg>
-              </div>
-              <h3 className="text-2xl font-bold text-dark mb-4 relative">Notre Mission</h3>
-              <p className="text-muted leading-relaxed relative">{aboutContent.mission}</p>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="bg-white rounded-3xl p-10 shadow-sm relative overflow-hidden group"
-            >
-              <div className="absolute top-0 right-0 w-40 h-40 opacity-10 transition-transform duration-500 group-hover:scale-125">
-                <Image
-                  src="/images/photos/equipe-finab-32742e.jpg"
-                  alt=""
-                  fill
-                  className="object-cover rounded-bl-3xl"
-                />
-              </div>
-              <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 relative">
-                <svg className="w-8 h-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                </>
+              ),
+            },
+            {
+              title: "Notre Vision",
+              text: aboutContent.vision,
+              image: "/images/photos/equipe-finab-32742e.jpg",
+              icon: (
+                <>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
+                </>
+              ),
+            },
+          ].map((card, i) => (
+            <motion.article
+              key={card.title}
+              initial={{ opacity: 0, y: 70 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 1.1, delay: i * 0.15, ease: EASE }}
+              className="glow-border group relative min-h-[420px] overflow-hidden rounded-[2rem] bg-ink-3 p-10 md:p-12"
+            >
+              <div className="absolute inset-0 overflow-hidden rounded-[2rem]">
+                <Image
+                  src={card.image}
+                  alt=""
+                  fill
+                  sizes="50vw"
+                  className="object-cover opacity-25 transition-all duration-[1.4s] group-hover:scale-110 group-hover:opacity-40"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-ink-3 via-ink-3/80 to-ink-3/30" />
               </div>
-              <h3 className="text-2xl font-bold text-dark mb-4 relative">Notre Vision</h3>
-              <p className="text-muted leading-relaxed relative">{aboutContent.vision}</p>
-            </motion.div>
-          </div>
+              <div className="relative flex h-full flex-col justify-end">
+                <span className="mb-8 flex h-16 w-16 items-center justify-center rounded-2xl border border-primary/30 bg-primary/15 text-primary-light">
+                  <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    {card.icon}
+                  </svg>
+                </span>
+                <h3 className="text-3xl font-bold tracking-[-0.02em] md:text-4xl">{card.title}</h3>
+                <p className="mt-4 text-lg leading-relaxed text-white/70">{card.text}</p>
+              </div>
+            </motion.article>
+          ))}
         </div>
       </section>
 
-      {/* Values */}
-      <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
+      {/* Valeurs */}
+      <section className="bg-cream py-28 md:py-36">
+        <div className="mx-auto max-w-7xl px-6">
           <SectionHeading
             badge="Nos valeurs"
             title="Ce qui nous guide"
             subtitle="Nos valeurs fondamentales définissent chacune de nos actions"
+            highlight={["guide"]}
           />
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
             {aboutContent.values.map((value, i) => (
               <motion.div
                 key={value.title}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                whileHover={{ y: -5 }}
-                className="text-center p-8 rounded-2xl bg-surface hover:shadow-lg transition-all"
+                transition={{ duration: 0.9, delay: i * 0.1, ease: EASE }}
+                className="group relative overflow-hidden rounded-[2rem] bg-white p-8 shadow-[0_20px_60px_-35px_rgba(5,13,9,0.35)] ring-1 ring-black/5 transition-all duration-500 hover:-translate-y-2 hover:bg-ink hover:text-white"
               >
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary/10 to-primary-light/10 flex items-center justify-center mx-auto mb-6">
-                  <span className="text-2xl font-bold text-primary">{value.title[0]}</span>
-                </div>
-                <h3 className="text-lg font-bold text-dark mb-3">{value.title}</h3>
-                <p className="text-sm text-muted leading-relaxed">{value.description}</p>
+                <span className="pointer-events-none absolute -right-4 -top-10 font-display text-[10rem] italic leading-none text-primary/10 transition-colors duration-500 group-hover:text-primary/25">
+                  {value.title[0]}
+                </span>
+                <span className="relative mb-10 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary-light font-display text-2xl text-white">
+                  {value.title[0]}
+                </span>
+                <h3 className="relative text-xl font-bold">{value.title}</h3>
+                <p className="relative mt-3 text-sm leading-relaxed text-muted transition-colors duration-500 group-hover:text-white/65">
+                  {value.description}
+                </p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Team image gallery section */}
-      <section className="py-24 bg-surface">
-        <div className="max-w-7xl mx-auto px-6">
+      {/* Équipe */}
+      <section className="bg-surface py-28 md:py-36">
+        <div className="mx-auto max-w-7xl px-6">
           <SectionHeading
             badge="Notre équipe"
             title="Des professionnels engagés"
             subtitle="Une équipe multiculturelle au service de votre réussite"
+            highlight={["engagés"]}
           />
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              { src: "/images/photos/equipe-direction-7aeb02.jpg", label: "Équipe direction" },
-              { src: "/images/photos/equipe-direction-ed46bb.jpg", label: "Conseil financier" },
-              { src: "/images/photos/equipe-direction-90978c.jpg", label: "Service client" },
-              { src: "/images/photos/equipe-direction-4b31d6.jpg", label: "Formation" },
-            ].map((item, i) => (
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
+            {team.map((item, i) => (
               <motion.div
-                key={i}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
+                key={item.src}
+                initial={{ opacity: 0, y: 60 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                whileHover={{ scale: 1.03 }}
-                className="relative aspect-square rounded-2xl overflow-hidden group cursor-pointer"
+                transition={{ duration: 1, delay: i * 0.12, ease: EASE }}
+                className={`group relative aspect-[3/4] overflow-hidden rounded-[1.75rem] ${i % 2 === 1 ? "md:mt-16" : ""}`}
               >
                 <Image
                   src={item.src}
                   alt={item.label}
                   fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-110"
                   sizes="(max-width: 768px) 50vw, 25vw"
+                  className="object-cover grayscale-[40%] transition-all duration-[1.2s] group-hover:scale-110 group-hover:grayscale-0"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-dark/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                  <p className="text-white font-medium text-sm">{item.label}</p>
-                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-transparent" />
+                <p className="absolute bottom-5 left-5 font-semibold text-white">{item.label}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Stats */}
-      <section className="py-20 bg-primary-dark relative overflow-hidden">
-        <div className="absolute inset-0 opacity-15">
-          <Image
-            src="/images/photos/communaute-finab-canada-afrique-haiti-4037e9.jpg"
-            alt=""
-            fill
-            className="object-cover"
-          />
+      {/* Chiffres */}
+      <section className="relative overflow-hidden bg-primary-dark py-24 text-white">
+        <div className="absolute inset-0 opacity-20">
+          <Image src="/images/photos/communaute-finab-canada-afrique-haiti-4037e9.jpg" alt="" fill sizes="100vw" className="slow-zoom object-cover" />
         </div>
-        <div className="max-w-7xl mx-auto px-6 relative">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat, i) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="text-center"
-              >
-                <div className="text-4xl md:text-5xl font-bold text-accent mb-2">{stat.value}</div>
-                <div className="text-white/60 text-sm">{stat.label}</div>
-              </motion.div>
-            ))}
-          </div>
+        <div className="absolute inset-0 bg-gradient-to-r from-ink/70 to-primary-dark/40" />
+        <div className="film-grain" />
+        <div className="relative mx-auto grid max-w-7xl grid-cols-2 gap-8 px-6 md:grid-cols-4">
+          {stats.map((stat) => (
+            <AnimatedCounter
+              key={stat.label}
+              value={stat.value}
+              label={stat.label}
+              className="text-center"
+              valueClassName="whitespace-nowrap font-display text-4xl font-semibold text-white md:text-6xl"
+              labelClassName="mt-2 text-xs uppercase tracking-[0.2em] text-white/65"
+            />
+          ))}
         </div>
       </section>
     </>

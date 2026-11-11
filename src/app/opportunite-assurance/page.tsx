@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import BookingForm from "./BookingForm";
+import Reveal from "@/components/immersive/Reveal";
 import "./opportunite.css";
 
 export const metadata: Metadata = {
@@ -123,19 +124,19 @@ export default function OpportuniteAssurancePage() {
 
       <section className="opportunity-section opportunity-section-light" id="parcours">
         <div className="opportunity-container">
-          <div className="opportunity-section-heading">
+          <Reveal className="opportunity-section-heading">
             <div>
               <div className="opportunity-eyebrow dark"><span className="opportunity-eyebrow-line" /> CE QUE VOUS ALLEZ CLARIFIER</div>
               <h2>Une décision professionnelle mérite une information de qualité.</h2>
             </div>
             <p>Un premier échange vous permet de distinguer ce qui est possible, ce qui est requis et ce qui doit être préparé.</p>
-          </div>
+          </Reveal>
           <div className="opportunity-benefit-grid">
-            {benefits.map((benefit) => (
-              <div className="opportunity-benefit" key={benefit}>
+            {benefits.map((benefit, i) => (
+              <Reveal className="opportunity-benefit" key={benefit} delay={i * 0.08}>
                 <CheckIcon />
                 <span>{benefit}</span>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -143,18 +144,18 @@ export default function OpportuniteAssurancePage() {
 
       <section className="opportunity-section opportunity-section-cream">
         <div className="opportunity-container">
-          <div className="opportunity-section-heading stacked">
+          <Reveal className="opportunity-section-heading stacked">
             <div className="opportunity-eyebrow dark"><span className="opportunity-eyebrow-line" /> LES CONDITIONS À CONNAÎTRE</div>
             <h2>La clarté avant l’engagement.</h2>
             <p>Cette voie demande de la disponibilité et de la constance. Voici les éléments essentiels à comprendre avant votre appel.</p>
-          </div>
+          </Reveal>
           <div className="opportunity-requirement-grid">
-            {requirements.map((item) => (
-              <article className="opportunity-requirement" key={item.number}>
+            {requirements.map((item, i) => (
+              <Reveal as="article" className="opportunity-requirement" key={item.number} delay={i * 0.12}>
                 <span className="opportunity-number">{item.number}</span>
                 <h3>{item.title}</h3>
                 <p>{item.text}</p>
-              </article>
+              </Reveal>
             ))}
           </div>
           <div className="opportunity-fee-note">
@@ -172,11 +173,11 @@ export default function OpportuniteAssurancePage() {
             <h2>Atteignez votre objectif. <em>Soyez reconnu(e).</em></h2>
             <p>Selon les conditions et les critères du programme, une prime pouvant atteindre <strong>3 000 $</strong> peut être offerte lorsque le permis est obtenu dans le délai prévu.</p>
           </div>
-          <div className="opportunity-bonus-badge">
+          <Reveal direction="scale" className="opportunity-bonus-badge">
             <span>Jusqu&apos;à</span>
             <strong>3 000 $</strong>
             <small>selon les conditions du programme</small>
-          </div>
+          </Reveal>
         </div>
       </section>
 

@@ -1,7 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Link from "next/link";
+import Magnetic from "@/components/immersive/Magnetic";
 
 interface ButtonProps {
   children: React.ReactNode;
@@ -27,61 +27,58 @@ export default function Button({
   disabled = false,
 }: ButtonProps) {
   const baseStyles =
-    "inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-300 cursor-pointer";
+    "group relative isolate inline-flex items-center justify-center gap-2 overflow-hidden rounded-full font-semibold tracking-tight transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] cursor-pointer active:scale-[0.97]";
 
   const variants = {
-    primary: "bg-primary text-white hover:bg-primary-light shadow-lg hover:shadow-xl hover:shadow-primary/20",
-    secondary: "bg-accent text-white hover:bg-accent-light shadow-lg hover:shadow-xl hover:shadow-accent/20",
-    outline: "border-2 border-primary text-primary hover:bg-primary hover:text-white",
-    accent: "bg-accent text-white hover:bg-accent-light shadow-lg hover:shadow-xl hover:shadow-accent/30",
+    primary:
+      "bg-primary text-white shadow-[0_10px_40px_-10px_rgba(22,163,74,0.7)] hover:bg-primary-light hover:shadow-[0_18px_50px_-12px_rgba(34,197,94,0.8)]",
+    secondary:
+      "bg-accent text-white shadow-[0_10px_40px_-10px_rgba(220,38,38,0.7)] hover:bg-accent-light hover:shadow-[0_18px_50px_-12px_rgba(239,68,68,0.8)]",
+    outline: "border border-primary/60 text-primary hover:bg-primary hover:text-white hover:border-primary",
+    accent:
+      "bg-accent text-white shadow-[0_10px_40px_-10px_rgba(220,38,38,0.7)] hover:bg-accent-light hover:shadow-[0_18px_50px_-12px_rgba(239,68,68,0.8)]",
     ghost: "text-primary hover:bg-primary/10",
   };
 
   const sizes = {
     sm: "px-4 py-2 text-sm",
     md: "px-6 py-3 text-base",
-    lg: "px-8 py-4 text-lg",
+    lg: "px-8 py-4 text-base md:text-lg",
   };
 
-  const classes = `${baseStyles} ${variants[variant]} ${sizes[size]} ${className} ${disabled ? "opacity-50 cursor-not-allowed" : ""}`;
+  const classes = `${baseStyles} ${variants[variant]} ${sizes[size]} ${className} ${disabled ? "pointer-events-none opacity-50" : ""}`;
 
-  const motionProps = {
-    whileHover: disabled ? {} : { scale: 1.03 },
-    whileTap: disabled ? {} : { scale: 0.97 },
-  };
+  const content = (
+    <>
+      {variant !== "ghost" && (
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-y-0 -left-1/2 -z-10 w-1/2 -skew-x-12 bg-gradient-to-r from-transparent via-white/35 to-transparent opacity-0 transition-all duration-700 group-hover:left-[120%] group-hover:opacity-100"
+        />
+      )}
+      <span className="relative inline-flex items-center gap-2">{children}</span>
+    </>
+  );
 
+  let element: React.ReactNode;
   if (href) {
-    if (external) {
-      return (
-        <motion.a
-          href={href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={classes}
-          {...motionProps}
-        >
-          {children}
-        </motion.a>
-      );
-    }
-    return (
+    element = external ? (
+      <a href={href} target="_blank" rel="noopener noreferrer" className={classes}>
+        {content}
+      </a>
+    ) : (
       <Link href={href} className={classes}>
-        <motion.span className="inline-flex items-center gap-2" {...motionProps}>
-          {children}
-        </motion.span>
+        {content}
       </Link>
+    );
+  } else {
+    element = (
+      <button type={type} onClick={onClick} className={classes} disabled={disabled}>
+        {content}
+      </button>
     );
   }
 
-  return (
-    <motion.button
-      type={type}
-      onClick={onClick}
-      className={classes}
-      disabled={disabled}
-      {...motionProps}
-    >
-      {children}
-    </motion.button>
-  );
+  if (variant === "ghost" || size === "sm") return element;
+  return <Magnetic strength={0.25}>{element}</Magnetic>;
 }

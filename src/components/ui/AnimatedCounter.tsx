@@ -20,16 +20,13 @@ export default function AnimatedCounter({
 }: AnimatedCounterProps) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
-  const [displayValue, setDisplayValue] = useState("0");
+  const [displayValue, setDisplayValue] = useState(() => (/^[\d,]+/.test(value) ? "0" : value));
 
   useEffect(() => {
     if (!isInView) return;
 
     const numericMatch = value.match(/^([\d,]+)/);
-    if (!numericMatch) {
-      setDisplayValue(value);
-      return;
-    }
+    if (!numericMatch) return;
 
     const target = parseInt(numericMatch[1].replace(/,/g, ""), 10);
     const suffix = value.slice(numericMatch[0].length);

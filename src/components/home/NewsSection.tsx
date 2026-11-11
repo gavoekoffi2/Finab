@@ -1,63 +1,91 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import SectionHeading from "@/components/ui/SectionHeading";
-import AnimatedCard from "@/components/ui/AnimatedCard";
+import Reveal from "@/components/immersive/Reveal";
 import Button from "@/components/ui/Button";
-import { newsArticles } from "@/data/content";
+import { newsArticles, newsImages } from "@/data/content";
 import { ArrowRightIcon } from "@/components/ui/Icons";
 
-const newsImages: Record<string, string> = {
-  "education-financiere-2025": "/images/photos/actualite-finab-81824c.jpg",
-  "partenariat-afrique": "/images/photos/actualite-finab-40ddef.jpg",
-  "impots-canada-guide": "/images/photos/actualite-finab-9226e1.jpg",
-  "recrutement-international": "/images/photos/actualite-finab-c8c2a4.jpg",
-};
+function formatDate(date: string) {
+  return new Date(date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+}
 
 export default function NewsSection() {
-  return (
-    <section className="py-24 bg-surface">
-      <div className="max-w-7xl mx-auto px-6">
-        <SectionHeading
-          badge="Actualités"
-          title="Dernières nouvelles"
-          subtitle="Restez informé de nos dernières activités et développements"
-        />
+  const [featured, ...others] = newsArticles;
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {newsArticles.map((article, i) => (
-            <AnimatedCard key={article.id} delay={i * 0.1}>
-              <div className="relative h-48 overflow-hidden group">
-                <Image
-                  src={newsImages[article.id] || "/images/photos/actualite-finab-81824c.jpg"}
-                  alt={article.title}
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-110"
-                  sizes="(max-width: 768px) 100vw, 25vw"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-dark/50 to-transparent" />
-                <div className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-semibold bg-primary/90 text-white backdrop-blur-sm">
-                  {article.category}
-                </div>
-              </div>
-              <div className="p-6">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="text-xs text-muted">{new Date(article.date).toLocaleDateString("fr-FR")}</span>
-                </div>
-                <h3 className="font-bold text-dark mb-2 line-clamp-2">{article.title}</h3>
-                <p className="text-sm text-muted line-clamp-3 mb-4">{article.excerpt}</p>
-                <Button href={`/actualites#${article.id}`} variant="ghost" size="sm" className="text-xs">
-                  Lire la suite <ArrowRightIcon className="w-3 h-3 ml-1" />
-                </Button>
-              </div>
-            </AnimatedCard>
-          ))}
+  return (
+    <section className="relative bg-surface py-28 md:py-36">
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
+          <SectionHeading
+            badge="Actualités"
+            title="Dernières nouvelles"
+            subtitle="Restez informé de nos dernières activités et développements"
+            center={false}
+            highlight={["nouvelles"]}
+          />
+          <div className="mb-14 md:mb-20">
+            <Button href="/actualites" variant="outline">
+              Toutes les actualités
+            </Button>
+          </div>
         </div>
 
-        <div className="text-center mt-12">
-          <Button href="/actualites" variant="outline">
-            Toutes les actualités
-          </Button>
+        <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
+          <Reveal className="lg:col-span-7">
+            <Link href={`/actualites#${featured.id}`} className="group block" data-cursor="Lire">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem]">
+                <Image
+                  src={newsImages[featured.id] || "/images/photos/actualite-finab-81824c.jpg"}
+                  alt={featured.title}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 60vw"
+                  className="object-cover transition-transform duration-[1.6s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/10 to-transparent" />
+                <span className="absolute left-6 top-6 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-white">{featured.category}</span>
+                <div className="absolute inset-x-0 bottom-0 p-6 text-white md:p-10">
+                  <p className="text-xs uppercase tracking-[0.2em] text-white/60">{formatDate(featured.date)}</p>
+                  <h3 className="mt-3 text-2xl font-bold tracking-[-0.02em] md:text-4xl">{featured.title}</h3>
+                  <p className="mt-3 line-clamp-2 max-w-xl text-white/75">{featured.excerpt}</p>
+                  <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-primary-light">
+                    Lire la suite <ArrowRightIcon className="h-4 w-4 transition-transform duration-500 group-hover:translate-x-2" />
+                  </span>
+                </div>
+              </div>
+            </Link>
+          </Reveal>
+
+          <div className="flex flex-col divide-y divide-black/10 lg:col-span-5">
+            {others.map((article, i) => (
+              <Reveal key={article.id} delay={0.1 + i * 0.1}>
+                <Link href={`/actualites#${article.id}`} className="group flex gap-5 py-6 first:pt-0">
+                  <div className="relative h-24 w-28 flex-shrink-0 overflow-hidden rounded-2xl md:h-28 md:w-36">
+                    <Image
+                      src={newsImages[article.id] || "/images/photos/actualite-finab-81824c.jpg"}
+                      alt={article.title}
+                      fill
+                      sizes="150px"
+                      className="object-cover transition-transform duration-[1.2s] group-hover:scale-110"
+                    />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="mb-2 flex items-center gap-3 text-xs">
+                      <span className="font-semibold uppercase tracking-[0.15em] text-primary">{article.category}</span>
+                      <span className="text-muted">{formatDate(article.date)}</span>
+                    </div>
+                    <h3 className="line-clamp-2 font-bold text-ink transition-colors group-hover:text-primary md:text-lg">{article.title}</h3>
+                    <p className="mt-1 line-clamp-2 text-sm text-muted">{article.excerpt}</p>
+                    <span className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-primary">
+                      Lire la suite <ArrowRightIcon className="h-3 w-3 transition-transform duration-500 group-hover:translate-x-1" />
+                    </span>
+                  </div>
+                </Link>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </div>
     </section>

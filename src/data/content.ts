@@ -340,3 +340,47 @@ export const aboutContent = {
   history:
     "Fondée par Abraham Koffi AKPOBI, FINAB la solution est née de la volonté de créer un pont entre le Canada et les communautés africaines et caribéennes. Face aux défis financiers rencontrés par les diasporas, FINAB propose des solutions adaptées qui tiennent compte des réalités de chaque continent. Depuis sa création, l'entreprise n'a cessé de croître, ajoutant constamment de nouveaux services pour répondre aux besoins de ses clients.",
 };
+
+// Photos associées aux produits (réutilisées sur l'accueil, la page Produits et les Services)
+export const productImages: Record<string, { src: string; alt: string }> = {
+  "education-financiere": {
+    src: "/images/photos/education-financiere-apprentissage-et-formation-14465d.jpg",
+    alt: "Éducation financière - Apprentissage et formation",
+  },
+  "declarations-impots": {
+    src: "/images/photos/education-financiere-apprentissage-et-formation-eb4e97.jpg",
+    alt: "Déclarations d'impôts - Consultation professionnelle",
+  },
+  "formation-recrutement": {
+    src: "/images/photos/education-financiere-apprentissage-et-formation-eaa682.jpg",
+    alt: "Formation et recrutement - Équipe professionnelle",
+  },
+  "assurance-vie": {
+    src: "/images/assurance-vie.jpg",
+    alt: "Assurance Vie - Famille africaine unie",
+  },
+  "assurance-sante": {
+    src: "/images/photos/assurance-vie-famille-africaine-unie-7b2b1f.jpg",
+    alt: "Assurance Santé - Soins médicaux de qualité",
+  },
+  "micro-assurance": {
+    src: "/images/photos/assurance-vie-famille-africaine-unie-70af45.jpg",
+    alt: "Micro-assurance - Petits entrepreneurs africains",
+  },
+  "assurance-voyage": {
+    src: "/images/assurance-voyage.jpg",
+    alt: "Assurance Voyage - Voyager en toute sérénité",
+  },
+  "epargne-investissement": {
+    src: "/images/photos/micro-assurance-petits-entrepreneurs-africains-ed53a2.jpg",
+    alt: "Épargne et investissement - Croissance financière",
+  },
+};
+
+// Photos des articles d'actualité
+export const newsImages: Record<string, string> = {
+  "education-financiere-2025": "/images/photos/actualite-finab-81824c.jpg",
+  "partenariat-afrique": "/images/photos/actualite-finab-40ddef.jpg",
+  "impots-canada-guide": "/images/photos/actualite-finab-9226e1.jpg",
+  "recrutement-international": "/images/photos/actualite-finab-c8c2a4.jpg",
+};

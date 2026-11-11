@@ -2,54 +2,66 @@
 
 import { motion } from "framer-motion";
 import AnimatedCounter from "@/components/ui/AnimatedCounter";
-import { stats } from "@/data/content";
+import { stats, productsCanada, productsAfrica } from "@/data/content";
+
+const services = [...productsCanada, ...productsAfrica].map((p) => p.title);
+
+function MarqueeRow({ reverse = false, outline = false }: { reverse?: boolean; outline?: boolean }) {
+  const items = [...services, ...services];
+  return (
+    <div className="flex overflow-hidden" aria-hidden="true">
+      <div className={`marquee ${reverse ? "marquee-reverse" : ""}`} style={{ ["--marquee-duration" as string]: "60s" }}>
+        {items.map((title, i) => (
+          <span key={i} className="flex items-center whitespace-nowrap">
+            <span
+              className={`px-6 text-5xl font-bold tracking-[-0.04em] md:text-7xl ${
+                outline ? "text-outline" : "display-italic font-normal text-white/90"
+              }`}
+            >
+              {title}
+            </span>
+            <span className={`text-3xl ${i % 2 ? "text-accent-light" : "text-primary-light"}`}>✦</span>
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function StatsSection() {
   return (
-    <section className="py-20 bg-dark relative overflow-hidden noise">
-      {/* Decorative background */}
-      <div className="absolute inset-0">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/15 rounded-full blur-[120px]" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-primary-light/20 rounded-full blur-[120px]" />
-        <div className="absolute inset-0 animate-shimmer" />
-      </div>
+    <section className="relative overflow-hidden bg-ink py-24 text-white md:py-32">
+      <div className="film-grain" />
+      <div className="breathe absolute left-1/4 top-0 h-96 w-96 rounded-full bg-primary/20 blur-[140px]" />
+      <div className="breathe absolute bottom-0 right-1/4 h-96 w-96 rounded-full bg-accent/15 blur-[140px]" />
 
-      <div className="max-w-7xl mx-auto px-6 relative">
+      <div className="relative mx-auto max-w-7xl px-6">
         <motion.p
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center text-primary-light font-semibold text-sm tracking-widest uppercase mb-12"
+          className="eyebrow mb-14 justify-center text-primary-light"
         >
           FINAB en chiffres
         </motion.p>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 divide-white/10 md:grid-cols-4 md:divide-x">
           {stats.map((stat) => (
             <AnimatedCounter
               key={stat.label}
               value={stat.value}
               label={stat.label}
-              className="text-center"
-              valueClassName="text-4xl md:text-5xl lg:text-6xl font-bold text-gradient mb-2"
-              labelClassName="text-white/60 text-sm md:text-base"
+              className="px-4 py-6 text-center"
+              valueClassName="text-gradient whitespace-nowrap font-display text-[2.6rem] font-semibold tracking-tight sm:text-6xl xl:text-7xl"
+              labelClassName="mt-3 text-xs uppercase tracking-[0.25em] text-white/55 md:text-sm"
             />
           ))}
         </div>
+      </div>
 
-        {/* Divider accents */}
-        <div className="flex justify-center mt-12 gap-2">
-          {[...Array(3)].map((_, i) => (
-            <motion.div
-              key={i}
-              initial={{ scaleX: 0 }}
-              whileInView={{ scaleX: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.5 + i * 0.1 }}
-              className={`h-1 rounded-full ${i === 1 ? "w-12 bg-primary-light" : "w-6 bg-white/20"}`}
-            />
-          ))}
-        </div>
+      <div className="relative mt-20 space-y-4 md:mt-28">
+        <MarqueeRow />
+        <MarqueeRow reverse outline />
       </div>
     </section>
   );

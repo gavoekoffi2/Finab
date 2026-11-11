@@ -1,11 +1,15 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import StickyBar from "@/components/layout/StickyBar";
-import DesktopStickyBar from "@/components/layout/DesktopStickyBar";
 import Chatbot from "@/components/chatbot/Chatbot";
+import SmoothScroll from "@/components/immersive/SmoothScroll";
+import IntroLoader from "@/components/immersive/IntroLoader";
+import CustomCursor from "@/components/immersive/CustomCursor";
+import ScrollProgress from "@/components/immersive/ScrollProgress";
+import MotionProvider from "@/components/immersive/MotionProvider";
 
 const inter = localFont({
   src: [
@@ -15,6 +19,24 @@ const inter = localFont({
   display: "swap",
   fallback: ["system-ui", "-apple-system", "Segoe UI", "Roboto", "sans-serif"],
 });
+
+// Police éditoriale pour les mots mis en valeur
+const fraunces = localFont({
+  src: [
+    { path: "./fonts/fraunces-latin.woff2", weight: "100 900", style: "normal" },
+    { path: "./fonts/fraunces-latin-italic.woff2", weight: "100 900", style: "italic" },
+  ],
+  variable: "--font-fraunces",
+  display: "swap",
+  fallback: ["Georgia", "Times New Roman", "serif"],
+});
+
+// Évite de rejouer l'écran d'ouverture pendant la même visite (lu avant l'affichage).
+const introScript = `try{if(sessionStorage.getItem('finab-intro-seen')==='1'||window.matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('intro-seen')}}catch(e){}`;
+
+export const viewport: Viewport = {
+  themeColor: "#050d09",
+};
 
 export const metadata: Metadata = {
   title: {
@@ -85,14 +107,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" className={inter.variable}>
+    <html lang="fr" className={`${inter.variable} ${fraunces.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: introScript }} />
+        <noscript>
+          <style>{`.intro-overlay{display:none!important}`}</style>
+        </noscript>
+      </head>
       <body className="antialiased font-sans">
-        <Header />
-        <main className="min-h-screen">{children}</main>
-        <Footer />
-        <StickyBar />
-        <DesktopStickyBar />
-        <Chatbot />
+        <MotionProvider>
+          <IntroLoader />
+          <SmoothScroll />
+          <ScrollProgress />
+          <Header />
+          <main className="min-h-screen">{children}</main>
+          <Footer />
+          <StickyBar />
+          <Chatbot />
+          <CustomCursor />
+        </MotionProvider>
       </body>
     </html>
   );

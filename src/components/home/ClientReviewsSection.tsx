@@ -1,6 +1,7 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import SplitText from "@/components/immersive/SplitText";
 
 interface Review {
   id: string;
@@ -63,59 +64,55 @@ function ReviewCard({ review, index }: { review: Review; index: number }) {
     "from-red-500 to-red-700",
     "from-green-500 to-green-700",
     "from-blue-500 to-blue-700",
-    "from-purple-500 to-purple-700",
+    "from-emerald-500 to-emerald-700",
     "from-orange-500 to-orange-700",
     "from-teal-500 to-teal-700",
   ];
   const color = colors[index % colors.length];
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.08 }}
-      className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 flex flex-col gap-4 hover:shadow-xl transition-shadow duration-300 relative overflow-hidden group"
-    >
-      {/* Accent décoratif */}
-      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-primary-light opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+    <article className="group relative flex w-[320px] flex-shrink-0 flex-col gap-4 overflow-hidden rounded-3xl bg-white p-7 shadow-[0_20px_60px_-30px_rgba(5,13,9,0.35)] ring-1 ring-black/5 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_30px_70px_-30px_rgba(22,163,74,0.45)] md:w-[380px]">
+      <div className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-gradient-to-r from-primary to-accent transition-transform duration-700 group-hover:scale-x-100" />
+      <div className="absolute right-6 top-2 select-none font-display text-7xl leading-none text-primary/10">&ldquo;</div>
 
-      {/* Guillemet décoratif */}
-      <div className="absolute top-4 right-4 text-5xl text-primary/10 font-serif leading-none select-none">
-        &ldquo;
-      </div>
-
-      {/* En-tête */}
       <div className="flex items-center gap-3">
-        <div
-          className={`w-11 h-11 rounded-full bg-gradient-to-br ${color} flex items-center justify-center text-white font-bold text-sm flex-shrink-0`}
-        >
+        <div className={`flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${color} text-sm font-bold text-white`}>
           {initials}
         </div>
         <div>
-          <p className="font-bold text-dark text-sm">{review.name}</p>
-          {review.location && (
-            <p className="text-muted text-xs">{review.location}</p>
-          )}
+          <p className="text-sm font-bold text-ink">{review.name}</p>
+          {review.location && <p className="text-xs text-muted">{review.location}</p>}
         </div>
       </div>
 
-      {/* Étoiles */}
       <StarRating value={review.rating} readonly />
 
-      {/* Texte */}
-      <p className="text-dark/75 text-sm leading-relaxed italic flex-1">
-        &ldquo;{review.text}&rdquo;
-      </p>
+      <p className="flex-1 text-sm leading-relaxed text-ink/75">&ldquo;{review.text}&rdquo;</p>
 
-      {/* Date */}
-      <p className="text-muted text-xs">
+      <p className="text-xs text-muted">
         {new Date(review.date).toLocaleDateString("fr-FR", {
           year: "numeric",
           month: "long",
           day: "numeric",
         })}
       </p>
-    </motion.div>
+    </article>
+  );
+}
+
+function ReviewsMarquee({ reviews, reverse = false }: { reviews: Review[]; reverse?: boolean }) {
+  const items = [...reviews, ...reviews];
+  return (
+    <div className="marquee-pause flex overflow-hidden py-3 [mask-image:linear-gradient(90deg,transparent,black_6%,black_94%,transparent)]">
+      <div
+        className={`marquee gap-6 pr-6 ${reverse ? "marquee-reverse" : ""}`}
+        style={{ ["--marquee-duration" as string]: `${Math.max(30, reviews.length * 9)}s` }}
+      >
+        {items.map((review, i) => (
+          <ReviewCard key={`${review.id}-${i}`} review={review} index={i % reviews.length} />
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -126,8 +123,6 @@ export default function ClientReviewsSection() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
-  const [visibleStart, setVisibleStart] = useState(0);
-  const autoScrollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const [form, setForm] = useState({
     name: "",
@@ -146,27 +141,6 @@ export default function ClientReviewsSection() {
       })
       .catch(() => setLoading(false));
   }, []);
-
-  // Auto-scroll du carousel
-  const VISIBLE = 3;
-  useEffect(() => {
-    if (reviews.length <= VISIBLE) return;
-    autoScrollRef.current = setInterval(() => {
-      setVisibleStart((prev) => (prev + 1) % reviews.length);
-    }, 4000);
-    return () => {
-      if (autoScrollRef.current) clearInterval(autoScrollRef.current);
-    };
-  }, [reviews.length]);
-
-  const getVisibleReviews = () => {
-    if (reviews.length === 0) return [];
-    const result = [];
-    for (let i = 0; i < Math.min(VISIBLE, reviews.length); i++) {
-      result.push(reviews[(visibleStart + i) % reviews.length]);
-    }
-    return result;
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -209,28 +183,27 @@ export default function ClientReviewsSection() {
       : "5.0";
 
   return (
-    <section className="py-24 bg-white relative overflow-hidden">
-      {/* Fond décoratif */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/3 via-transparent to-primary/5 pointer-events-none" />
-      <div className="absolute top-10 right-10 w-72 h-72 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-10 left-10 w-56 h-56 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
+    <section className="relative overflow-hidden bg-cream py-28 md:py-36">
+      <div className="pointer-events-none absolute right-10 top-10 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
+      <div className="pointer-events-none absolute bottom-10 left-10 h-56 w-56 rounded-full bg-accent/10 blur-3xl" />
 
-      <div className="max-w-7xl mx-auto px-6 relative">
+      <div className="relative">
         {/* En-tête de section */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-14"
-        >
-          <span className="inline-block bg-primary/10 text-primary text-sm font-semibold px-4 py-1.5 rounded-full mb-4">
+        <div className="mx-auto mb-14 max-w-7xl px-6 text-center">
+          <motion.span
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="eyebrow mb-6 justify-center text-primary"
+          >
             Avis clients
-          </span>
-          <h2 className="text-3xl md:text-4xl font-bold text-dark mb-4">
-            Ce que pensent nos clients
-          </h2>
-          <p className="text-muted text-lg max-w-2xl mx-auto">
+          </motion.span>
+          <SplitText
+            text="Ce que pensent nos clients"
+            highlight={["clients"]}
+            className="text-4xl font-bold leading-[1.02] tracking-[-0.035em] text-ink md:text-5xl lg:text-6xl"
+          />
+          <p className="mx-auto mt-6 max-w-2xl text-lg text-muted">
             Des témoignages authentiques de personnes qui nous ont fait confiance
             au Canada, en Afrique et en Haïti.
           </p>
@@ -242,7 +215,7 @@ export default function ClientReviewsSection() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
-              className="inline-flex items-center gap-3 mt-6 bg-primary/5 border border-primary/15 rounded-2xl px-6 py-3"
+              className="mt-8 inline-flex items-center gap-3 rounded-full bg-white px-6 py-3 shadow-sm ring-1 ring-black/5"
             >
               <div className="flex gap-0.5">
                 {[1, 2, 3, 4, 5].map((s) => (
@@ -256,53 +229,47 @@ export default function ClientReviewsSection() {
                   </svg>
                 ))}
               </div>
-              <span className="font-bold text-dark text-lg">{avgRating}</span>
-              <span className="text-muted text-sm">
-                · {reviews.length} avis vérifiés
-              </span>
+              <span className="font-display text-xl font-semibold text-ink">{avgRating}</span>
+              <span className="text-sm text-muted">· {reviews.length} avis vérifiés</span>
             </motion.div>
           )}
-        </motion.div>
+        </div>
 
-        {/* Carousel d'avis */}
+        {/* Bandeaux d'avis */}
         {loading ? (
           <div className="flex justify-center py-16">
-            <div className="w-10 h-10 border-4 border-primary/30 border-t-primary rounded-full animate-spin" />
+            <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary/30 border-t-primary" />
           </div>
         ) : reviews.length === 0 ? (
-          <p className="text-center text-muted py-12">
-            Soyez le premier à laisser un avis !
-          </p>
-        ) : (
-          <div className="relative">
-            <AnimatePresence mode="popLayout">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {getVisibleReviews().map((review, i) => (
-                  <ReviewCard key={review.id + visibleStart} review={review} index={i} />
-                ))}
-              </div>
-            </AnimatePresence>
-
-            {/* Indicateurs de pagination */}
-            {reviews.length > VISIBLE && (
-              <div className="flex justify-center gap-2 mt-8">
-                {reviews.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setVisibleStart(i)}
-                    className={`transition-all duration-300 rounded-full ${
-                      i === visibleStart
-                        ? "w-8 h-2.5 bg-primary"
-                        : "w-2.5 h-2.5 bg-primary/25 hover:bg-primary/50"
-                    }`}
-                    aria-label={`Voir avis ${i + 1}`}
-                  />
-                ))}
-              </div>
-            )}
+          <p className="py-12 text-center text-muted">Soyez le premier à laisser un avis !</p>
+        ) : reviews.length <= 3 ? (
+          <div className="mx-auto flex max-w-7xl flex-wrap justify-center gap-6 px-6">
+            {reviews.map((review, i) => (
+              <motion.div
+                key={review.id}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <ReviewCard review={review} index={i} />
+              </motion.div>
+            ))}
           </div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            className="space-y-2"
+          >
+            <ReviewsMarquee reviews={reviews} />
+            <ReviewsMarquee reviews={[...reviews].reverse()} reverse />
+          </motion.div>
         )}
 
+        <div className="mx-auto max-w-7xl px-6">
         {/* Bouton / Formulaire */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -314,7 +281,7 @@ export default function ClientReviewsSection() {
           {!showForm ? (
             <button
               onClick={() => setShowForm(true)}
-              className="inline-flex items-center gap-2 bg-primary text-white font-semibold px-8 py-4 rounded-2xl hover:bg-primary-dark transition-all duration-300 shadow-lg hover:shadow-primary/30 hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2 rounded-full bg-ink px-8 py-4 font-semibold text-white shadow-lg transition-all duration-500 hover:-translate-y-0.5 hover:bg-primary hover:shadow-primary/30"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -328,7 +295,7 @@ export default function ClientReviewsSection() {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -20, scale: 0.97 }}
                 transition={{ duration: 0.4 }}
-                className="max-w-xl mx-auto bg-white rounded-3xl shadow-2xl border border-gray-100 p-8 text-left"
+                className="mx-auto max-w-xl rounded-[2rem] bg-white p-8 text-left shadow-2xl ring-1 ring-black/5"
               >
                 {submitted ? (
                   <motion.div
@@ -447,6 +414,7 @@ export default function ClientReviewsSection() {
             </AnimatePresence>
           )}
         </motion.div>
+        </div>
       </div>
     </section>
   );
