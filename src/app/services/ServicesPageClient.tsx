@@ -86,7 +86,7 @@ export default function ServicesPageClient() {
     const whatsappMessage = encodeURIComponent(
       `*Demande de service FINAB*\n\nNom: ${requestForm.name}\nEmail: ${requestForm.email}\nTéléphone: ${requestForm.phone}\nService: ${requestForm.service}\nDescription: ${requestForm.description}`
     );
-    window.open(`https://wa.me/14383345252?text=${whatsappMessage}`, "_blank");
+    window.open(`https://wa.me/12635527737?text=${whatsappMessage}`, "_blank");
     setRequestSubmitted(true);
   };
 

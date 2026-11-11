@@ -3,9 +3,9 @@ export const siteConfig = {
   tagline: "La résurrection financière au service de votre avenir",
   description:
     "FINAB la solution – Éducation financière, assurances, déclarations d'impôts, formation et recrutement au Canada, en Afrique et en Haïti.",
-  phone: "+1 (438) 334-5252",
+  phone: "+1 (263) 552-7737",
   email: "info@finablasolution.cloud",
-  whatsapp: "https://wa.me/14383345252",
+  whatsapp: "https://wa.me/12635527737",
   address: "Montréal, QC, Canada",
   recruitmentUrl: "https://finabrecrutement.com",
   ceo: "Abraham Koffi AKPOBI",
@@ -265,7 +265,7 @@ export const chatbotFAQ = [
   {
     question: "Comment joindre un conseiller ?",
     answer:
-      "Vous pouvez nous joindre par téléphone au +1 (438) 334-5252, par email à info@finablasolution.cloud, ou via WhatsApp. Vous pouvez aussi utiliser notre formulaire de contact.",
+      "Vous pouvez nous joindre par téléphone au +1 (263) 552-7737, par email à info@finablasolution.cloud, ou via WhatsApp. Vous pouvez aussi utiliser notre formulaire de contact.",
   },
   {
     question: "Qui est le fondateur de FINAB ?",

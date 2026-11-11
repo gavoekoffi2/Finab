@@ -23,7 +23,7 @@ export default function ContactPageClient() {
     const whatsappMessage = encodeURIComponent(
       `*Nouveau message - FINAB Contact*\n\nNom: ${formData.name}\nEmail: ${formData.email}\nTéléphone: ${formData.phone}\nSujet: ${formData.subject}\nMessage: ${formData.message}`
     );
-    window.open(`https://wa.me/14383345252?text=${whatsappMessage}`, "_blank");
+    window.open(`https://wa.me/12635527737?text=${whatsappMessage}`, "_blank");
     setSubmitted(true);
   };
 

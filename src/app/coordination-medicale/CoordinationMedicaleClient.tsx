@@ -119,7 +119,7 @@ export default function CoordinationMedicaleClient() {
     const whatsappMessage = encodeURIComponent(
       `*Demande de Coordination Médicale*\n\nNom: ${formData.name}\nEmail: ${formData.email}\nTéléphone: ${formData.phone}\nPays: ${formData.country}\nPathologie: ${formData.pathology}\nMessage: ${formData.message}`
     );
-    window.open(`https://wa.me/14383345252?text=${whatsappMessage}`, "_blank");
+    window.open(`https://wa.me/12635527737?text=${whatsappMessage}`, "_blank");
     setSubmitted(true);
   };
 
