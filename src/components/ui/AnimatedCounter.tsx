@@ -39,14 +39,13 @@ export default function AnimatedCounter({
     if (!isInView || target === null) return;
 
     const animationTarget = target;
-    setDisplayValue(formatCounterValue(0, suffix));
     const duration = 2000;
     const startTime = performance.now();
     let rafId: number;
 
     function animate(currentTime: number) {
       const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
+      const progress = Math.max(0, Math.min(elapsed / duration, 1));
       const eased = 1 - Math.pow(1 - progress, 3);
       const current = Math.round(eased * animationTarget);
       setDisplayValue(formatCounterValue(current, suffix));
