@@ -24,6 +24,8 @@
 .dashboard-panel-title { display: flex; justify-content: space-between; align-items: center; gap: 15px; margin-bottom: 24px; }
 .dashboard-panel-title h2 { margin: 8px 0 0; font-size: 25px; letter-spacing: -.05em; }
 .dashboard-panel-title button { font-size: 11px; }
+.dashboard-panel-title > div:last-child { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 9px; }
+.dashboard-panel-title .admin-danger-button { color: #fff; background: #b3473c; }
 .dashboard-empty { padding: 28px 0; color: #6e7d77; }
 .appointment-table { overflow-x: auto; }
 .appointment-row { min-width: 870px; display: grid; grid-template-columns: 1.2fr 1fr 1.35fr 1fr .7fr; align-items: center; gap: 15px; padding: 15px 0; border-top: 1px solid #e5ede7; color: #45675a; font-size: 12px; }

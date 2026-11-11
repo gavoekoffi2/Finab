@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="fr-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Programme Futurs conseillers — FINAB la solution</title>
+<meta name="description" content="Formation préparatoire à l'obtention du permis en assurance de personnes et programme de leadership FINAB. Québec, Ontario, Alberta, Manitoba, Nouveau-Brunswick.">
+<!--
+  Page publique du programme Futurs conseillers — servie à /programme-futurs-conseillers
+  Le formulaire envoie les candidatures à la Google Sheet FINAB (Google Apps Script).
+  ► Remplacer COLLER_ICI_L_URL_APPS_SCRIPT ci-dessous par l'URL de l'application Web (se termine par /exec).
+  Retirer la balise robots noindex ci-dessus au moment de la mise en ligne validée.
+-->
+<style>
+  :root{
+    --ink:#14213d; --ink-soft:#4a5568; --bg:#ffffff; --bg-alt:#f5f7fa; --line:#e2e8f0;
+    --brand:#0b5d3b; --accent:#c8902a; --warn-bg:#fff7e0; --warn-line:#e8c66a; --todo:#fff2a8;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+  a{color:var(--brand)}
+  img{max-width:100%}
+  .wrap{max-width:960px;margin:0 auto;padding:0 20px}
+  .todo{background:var(--todo);padding:0 .2em;border-radius:3px}
+  [id]{scroll-margin-top:84px}
+
+  .topbar{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--line)}
+  .topbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:68px}
+  .logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font-weight:800}
+  .logo img{height:44px;width:auto;display:block}
+  .logo .wordmark{display:none;font-size:1.05rem;letter-spacing:.02em}
+  .logo.noimg img{display:none}.logo.noimg .wordmark{display:inline}
+  .topbar nav{display:flex;align-items:center;gap:18px;font-size:.95rem}
+  .topbar nav a{text-decoration:none;color:var(--ink-soft)}
+  .topbar nav a.cta{background:var(--brand);color:#fff;padding:9px 14px;border-radius:8px;font-weight:700}
+
+  header.hero{background:linear-gradient(135deg,#0b5d3b 0%,#123a5c 100%);color:#fff;padding:60px 0 60px}
+  .eyebrow{text-transform:uppercase;letter-spacing:.12em;font-size:.8rem;opacity:.85;margin:0 0 12px}
+  h1{font-size:clamp(1.75rem,4.5vw,2.7rem);line-height:1.15;margin:0 0 16px;max-width:22ch}
+  .lead{font-size:1.15rem;max-width:60ch;opacity:.95;margin:0 0 28px}
+  .btn{display:inline-block;background:var(--accent);color:#1a1200;font-weight:700;text-decoration:none;padding:14px 22px;border-radius:8px;border:0;cursor:pointer;font-size:1rem;text-align:center}
+  .btn:hover{filter:brightness(1.06)}
+  .btn.ghost{background:transparent;color:#fff;border:2px solid rgba(255,255,255,.6);margin-left:10px}
+  .notice{background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:10px;padding:16px 18px;margin:-28px auto 0;position:relative;max-width:920px}
+  .notice strong{display:block;margin-bottom:4px}
+
+  section{padding:56px 0}
+  section.alt{background:var(--bg-alt)}
+  h2{font-size:1.6rem;margin:0 0 8px}
+  .sub{color:var(--ink-soft);margin:0 0 28px;max-width:65ch}
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px}
+  .card h3{margin:0 0 4px;font-size:1.15rem}
+  .tag{display:inline-block;font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:999px;margin-bottom:10px}
+  .tag.a{background:#e6f2ec;color:var(--brand)}
+  .tag.b{background:#e8eef7;color:#123a5c}
+  .card ul{padding-left:20px;margin:10px 0 0}
+  .card li{margin:6px 0}
+  .stop{border-left:4px solid #b42318;background:#fdf2f1;padding:12px 14px;border-radius:6px;margin-top:14px;font-size:.95rem}
+
+  .fees{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:24px;align-items:start}
+  .price{background:#fff;border:2px solid var(--brand);border-radius:12px;padding:24px;text-align:center}
+  .price .amt{font-size:2.6rem;font-weight:800;color:var(--brand);line-height:1}
+  .price .tx{font-size:1.05rem;font-weight:700;color:var(--brand)}
+  .price .unit{color:var(--ink-soft);font-size:.95rem;margin-top:6px}
+  .price p{margin:12px 0 0;font-size:.95rem}
+
+  .path{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;counter-reset:s}
+  .path li{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px;counter-increment:s;position:relative}
+  .path li::before{content:counter(s);display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:var(--brand);color:#fff;font-weight:800;margin-bottom:8px}
+  .path strong{display:block}
+
+  table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:.95rem}
+  th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:#eef2f6;font-size:.85rem;text-transform:uppercase;letter-spacing:.04em}
+  tr:last-child td{border-bottom:0}
+  .src{font-size:.85rem;color:var(--ink-soft);margin-top:12px}
+
+  .nopromise{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;padding:0;list-style:none;margin:0}
+  .nopromise li{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .nopromise li::before{content:"✕";color:#b42318;font-weight:800;margin-right:8px}
+
+  details{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin-bottom:10px}
+  summary{font-weight:700;cursor:pointer}
+  details p,details ul{margin:10px 0 0}
+
+  form{background:#fff;border:1px solid var(--line);border-radius:12px;padding:24px}
+  fieldset{border:0;padding:0;margin:0 0 26px;min-width:0}
+  legend{font-weight:800;font-size:1.1rem;margin-bottom:12px}
+  .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px 18px}
+  label{display:block;font-weight:600;font-size:.95rem;margin-bottom:6px}
+  .hint{font-weight:400;color:var(--ink-soft);font-size:.85rem}
+  input[type=text],input[type=email],input[type=tel],select,textarea{width:100%;padding:11px 12px;border:1px solid #cbd5e0;border-radius:8px;font:inherit;background:#fff;color:var(--ink)}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--brand);outline-offset:1px}
+  textarea{min-height:96px;resize:vertical}
+  .field{margin-bottom:14px}
+  .check{display:flex;gap:10px;align-items:flex-start;font-weight:400;margin:10px 0}
+  .check input{margin-top:5px;flex:none;width:18px;height:18px}
+  .consent{background:var(--bg-alt);border-radius:8px;padding:14px 16px;font-size:.92rem;margin-bottom:12px}
+  .req{color:#b42318}
+  .hp{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}
+  #erreur{display:none;background:#fdf2f1;border:1px solid #f1b5ad;color:#7a1a10;border-radius:10px;padding:14px 16px;margin-top:14px}
+  .btn[disabled]{opacity:.6;cursor:wait}
+  #merci{display:none;background:#e6f2ec;border:1px solid #9fd0b6;border-radius:10px;padding:16px;margin-top:16px}
+
+  .privacy h3{font-size:1.05rem;margin:18px 0 4px}
+  .privacy p,.privacy ul{margin:4px 0 0}
+
+  footer{background:#0e1726;color:#cbd5e0;padding:32px 0;font-size:.92rem}
+  footer a{color:#fff}
+
+  @media (max-width:720px){
+    .topbar nav a:not(.cta){display:none}
+    .fees{grid-template-columns:1fr}
+    header.hero{padding:44px 0 56px}
+    .btn{display:block;width:100%}
+    .btn.ghost{margin:10px 0 0}
+    /* Tableau des provinces en fiches empilées */
+    table,thead,tbody,tr,td{display:block;width:100%}
+    thead{position:absolute;left:-9999px}
+    table{border:0;background:transparent}
+    tr{background:#fff;border:1px solid var(--line);border-radius:12px;margin-bottom:12px;padding:6px 0}
+    td{border:0;padding:6px 16px}
+    td::before{content:attr(data-label);display:block;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft)}
+    td:first-child{font-weight:800;font-size:1.05rem}
+    td:first-child::before{display:none}
+    form{padding:18px}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <a class="logo" href="https://finablasolution.cloud/" aria-label="FINAB la solution — accueil">
+      <img src="/images/logo.png" alt="FINAB la solution" onerror="this.parentNode.classList.add('noimg')">
+      <span class="wordmark">FINAB la solution</span>
+    </a>
+    <nav aria-label="Navigation du programme">
+      <a href="#parcours">Parcours</a>
+      <a href="#frais">Frais</a>
+      <a href="#faq">Questions</a>
+      <a class="cta" href="#postuler">Postuler</a>
+    </nav>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">FINAB Leadership 7×7 · Formation préparatoire au permis</p>
+    <h1>Futur conseiller en assurance de personnes — Programme de formation et leadership FINAB</h1>
+    <p class="lead">Vous n'avez pas encore de permis, mais vous voulez bâtir une carrière en services financiers et, un jour, diriger une équipe ? Ce programme vous prépare à l'obtention du permis, puis vous accompagne vers le leadership.</p>
+    <a class="btn" id="btn-postuler" href="#postuler">Déposer ma candidature</a>
+    <a class="btn ghost" id="btn-frais" href="#frais">Voir les frais</a>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="notice" role="note">
+    <strong>Une formation préparatoire au permis, pas une offre d'emploi garantie.</strong>
+    Aucune activité réglementée de conseil ou de vente d'assurance ne peut être exercée avant l'obtention des autorisations requises dans votre province. Programme offert au Québec, en Ontario, en Alberta, au Manitoba et au Nouveau-Brunswick.
+  </div>
+</div>
+
+<section id="parcours">
+  <div class="wrap">
+    <h2>Votre parcours, en deux étapes</h2>
+    <p class="sub">La formation et l'activité professionnelle sont deux étapes distinctes. Vous ne passez à la seconde qu'une fois votre permis obtenu.</p>
+    <div class="steps">
+      <div class="card">
+        <span class="tag b">Étape 1 · Avant le permis</span>
+        <h3>Formation et préparation</h3>
+        <ul>
+          <li>Cours théoriques préparatoires aux examens exigés par le régulateur de votre province.</li>
+          <li>Accompagnement dans vos démarches de qualification professionnelle.</li>
+          <li>Formation pratique FINAB dès les 24 heures suivant l'inscription : observation, études de cas fictifs, communication, éthique.</li>
+          <li>Mentorat et développement des compétences professionnelles et de leadership.</li>
+        </ul>
+        <div class="stop">Pendant cette étape, vous ne conseillez aucun client et ne vendez aucun produit d'assurance. Aucune rémunération n'est versée.</div>
+      </div>
+      <div class="card">
+        <span class="tag a">Étape 2 · Après le permis</span>
+        <h3>Activité professionnelle</h3>
+        <ul>
+          <li>Possibilité d'intégrer un réseau de conseillers après l'obtention des autorisations réglementaires, le rattachement à un cabinet ou le parrainage par un assureur selon la province, et l'acceptation de votre dossier.</li>
+          <li>Statut de travailleur autonome.</li>
+          <li>Rémunération exclusivement à la commission.</li>
+          <li>Accès au programme de leadership FINAB.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="frais">
+  <div class="wrap">
+    <h2>Frais de formation</h2>
+    <p class="sub">Nous préférons être clairs dès le départ : le programme comporte des frais de formation, remboursables après l'obtention de votre permis.</p>
+    <div class="fees">
+      <div class="price">
+        <div class="amt">378 $</div>
+        <div class="tx">+ taxes applicables</div>
+        <div class="unit">dollars canadiens · cours théoriques et inscription compris</div>
+        <p><strong>Remboursables après l'obtention du permis professionnel</strong>, selon les modalités présentées lors de l'entrevue individuelle.</p>
+      </div>
+      <div class="card">
+        <ul>
+          <li><strong>Aucun paiement</strong> n'est demandé au moment de la candidature.</li>
+          <li>Les modalités complètes vous sont expliquées lors d'une <strong>entrevue individuelle</strong>, avant tout engagement financier.</li>
+          <li>Les <strong>conditions écrites</strong> du programme vous sont remises avant toute inscription payante. Vous ne payez qu'après les avoir lues et acceptées.</li>
+          <li>Aucun achat personnel d'assurance n'est exigé. L'étude pratique se fait sur un cas fictif.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Comment se passe l'inscription</h2>
+    <p class="sub">Quatre étapes, sans aucun paiement avant la dernière.</p>
+    <ol class="path">
+      <li><strong>Candidature</strong>Vous remplissez le formulaire ci-dessous. Gratuit et sans engagement.</li>
+      <li><strong>Entrevue individuelle</strong>Nous vous présentons le programme et ses modalités complètes, et répondons à vos questions.</li>
+      <li><strong>Conditions écrites</strong>Vous recevez les conditions du programme par écrit, et prenez le temps de les lire.</li>
+      <li><strong>Inscription</strong>Si vous décidez de poursuivre, vous vous inscrivez. La formation pratique commence dans les 24 heures.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <h2>Exigences de formation et de permis par province</h2>
+    <p class="sub">Le permis est délivré par le régulateur de votre province, pas par FINAB. Voici les grandes étapes ; les exigences exactes sont publiées par chaque régulateur.</p>
+    <table>
+      <thead>
+        <tr><th>Province</th><th>Régulateur</th><th>Avant l'examen</th><th>Pour obtenir le permis</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Québec</td><td data-label="Régulateur">Autorité des marchés financiers (AMF)</td><td data-label="Avant l'examen">Formation minimale reconnue par l'AMF</td><td data-label="Pour obtenir le permis">Réussite des examens de l'AMF, puis période probatoire</td></tr>
+        <tr><td>Ontario</td><td data-label="Régulateur">FSRA</td><td data-label="Avant l'examen">Cours LLQP auprès d'un fournisseur reconnu</td><td data-label="Pour obtenir le permis">Examen provincial, parrainage par un assureur, assurance responsabilité professionnelle (E&amp;O)</td></tr>
+        <tr><td>Alberta</td><td data-label="Régulateur">Alberta Insurance Council</td><td data-label="Avant l'examen">Cours LLQP auprès d'un éducateur approuvé</td><td data-label="Pour obtenir le permis">Examen réussi dans les 12 mois précédant la demande, parrainage obligatoire</td></tr>
+        <tr><td>Manitoba</td><td data-label="Régulateur">Insurance Council of Manitoba</td><td data-label="Avant l'examen">Cours LLQP auprès d'un fournisseur reconnu</td><td data-label="Pour obtenir le permis">Examen provincial et demande de permis auprès du Council</td></tr>
+        <tr><td>Nouveau-Brunswick</td><td data-label="Régulateur">FCNB</td><td data-label="Avant l'examen">Cours LLQP (4 modules)</td><td data-label="Pour obtenir le permis">Examen provincial, parrainage par un assureur autorisé au N.-B.</td></tr>
+      </tbody>
+    </table>
+    <p class="src">Sources : AMF, FSRA, Alberta Insurance Council, Insurance Council of Manitoba, Commission des services financiers et des services aux consommateurs du Nouveau-Brunswick (FCNB).</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Ce que nous ne promettons pas</h2>
+    <p class="sub">Pour que votre décision soit éclairée.</p>
+    <ul class="nopromise">
+      <li>Aucun emploi garanti</li>
+      <li>Aucun salaire fixe</li>
+      <li>Aucun revenu garanti</li>
+      <li>Aucun permis automatique</li>
+      <li>Aucune promotion garantie</li>
+    </ul>
+  </div>
+</section>
+
+<section class="alt" id="faq">
+  <div class="wrap">
+    <h2>Questions fréquentes</h2>
+    <details>
+      <summary>Est-ce un emploi ?</summary>
+      <p>Non. C'est une formation préparatoire à l'obtention du permis. Une activité professionnelle peut être proposée seulement après l'obtention du permis, le rattachement ou le parrainage requis, et l'acceptation de votre dossier.</p>
+    </details>
+    <details>
+      <summary>Puis-je conseiller des clients pendant la formation ?</summary>
+      <p>Non. Conseiller des clients ou vendre de l'assurance est réservé aux titulaires d'un permis. Pendant l'étape 1, vous travaillez uniquement sur des cas fictifs et en observation.</p>
+    </details>
+    <details>
+      <summary>Quand dois-je payer ?</summary>
+      <p>Jamais au moment de la candidature. Les frais de 378 $ + taxes sont payables seulement après votre entrevue individuelle et la remise des conditions écrites, si vous choisissez de vous inscrire.</p>
+    </details>
+    <details>
+      <summary>Comment fonctionne le remboursement ?</summary>
+      <p>Les frais de formation sont remboursables après l'obtention du permis professionnel. Les modalités vous sont présentées lors de l'entrevue individuelle et remises par écrit avant toute inscription payante.</p>
+    </details>
+    <details>
+      <summary>Dois-je acheter une assurance FINAB ?</summary>
+      <p>Non. Aucun achat personnel d'assurance n'est exigé pour participer au programme.</p>
+    </details>
+    <details>
+      <summary>Je détiens déjà un permis. Ce programme est-il pour moi ?</summary>
+      <p>Non : les conseillers déjà titulaires d'un permis passent par notre offre « FINAB recrute 7 futurs leaders », sans frais de formation. <a href="https://www.linkedin.com/jobs/view/4481955162/" target="_blank" rel="noopener">Voir l'offre sur LinkedIn</a></p>
+    </details>
+  </div>
+</section>
+
+<section id="postuler">
+  <div class="wrap">
+    <h2>Candidature</h2>
+    <p class="sub">Environ 10 minutes. Gratuit et sans engagement : aucun paiement n'est demandé à cette étape. Inscriptions avant le 31 octobre 2026.</p>
+
+    <form id="candidature" action="https://script.google.com/macros/s/AKfycbyVbz--MtWGDyPNa4MTIoQFO5Jv-pYOS5civuZYU4VvWcvKy7NQz8amaN0KqPkNJgLe/exec" method="post" novalidate>
+      <div class="hp" aria-hidden="true"><label for="site_web">Ne pas remplir ce champ</label><input id="site_web" name="site_web" type="text" tabindex="-1" autocomplete="off"></div>
+      <fieldset>
+        <legend>1. Vos coordonnées</legend>
+        <div class="grid2">
+          <div class="field"><label for="nom">Prénom et nom <span class="req">*</span></label><input id="nom" name="nom" type="text" autocomplete="name" required></div>
+          <div class="field"><label for="courriel">Courriel <span class="req">*</span></label><input id="courriel" name="courriel" type="email" autocomplete="email" required></div>
+          <div class="field"><label for="tel">Téléphone <span class="req">*</span></label><input id="tel" name="telephone" type="tel" autocomplete="tel" required></div>
+          <div class="field"><label for="province">Province <span class="req">*</span></label>
+            <select id="province" name="province" required>
+              <option value="">Choisir…</option>
+              <option>Québec</option><option>Ontario</option><option>Alberta</option><option>Manitoba</option><option>Nouveau-Brunswick</option>
+            </select>
+          </div>
+          <div class="field"><label for="ville">Ville <span class="req">*</span></label><input id="ville" name="ville" type="text" required></div>
+          <div class="field"><label for="linkedin">Profil LinkedIn <span class="hint">(facultatif)</span></label><input id="linkedin" name="linkedin" type="text" placeholder="https://www.linkedin.com/in/…"></div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>2. Parcours et engagement</legend>
+        <div class="grid2">
+          <div class="field"><label for="diplome">Plus haut diplôme obtenu <span class="req">*</span> <span class="hint">— sert à vérifier l'admissibilité à la formation exigée par le régulateur</span></label>
+            <select id="diplome" name="diplome" required>
+              <option value="">Choisir…</option><option>Secondaire</option><option>Collégial / DEC</option><option>Universitaire</option><option>Autre</option>
+            </select>
+          </div>
+          <div class="field"><label for="llqp">Avez-vous commencé un cours LLQP ou une formation reconnue par l'AMF ? <span class="req">*</span></label>
+            <select id="llqp" name="formation_reglementaire" required>
+              <option value="">Choisir…</option><option>Non</option><option>Oui, en cours</option><option>Oui, terminé</option>
+            </select>
+          </div>
+          <div class="field"><label for="heures">Heures par semaine pour la formation <span class="req">*</span></label>
+            <select id="heures" name="heures_semaine" required>
+              <option value="">Choisir…</option><option>Moins de 5</option><option>5 à 10</option><option>Plus de 10</option>
+            </select>
+          </div>
+          <div class="field"><label for="dispo">Disponibilité pour la formation pratique <span class="req">*</span></label>
+            <select id="dispo" name="disponibilite" required>
+              <option value="">Choisir…</option><option>Dès maintenant</option><option>D'ici 2 semaines</option><option>Plus tard</option>
+            </select>
+          </div>
+        </div>
+        <label class="check"><input type="checkbox" name="ack_frais" required><span>J'ai compris que la formation comporte des <strong>frais de 378 $ + taxes</strong> (cours théoriques et inscription), remboursables après l'obtention du permis selon les modalités présentées en entrevue, et que les conditions écrites me seront remises avant toute inscription payante. <span class="req">*</span></span></label>
+        <label class="check"><input type="checkbox" name="ack_reglemente" required><span>Je comprends que je ne pourrai <strong>conseiller aucun client ni vendre d'assurance</strong> avant d'avoir obtenu mon permis. <span class="req">*</span></span></label>
+        <label class="check"><input type="checkbox" name="ack_commission" required><span>Je comprends qu'il s'agit d'une formation et non d'une offre d'emploi garantie, et que l'activité éventuelle après le permis est rémunérée <strong>uniquement à la commission</strong>, sans salaire ni revenu garanti. <span class="req">*</span></span></label>
+      </fieldset>
+
+      <fieldset>
+        <legend>3. Votre profil</legend>
+        <div class="field"><label for="situation">Situation actuelle <span class="req">*</span></label>
+          <select id="situation" name="situation" required>
+            <option value="">Choisir…</option><option>Études</option><option>Emploi</option><option>Entrepreneur</option><option>Autre</option>
+          </select>
+        </div>
+        <div class="field"><label for="aide">Décrivez une situation où vous avez aidé quelqu'un à apprendre ou à progresser. <span class="req">*</span></label><textarea id="aide" name="aide_autrui" required></textarea></div>
+        <div class="field"><label for="vision">Pourquoi voulez-vous devenir conseiller, et quel leader voulez-vous être dans 3 ans ? <span class="req">*</span></label><textarea id="vision" name="vision" required></textarea></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>4. Consentement</legend>
+        <div class="consent">
+          FINAB La Solution recueille ces renseignements uniquement pour évaluer votre candidature au programme et vous contacter à ce sujet. Seules la direction et les personnes chargées de la sélection y ont accès. Détails dans notre <a href="#confidentialite">politique de confidentialité</a>. Vous pouvez en tout temps accéder à vos renseignements, les faire corriger ou retirer votre consentement en écrivant à <a href="mailto:Koffi.akpobi@mygreatway.ca">Koffi.akpobi@mygreatway.ca</a>.
+        </div>
+        <label class="check"><input type="checkbox" name="consentement" required><span>Je consens à ce que FINAB La Solution recueille et utilise ces renseignements pour évaluer ma candidature, conformément à la <a href="#confidentialite">politique de confidentialité</a>. <span class="req">*</span></span></label>
+        <label class="check"><input type="checkbox" name="exactitude" required><span>Je confirme que les renseignements fournis sont exacts. <span class="req">*</span></span></label>
+        <label class="check"><input type="checkbox" name="infolettre"><span>J'accepte de recevoir des informations sur les prochaines sessions du programme. <span class="hint">(facultatif — retrait possible en tout temps)</span></span></label>
+      </fieldset>
+
+      <button class="btn" id="envoyer" type="submit">Envoyer ma candidature</button>
+      <div id="erreur" role="alert"></div>
+      <div id="merci" role="status" tabindex="-1">
+        <strong>Merci, votre candidature est reçue.</strong><br>
+        Un courriel de confirmation vous a été envoyé. Nous vous contacterons pour planifier votre entrevue individuelle. Aucun paiement ne vous sera demandé avant la remise des conditions écrites.
+      </div>
+    </form>
+  </div>
+</section>
+
+<section class="alt privacy" id="confidentialite">
+  <div class="wrap">
+    <h2>Politique de confidentialité — Candidatures au programme</h2>
+    <p class="sub">Comment FINAB La Solution protège les renseignements personnels transmis par ce formulaire.</p>
+
+    <h3>Responsable</h3>
+    <p>La personne responsable de la protection des renseignements personnels chez FINAB La Solution est Koffi Abraham AKPOBI, directeur de FINAB La Solution, joignable à <a href="mailto:Koffi.akpobi@mygreatway.ca">Koffi.akpobi@mygreatway.ca</a> ou au +1 (438) 334-5252.</p>
+
+    <h3>Renseignements recueillis et finalité</h3>
+    <p>Coordonnées, province et ville, parcours scolaire, disponibilités et réponses aux questions du formulaire. Ils servent uniquement à évaluer votre candidature, à planifier votre entrevue et à vous informer du programme. Nous ne demandons aucun renseignement sur votre santé, vos revenus ou votre situation financière.</p>
+
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><strong>FINAB la solution</strong> — La résurrection financière au service de votre avenir.</p>
+    <p>Questions : <a href="mailto:info@finablasolution.cloud">info@finablasolution.cloud</a> · +1 (438) 334-5252 · Montréal, QC · <a href="https://finablasolution.cloud/">finablasolution.cloud</a></p>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var form = document.getElementById('candidature');
+    var btn = document.getElementById('envoyer');
+    var merci = document.getElementById('merci');
+    var erreur = document.getElementById('erreur');
+    function montrerErreur(msg){
+      erreur.textContent = msg;
+      erreur.style.display = 'block';
+      erreur.scrollIntoView({behavior:'smooth', block:'center'});
+    }
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      erreur.style.display = 'none';
+      if(!form.checkValidity()){ form.reportValidity(); return; }
+      var donnees = {};
+      new FormData(form).forEach(function(v, k){ donnees[k] = v; });
+      ['ack_frais','ack_reglemente','ack_commission','consentement','exactitude','infolettre'].forEach(function(k){
+        var c = form.querySelector('input[name="'+k+'"]'); donnees[k] = !!(c && c.checked);
+      });
+      var adresse = form.getAttribute('action');
+      if(adresse.indexOf('https://script.google.com/') !== 0){
+        montrerErreur("Le formulaire n'est pas encore connecté. Écrivez-nous à info@finablasolution.cloud.");
+        return;
+      }
+      btn.disabled = true; btn.textContent = 'Envoi en cours…';
+      // Envoi en texte brut : requis par Google Apps Script (pas de pré-vérification CORS).
+      fetch(adresse, {
+        method: 'POST',
+        body: JSON.stringify(donnees)
+      }).then(function(r){
+        return r.json().catch(function(){ return {}; }).then(function(j){ return {ok: r.ok, j: j}; });
+      }).then(function(res){
+        if(res.ok && res.j.ok){
+          form.querySelectorAll('fieldset, #envoyer').forEach(function(el){ el.style.display = 'none'; });
+          merci.style.display = 'block';
+          merci.focus();
+          merci.scrollIntoView({behavior:'smooth', block:'center'});
+        } else {
+          btn.disabled = false; btn.textContent = 'Envoyer ma candidature';
+          montrerErreur(res.j.message || "Votre candidature n'a pas pu être envoyée. Réessayez dans quelques minutes ou écrivez à info@finablasolution.cloud.");
+        }
+      }).catch(function(){
+        btn.disabled = false; btn.textContent = 'Envoyer ma candidature';
+        montrerErreur("Connexion impossible. Vérifiez votre accès Internet, puis réessayez. Si le problème continue, écrivez à info@finablasolution.cloud.");
+      });
+    });
+  })();
+</script>
+</body>
+</html>

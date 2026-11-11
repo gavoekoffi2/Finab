@@ -11,6 +11,7 @@ import {
   useTransform,
 } from "framer-motion";
 import Button from "@/components/ui/Button";
+import AnimatedCounter from "@/components/ui/AnimatedCounter";
 import { siteConfig } from "@/data/content";
 import { useIntroStore } from "@/lib/introStore";
 
@@ -58,7 +59,7 @@ const phrases = [
 ];
 
 const heroStats = [
-  { value: "5000+", label: "Clients" },
+  { value: "2000+", label: "Clients" },
   { value: "3", label: "Continents" },
   { value: "98%", label: "Satisfaction" },
 ];
@@ -264,11 +265,14 @@ export default function HeroSection() {
             className="hidden gap-8 border-t border-white/15 pt-6 sm:flex md:gap-12"
           >
             {heroStats.map((stat) => (
-              <div key={stat.label}>
-                <dt className="sr-only">{stat.label}</dt>
-                <dd className="font-display text-3xl font-semibold md:text-4xl">{stat.value}</dd>
-                <dd className="mt-1 text-xs uppercase tracking-[0.2em] text-white/50">{stat.label}</dd>
-              </div>
+              <AnimatedCounter
+                key={stat.label}
+                value={stat.value}
+                label={stat.label}
+                definitionList
+                valueClassName="font-display text-3xl font-semibold md:text-4xl"
+                labelClassName="mt-1 text-xs uppercase tracking-[0.2em] text-white/50"
+              />
             ))}
           </motion.dl>
         </div>

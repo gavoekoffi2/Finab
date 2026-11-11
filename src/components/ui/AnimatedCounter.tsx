@@ -9,6 +9,14 @@ interface AnimatedCounterProps {
   className?: string;
   valueClassName?: string;
   labelClassName?: string;
+  definitionList?: boolean;
+}
+
+function formatCounterValue(value: number, suffix: string) {
+  const formatted = value >= 1000
+    ? value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+    : String(value);
+  return `${formatted}${suffix}`;
 }
 
 export default function AnimatedCounter({
@@ -17,58 +25,64 @@ export default function AnimatedCounter({
   className = "",
   valueClassName = "",
   labelClassName = "",
+  definitionList = false,
 }: AnimatedCounterProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
-  const [displayValue, setDisplayValue] = useState(() => (/^[\d,]+/.test(value) ? "0" : value));
+  const isInView = useInView(ref, { once: true, amount: 0 });
+  const numericMatch = value.match(/^([\d,]+)/);
+  const target = numericMatch ? parseInt(numericMatch[1].replace(/,/g, ""), 10) : null;
+  const suffix = numericMatch ? value.slice(numericMatch[0].length) : "";
+  const finalValue = target === null ? value : formatCounterValue(target, suffix);
+  const [displayValue, setDisplayValue] = useState(() => finalValue);
 
   useEffect(() => {
-    if (!isInView) return;
+    if (!isInView || target === null) return;
 
-    const numericMatch = value.match(/^([\d,]+)/);
-    if (!numericMatch) return;
-
-    const target = parseInt(numericMatch[1].replace(/,/g, ""), 10);
-    const suffix = value.slice(numericMatch[0].length);
+    const animationTarget = target;
+    setDisplayValue(formatCounterValue(0, suffix));
     const duration = 2000;
     const startTime = performance.now();
     let rafId: number;
 
-    function formatNum(n: number) {
-      if (n >= 1000) {
-        return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + suffix;
-      }
-      return n + suffix;
-    }
-
     function animate(currentTime: number) {
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      // Ease out cubic
       const eased = 1 - Math.pow(1 - progress, 3);
-      const current = Math.round(eased * target);
-
-      setDisplayValue(formatNum(current));
+      const current = Math.round(eased * animationTarget);
+      setDisplayValue(formatCounterValue(current, suffix));
 
       if (progress < 1) {
         rafId = requestAnimationFrame(animate);
-      } else {
-        // Ensure final value is exact
-        setDisplayValue(formatNum(target));
       }
     }
 
     rafId = requestAnimationFrame(animate);
-
     return () => cancelAnimationFrame(rafId);
-  }, [isInView, value]);
+  }, [isInView, suffix, target]);
+
+  if (definitionList) {
+    return (
+      <motion.div
+        ref={ref}
+        initial={false}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true, amount: 0 }}
+        transition={{ duration: 0.5 }}
+        className={className}
+      >
+        <dt className="sr-only">{label}</dt>
+        <dd className={valueClassName}>{displayValue}</dd>
+        <dd className={labelClassName}>{label}</dd>
+      </motion.div>
+    );
+  }
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, scale: 0.8 }}
+      initial={false}
       whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true }}
+      viewport={{ once: true, amount: 0 }}
       transition={{ duration: 0.5 }}
       className={className}
     >

@@ -6,13 +6,13 @@ import Reveal from "@/components/immersive/Reveal";
 import "./opportunite.css";
 
 export const metadata: Metadata = {
-  title: "Bâtissez votre prochaine opportunité professionnelle",
+  title: "Recrutement de conseillers financiers | FINAB",
   description:
-    "Découvrez une voie structurée vers une carrière en services financiers au Canada. Vérifiez votre admissibilité et réservez un appel d'information avec FINAB.",
+    "FINAB recrute des conseillers financiers au Canada. Découvrez les conditions, le parcours de formation et soumettez votre candidature.",
   openGraph: {
-    title: "Votre prochaine opportunité professionnelle commence ici",
+    title: "Rejoignez FINAB comme conseiller financier",
     description:
-      "Une rencontre d'information pour comprendre le parcours, les conditions et les prochaines étapes.",
+      "Soumettez votre candidature pour découvrir notre parcours de recrutement, de formation et de permis.",
     images: ["/images/team/partner-opportunity.jpg"],
   },
 };
@@ -25,21 +25,21 @@ const requirements = [
   },
   {
     number: "02",
-    title: "Un parcours encadré",
-    text: "Vous serez accompagné(e) dans votre préparation et devrez vous présenter à l'examen requis pour obtenir votre permis.",
+    title: "Une formation encadrée",
+    text: "Les candidats sélectionnés sont accompagnés dans leur préparation et doivent se présenter à l’examen requis pour obtenir leur permis.",
   },
   {
     number: "03",
-    title: "Une posture professionnelle",
-    text: "La réussite repose sur la motivation, la discipline, la participation active aux formations et la capacité à appliquer les apprentissages.",
+    title: "Un profil professionnel",
+    text: "Nous recherchons des personnes motivées, disciplinées, présentes aux formations et prêtes à appliquer leurs apprentissages auprès des clients.",
   },
 ];
 
 const benefits = [
-  "Comprendre le parcours avant de vous engager",
-  "Échanger avec un professionnel et poser vos questions",
-  "Identifier les étapes de formation et de permis",
-  "Évaluer si cette opportunité correspond à votre situation",
+  "Découvrir le rôle de conseiller financier",
+  "Comprendre les étapes de recrutement et de sélection",
+  "Connaître le parcours de formation et de permis",
+  "Évaluer si le poste correspond à votre projet professionnel",
 ];
 
 function ArrowIcon() {
@@ -70,14 +70,14 @@ export default function OpportuniteAssurancePage() {
               FINAB · Canada
             </div>
             <h1>
-              Et si votre prochaine <em>opportunité</em> professionnelle commençait ici ?
+              Rejoignez FINAB comme <em>conseiller financier</em>
             </h1>
             <p className="opportunity-lead">
-              Découvrez un parcours structuré pour vous former, obtenir votre permis et bâtir une activité dans les services financiers — avec un accompagnement clair à chaque étape.
+              FINAB recrute des personnes motivées pour se former, obtenir leur permis et exercer comme conseiller financier au Canada — avec un accompagnement clair à chaque étape.
             </p>
             <div className="opportunity-actions">
               <a className="opportunity-button opportunity-button-primary" href="#reservation">
-                Réserver mon appel d&apos;information <ArrowIcon />
+                Soumettre ma candidature <ArrowIcon />
               </a>
               <a className="opportunity-text-link" href="#parcours">
                 Comprendre le parcours <span>↓</span>
@@ -106,8 +106,8 @@ export default function OpportuniteAssurancePage() {
               </div>
             </div>
             <div className="opportunity-floating-card">
-              <span className="opportunity-floating-label">Votre prochaine étape</span>
-              <strong>Un appel. Des réponses. Une direction.</strong>
+              <span className="opportunity-floating-label">VOTRE PROCHAINE ÉTAPE</span>
+              <strong>Un appel pour clarifier votre prochaine étape.</strong>
             </div>
           </div>
         </div>
@@ -116,9 +116,9 @@ export default function OpportuniteAssurancePage() {
 
       <section className="opportunity-proof-strip">
         <div className="opportunity-container opportunity-proof-inner">
-          <span className="opportunity-proof-kicker">UN PARCOURS QUI SE PRÉPARE</span>
+          <span className="opportunity-proof-kicker">RECRUTEMENT · CONSEILLERS FINANCIERS</span>
           <span className="opportunity-proof-rule" />
-          <p>Avant de prendre une décision, prenez le temps de comprendre le parcours et de vérifier s&apos;il vous correspond.</p>
+          <p>Découvrez les attentes du poste, le processus de sélection et les étapes nécessaires pour devenir conseiller financier chez FINAB.</p>
         </div>
       </section>
 
@@ -126,10 +126,10 @@ export default function OpportuniteAssurancePage() {
         <div className="opportunity-container">
           <Reveal className="opportunity-section-heading">
             <div>
-              <div className="opportunity-eyebrow dark"><span className="opportunity-eyebrow-line" /> CE QUE VOUS ALLEZ CLARIFIER</div>
-              <h2>Une décision professionnelle mérite une information de qualité.</h2>
+              <div className="opportunity-eyebrow dark"><span className="opportunity-eyebrow-line" /> LE POSTE DE CONSEILLER FINANCIER</div>
+              <h2>Construisez votre carrière au sein d’une équipe qui vous accompagne.</h2>
             </div>
-            <p>Un premier échange vous permet de distinguer ce qui est possible, ce qui est requis et ce qui doit être préparé.</p>
+            <p>Un entretien de recrutement vous permet de comprendre les exigences du poste, les conditions de sélection et les prochaines étapes.</p>
           </Reveal>
           <div className="opportunity-benefit-grid">
             {benefits.map((benefit, i) => (
@@ -147,7 +147,7 @@ export default function OpportuniteAssurancePage() {
           <Reveal className="opportunity-section-heading stacked">
             <div className="opportunity-eyebrow dark"><span className="opportunity-eyebrow-line" /> LES CONDITIONS À CONNAÎTRE</div>
             <h2>La clarté avant l’engagement.</h2>
-            <p>Cette voie demande de la disponibilité et de la constance. Voici les éléments essentiels à comprendre avant votre appel.</p>
+            <p>Le poste demande de la disponibilité et de la constance. Voici les éléments essentiels à connaître avant de soumettre votre candidature.</p>
           </Reveal>
           <div className="opportunity-requirement-grid">
             {requirements.map((item, i) => (
@@ -165,17 +165,27 @@ export default function OpportuniteAssurancePage() {
         </div>
       </section>
 
+      <section className="opportunity-section opportunity-section-light">
+        <div className="opportunity-container">
+          <Reveal className="opportunity-section-heading stacked">
+            <div className="opportunity-eyebrow dark"><span className="opportunity-eyebrow-line" /> PRENEZ UNE DÉCISION ÉCLAIRÉE</div>
+            <h2>Un appel pour clarifier votre prochaine étape.</h2>
+            <p>Avant tout engagement, échangez avec un professionnel pour comprendre le parcours et obtenir des réponses adaptées à votre situation.</p>
+          </Reveal>
+        </div>
+      </section>
+
       <section className="opportunity-bonus-section">
         <div className="opportunity-bonus-glow" />
         <div className="opportunity-container opportunity-bonus-layout">
           <div>
-            <div className="opportunity-eyebrow"><span className="opportunity-eyebrow-line" /> UN PROGRAMME QUI VALORISE L&apos;EFFORT</div>
-            <h2>Atteignez votre objectif. <em>Soyez reconnu(e).</em></h2>
-            <p>Selon les conditions et les critères du programme, une prime pouvant atteindre <strong>3 000 $</strong> peut être offerte lorsque le permis est obtenu dans le délai prévu.</p>
+            <div className="opportunity-eyebrow"><span className="opportunity-eyebrow-line" /> UN PROGRAMME QUI RÉCOMPENSE L’ENGAGEMENT</div>
+            <h2>Donnez-vous les moyens de réussir. <em>Soyez récompensé(e).</em></h2>
+            <p>Les candidats qui progressent avec sérieux dans leur formation et obtiennent leur permis dans les conditions prévues peuvent être admissibles à un <strong>bonus de 5 000 $ à 10 000 $</strong>. Une raison de plus de transformer votre motivation en véritable projet professionnel.</p>
           </div>
           <Reveal direction="scale" className="opportunity-bonus-badge">
-            <span>Jusqu&apos;à</span>
-            <strong>3 000 $</strong>
+            <span>Bonus potentiel</span>
+            <strong>5 000 $<br />à 10 000 $</strong>
             <small>selon les conditions du programme</small>
           </Reveal>
         </div>
@@ -185,15 +195,15 @@ export default function OpportuniteAssurancePage() {
         <div className="opportunity-cta-pattern" />
         <div className="opportunity-container opportunity-cta-content">
           <div className="opportunity-eyebrow"><span className="opportunity-eyebrow-line" /> VOTRE PROCHAINE ÉTAPE</div>
-          <h2>Vous avez des questions ?<br /><em>Commençons par une conversation.</em></h2>
-          <p>Réservez un appel d&apos;information pour comprendre le parcours, les conditions et les prochaines étapes. Vous repartirez avec une vision claire — sans pression.</p>
+          <h2>Prêt(e) à rejoindre FINAB ?<br /><em>Soumettez votre candidature.</em></h2>
+          <p>Choisissez un créneau pour votre entretien de recrutement. Nous vous présenterons le poste, les conditions de sélection et les prochaines étapes.</p>
           <BookingForm />
         </div>
       </section>
 
       <section className="opportunity-footer-note">
         <div className="opportunity-container">
-          <p>FINAB présente une opportunité d&apos;information et d&apos;accompagnement. L&apos;admissibilité, le permis, les frais et toute prime éventuelle sont soumis aux exigences et conditions applicables. Cette page ne constitue pas une offre d&apos;emploi ni une garantie de revenus.</p>
+          <p>FINAB recrute des conseillers financiers. L’admissibilité, la sélection, le permis, les frais et toute prime éventuelle sont soumis aux exigences et conditions applicables. La candidature ne garantit ni une sélection, ni un permis, ni un revenu.</p>
           <Link href="/">Retourner sur FINAB la solution</Link>
         </div>
       </section>

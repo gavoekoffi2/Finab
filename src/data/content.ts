@@ -20,6 +20,8 @@ export const navigation = [
   { label: "Accueil", href: "/" },
   { label: "Nos Produits", href: "/produits" },
   { label: "Services", href: "/services" },
+  { label: "Devenir conseiller", href: "/programme-futurs-conseillers" },
+  { label: "FINAB Afrique", href: "/afrique/recrutement" },
   { label: "Coordination Médicale", href: "/coordination-medicale" },
   { label: "À propos", href: "/a-propos" },
   { label: "Actualités", href: "/actualites" },
@@ -308,7 +310,7 @@ export const quizQuestions = [
 ];
 
 export const stats = [
-  { value: "5000+", label: "Clients accompagnés" },
+  { value: "2000+", label: "Clients accompagnés" },
   { value: "3", label: "Continents couverts" },
   { value: "15+", label: "Services proposés" },
   { value: "98%", label: "Taux de satisfaction" },
