@@ -4,91 +4,115 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useMotionValueEvent, useScroll } from "framer-motion";
 import { navigation, siteConfig } from "@/data/content";
-import { MenuIcon, XIcon, PhoneIcon, WhatsAppIcon } from "@/components/ui/Icons";
+import { PhoneIcon, WhatsAppIcon, MailIcon } from "@/components/ui/Icons";
+import { getLenis } from "@/components/immersive/SmoothScroll";
+
+const EASE = [0.16, 1, 0.3, 1] as const;
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const pathname = usePathname();
-  const headerRef = useRef<HTMLElement>(null);
+  const lastY = useRef(0);
+  const { scrollY } = useScroll();
 
-  useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  useMotionValueEvent(scrollY, "change", (y) => {
+    setIsScrolled(y > 40);
+    const goingDown = y > lastY.current;
+    setIsHidden(goingDown && y > 700);
+    lastY.current = y;
+  });
 
-  useEffect(() => {
+  // Ferme le menu quand on change de page
+  const [lastPath, setLastPath] = useState(pathname);
+  if (pathname !== lastPath) {
+    setLastPath(pathname);
     setIsMobileOpen(false);
-  }, [pathname]);
+  }
+
+  useEffect(() => {
+    const lenis = getLenis();
+    if (isMobileOpen) {
+      lenis?.stop();
+      document.documentElement.style.overflow = "hidden";
+    } else {
+      lenis?.start();
+      document.documentElement.style.overflow = "";
+    }
+  }, [isMobileOpen]);
 
   return (
     <>
-      {/* Premium top bar */}
-      <div className={`text-white/90 text-sm py-2 hidden md:block transition-all duration-500 ${isScrolled ? "bg-dark/0 h-0 overflow-hidden opacity-0" : "bg-dark"}`}>
-        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-          <div className="flex items-center gap-6">
-            <a href={`tel:${siteConfig.phone}`} className="flex items-center gap-1.5 hover:text-primary-light transition-colors group">
-              <PhoneIcon className="w-3.5 h-3.5 group-hover:animate-bounce" />
-              {siteConfig.phone}
-            </a>
-            <a href={`mailto:${siteConfig.email}`} className="hover:text-primary-light transition-colors">
-              {siteConfig.email}
-            </a>
-          </div>
-          <div className="flex items-center gap-4">
-            <a
-              href={siteConfig.whatsapp}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 hover:text-primary-light transition-colors"
-            >
-              <WhatsAppIcon className="w-4 h-4" />
-              WhatsApp
-            </a>
-            <a
-              href={siteConfig.recruitmentUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-primary-light transition-colors"
-            >
-              Nos Recrutements
-            </a>
+      <motion.header
+        initial={false}
+        animate={{ y: isHidden && !isMobileOpen ? "-120%" : "0%" }}
+        transition={{ duration: 0.6, ease: EASE }}
+        className="fixed inset-x-0 top-0 z-[60]"
+      >
+        {/* Fond dégradé quand on est tout en haut (lisibilité sur les images) */}
+        <div
+          className={`pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/60 to-transparent transition-opacity duration-700 ${isScrolled ? "opacity-0" : "opacity-100"}`}
+        />
+
+        {/* Barre d'informations */}
+        <div
+          className={`relative hidden overflow-hidden text-xs text-white/70 transition-all duration-500 md:block ${isScrolled ? "max-h-0 opacity-0" : "max-h-12 opacity-100"}`}
+        >
+          <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-2.5">
+            <div className="flex items-center gap-6">
+              <a href={`tel:${siteConfig.phone}`} className="flex items-center gap-1.5 transition-colors hover:text-white">
+                <PhoneIcon className="h-3.5 w-3.5" />
+                {siteConfig.phone}
+              </a>
+              <a href={`mailto:${siteConfig.email}`} className="transition-colors hover:text-white">
+                {siteConfig.email}
+              </a>
+            </div>
+            <div className="flex items-center gap-5">
+              <a
+                href={siteConfig.whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 transition-colors hover:text-white"
+              >
+                <WhatsAppIcon className="h-3.5 w-3.5" />
+                WhatsApp
+              </a>
+              <a href={siteConfig.recruitmentUrl} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-white">
+                Nos Recrutements ↗
+              </a>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Main header - premium glass morphism */}
-      <header
-        ref={headerRef}
-        className={`sticky top-0 z-50 transition-all duration-500 ${
-          isScrolled
-            ? "bg-dark/80 backdrop-blur-2xl shadow-2xl shadow-dark/30 border-b border-white/5"
-            : "bg-transparent"
-        }`}
-      >
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex items-center justify-between h-18">
-            {/* Logo */}
-            <Link href="/" className="flex items-center group relative">
-              <div className="absolute -inset-3 rounded-full bg-primary/0 group-hover:bg-primary/10 transition-all duration-500 blur-xl" />
-              <div className="relative h-14 w-auto rounded-2xl overflow-hidden flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+        {/* Barre principale : transparente puis capsule flottante en verre */}
+        <div className={`relative mx-auto transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${isScrolled ? "mt-3 max-w-7xl px-3 md:px-4" : "max-w-7xl px-4 md:px-6"}`}>
+          <div
+            className={`flex items-center justify-between gap-4 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+              isScrolled ? "glass-dark h-16 rounded-full pl-3 pr-2 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.6)]" : "h-20"
+            }`}
+          >
+            <Link href="/" className="group relative flex shrink-0 items-center" aria-label="FINAB la solution – Accueil">
+              <span className="absolute -inset-3 rounded-full bg-primary/0 blur-xl transition-all duration-500 group-hover:bg-primary/25" />
+              <span
+                className={`relative flex items-center rounded-2xl bg-white px-2.5 py-1 shadow-lg transition-all duration-500 group-hover:scale-[1.04] ${isScrolled ? "h-11" : "h-14"}`}
+              >
                 <Image
-                  src="/images/logo.png"
+                  src="/images/logo-wide.png"
                   alt="FINAB la solution"
-                  width={140}
-                  height={140}
-                  className="object-contain"
+                  width={409}
+                  height={168}
+                  className="h-full w-auto object-contain"
                   priority
                 />
-              </div>
+              </span>
             </Link>
 
-            {/* Desktop Nav - Premium style with hover indicators */}
-            <nav className="hidden lg:flex items-center gap-0.5 relative">
+            <nav className="relative hidden items-center xl:flex" aria-label="Navigation principale">
               {navigation.map((item) => {
                 const isActive = pathname === item.href;
                 return (
@@ -97,29 +121,21 @@ export default function Header() {
                     href={item.href}
                     onMouseEnter={() => setHoveredItem(item.href)}
                     onMouseLeave={() => setHoveredItem(null)}
-                    className={`relative px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
-                      isScrolled
-                        ? isActive
-                          ? "text-primary-light"
-                          : "text-white/70 hover:text-white"
-                        : isActive
-                          ? "text-primary"
-                          : "text-dark/70 hover:text-primary"
+                    className={`relative rounded-full px-3 py-2 text-[13px] font-medium transition-colors duration-300 ${
+                      isActive ? "text-white" : "text-white/70 hover:text-white"
                     }`}
                   >
-                    {/* Hover background pill */}
                     {hoveredItem === item.href && (
-                      <motion.div
+                      <motion.span
                         layoutId="navHover"
-                        className={`absolute inset-0 rounded-xl ${isScrolled ? "bg-white/10" : "bg-primary/5"}`}
-                        transition={{ type: "spring", duration: 0.4, bounce: 0.15 }}
+                        className="absolute inset-0 rounded-full bg-white/10"
+                        transition={{ type: "spring", duration: 0.45, bounce: 0.15 }}
                       />
                     )}
-                    {/* Active underline */}
                     {isActive && (
-                      <motion.div
+                      <motion.span
                         layoutId="activeNav"
-                        className="absolute bottom-0 left-3 right-3 h-0.5 bg-gradient-to-r from-primary to-primary-light rounded-full"
+                        className="absolute inset-x-3 -bottom-0.5 h-[2px] rounded-full bg-gradient-to-r from-primary-light to-accent"
                         transition={{ type: "spring", duration: 0.5, bounce: 0.2 }}
                       />
                     )}
@@ -129,124 +145,135 @@ export default function Header() {
               })}
             </nav>
 
-            {/* CTA + Mobile Toggle */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <a
+                href={siteConfig.whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="WhatsApp"
+                className="hidden h-11 w-11 items-center justify-center rounded-full bg-white/10 text-green-400 transition-colors hover:bg-green-500 hover:text-white 2xl:flex"
+              >
+                <WhatsAppIcon className="h-5 w-5" />
+              </a>
               <Link
                 href="/contact"
-                className="hidden md:inline-flex items-center px-6 py-2.5 rounded-xl bg-gradient-to-r from-accent to-accent-dark text-white font-semibold text-sm hover:from-accent-light hover:to-accent transition-all shadow-lg hover:shadow-xl hover:shadow-accent/25 hover:scale-105 active:scale-95 duration-300"
+                className="group hidden items-center gap-2 rounded-full bg-accent px-5 py-3 text-sm font-semibold text-white shadow-[0_10px_30px_-10px_rgba(220,38,38,0.8)] transition-all duration-500 hover:bg-accent-light md:inline-flex"
               >
-                <span className="mr-2">Nous contacter</span>
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                Nous contacter
+                <svg className="h-4 w-4 transition-transform duration-500 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                 </svg>
               </Link>
               <button
-                onClick={() => setIsMobileOpen(!isMobileOpen)}
-                className={`lg:hidden p-2.5 rounded-xl transition-all duration-300 ${
-                  isScrolled
-                    ? "hover:bg-white/10 text-white"
-                    : "hover:bg-gray-100 text-dark"
-                } ${isMobileOpen ? "bg-primary/10 text-primary" : ""}`}
-                aria-label="Menu"
+                onClick={() => setIsMobileOpen((v) => !v)}
+                className="relative flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur transition-colors hover:bg-white/20 xl:hidden"
+                aria-label={isMobileOpen ? "Fermer le menu" : "Ouvrir le menu"}
+                aria-expanded={isMobileOpen}
               >
-                <AnimatePresence mode="wait">
-                  {isMobileOpen ? (
-                    <motion.div key="close" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.2 }}>
-                      <XIcon />
-                    </motion.div>
-                  ) : (
-                    <motion.div key="menu" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.2 }}>
-                      <MenuIcon />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                <span className="relative block h-3 w-5">
+                  <motion.span
+                    className="absolute left-0 top-0 h-[2px] w-5 rounded-full bg-current"
+                    animate={isMobileOpen ? { rotate: 45, y: 5 } : { rotate: 0, y: 0 }}
+                  />
+                  <motion.span
+                    className="absolute bottom-0 left-0 h-[2px] w-5 rounded-full bg-current"
+                    animate={isMobileOpen ? { rotate: -45, y: -5 } : { rotate: 0, y: 0 }}
+                  />
+                </span>
               </button>
             </div>
           </div>
         </div>
-      </header>
+      </motion.header>
 
-      {/* Mobile Menu - Premium slide-in */}
+      {/* Menu plein écran */}
       <AnimatePresence>
         {isMobileOpen && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsMobileOpen(false)}
-              className="lg:hidden fixed inset-0 z-40 bg-dark/50 backdrop-blur-sm"
-            />
-            <motion.div
-              initial={{ opacity: 0, x: "100%" }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: "100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="lg:hidden fixed top-0 right-0 bottom-0 w-[85%] max-w-sm z-50 bg-white shadow-2xl"
-            >
-              <div className="flex items-center justify-between p-6 border-b">
-                <Link href="/" className="flex items-center" onClick={() => setIsMobileOpen(false)}>
-                  <Image src="/images/logo.png" alt="FINAB la solution" width={120} height={120} className="object-contain" />
-                </Link>
-                <button onClick={() => setIsMobileOpen(false)} className="p-2 rounded-xl hover:bg-gray-100 transition-colors" aria-label="Fermer">
-                  <XIcon className="w-5 h-5" />
-                </button>
-              </div>
+          <motion.div
+            data-lenis-prevent
+            initial={{ clipPath: "circle(0% at calc(100% - 44px) 44px)" }}
+            animate={{ clipPath: "circle(150% at calc(100% - 44px) 44px)" }}
+            exit={{ clipPath: "circle(0% at calc(100% - 44px) 44px)" }}
+            transition={{ duration: 0.8, ease: EASE }}
+            className="fixed inset-0 z-[55] overflow-y-auto bg-ink text-white xl:hidden"
+          >
+            <div className="film-grain" />
+            <div className="absolute -right-32 top-1/3 h-96 w-96 rounded-full bg-primary/25 blur-[120px]" />
+            <div className="absolute -left-32 bottom-0 h-80 w-80 rounded-full bg-accent/20 blur-[120px]" />
 
-              <nav className="p-6 flex flex-col gap-1.5 overflow-y-auto max-h-[calc(100vh-200px)]">
+            <div className="relative flex min-h-full flex-col px-6 pb-10 pt-28">
+              <nav className="flex flex-col" aria-label="Menu mobile">
                 {navigation.map((item, i) => {
                   const isActive = pathname === item.href;
                   return (
                     <motion.div
                       key={item.href}
-                      initial={{ opacity: 0, x: 30 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.05 * i }}
+                      initial={{ opacity: 0, y: 40 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.15 + i * 0.05, duration: 0.7, ease: EASE }}
+                      className="border-b border-white/10"
                     >
                       <Link
                         href={item.href}
                         onClick={() => setIsMobileOpen(false)}
-                        className={`flex items-center px-4 py-3.5 rounded-xl text-base font-medium transition-all ${
-                          isActive
-                            ? "bg-primary/10 text-primary border-l-4 border-primary"
-                            : "text-dark/70 hover:bg-primary/5 hover:text-primary"
-                        }`}
+                        className="group flex items-baseline gap-4 py-3.5"
                       >
-                        {item.label}
-                        {isActive && (
-                          <div className="ml-auto w-2 h-2 rounded-full bg-primary" />
-                        )}
+                        <span className="w-6 text-xs font-medium text-white/40 tabular-nums">{String(i + 1).padStart(2, "0")}</span>
+                        <span
+                          className={`text-[1.75rem] font-semibold tracking-tight transition-all duration-500 group-hover:translate-x-2 sm:text-4xl ${
+                            isActive ? "display-italic text-gradient-brand" : "text-white"
+                          }`}
+                        >
+                          {item.label}
+                        </span>
                       </Link>
                     </motion.div>
                   );
                 })}
               </nav>
 
-              <div className="absolute bottom-0 left-0 right-0 p-6 border-t bg-surface">
-                <div className="flex flex-col gap-3">
-                  <a href={`tel:${siteConfig.phone}`} className="flex items-center gap-2 text-primary font-medium">
-                    <PhoneIcon className="w-5 h-5" /> {siteConfig.phone}
-                  </a>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6, duration: 0.7, ease: EASE }}
+                className="mt-10 grid gap-4 text-sm"
+              >
+                <a href={`tel:${siteConfig.phone}`} className="flex items-center gap-3 text-white/80">
+                  <PhoneIcon className="h-5 w-5 text-primary-light" /> {siteConfig.phone}
+                </a>
+                <a href={`mailto:${siteConfig.email}`} className="flex items-center gap-3 text-white/80">
+                  <MailIcon className="h-5 w-5 text-primary-light" /> {siteConfig.email}
+                </a>
+                <a href={siteConfig.recruitmentUrl} target="_blank" rel="noopener noreferrer" className="text-white/80">
+                  Nos Recrutements ↗
+                </a>
+                <div className="mt-4 grid grid-cols-2 gap-3">
                   <a
                     href={siteConfig.whatsapp}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-green-600 font-medium"
+                    className="flex items-center justify-center gap-2 rounded-full bg-green-600 px-4 py-3.5 font-semibold"
                   >
-                    <WhatsAppIcon className="w-5 h-5" /> WhatsApp
+                    <WhatsAppIcon className="h-5 w-5" /> WhatsApp
                   </a>
                   <Link
                     href="/contact"
                     onClick={() => setIsMobileOpen(false)}
-                    className="mt-2 text-center px-5 py-3.5 rounded-xl bg-gradient-to-r from-accent to-accent-dark text-white font-semibold hover:from-accent-light hover:to-accent transition-all shadow-lg"
+                    className="flex items-center justify-center rounded-full bg-accent px-4 py-3.5 font-semibold"
                   >
                     Nous contacter
                   </Link>
                 </div>
-              </div>
-            </motion.div>
-          </>
+                <Link
+                  href="/services"
+                  onClick={() => setIsMobileOpen(false)}
+                  className="flex items-center justify-center rounded-full border border-white/20 px-4 py-3.5 font-semibold"
+                >
+                  Demander un service
+                </Link>
+              </motion.div>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </>

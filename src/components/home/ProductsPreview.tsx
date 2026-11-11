@@ -1,160 +1,248 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import Link from "next/link";
+import { motion, useMotionValue, useScroll, useTransform, type MotionValue } from "framer-motion";
 import SectionHeading from "@/components/ui/SectionHeading";
-import AnimatedCard from "@/components/ui/AnimatedCard";
+import SplitText from "@/components/immersive/SplitText";
 import Button from "@/components/ui/Button";
-import { productsCanada, productsAfrica } from "@/data/content";
+import { productsCanada, productsAfrica, productImages } from "@/data/content";
 import { ArrowRightIcon } from "@/components/ui/Icons";
+import { useMediaQuery } from "@/lib/useMediaQuery";
 
-const canadaImages: Record<string, { src: string; alt: string }> = {
-  "education-financiere": {
-    src: "/images/photos/education-financiere-apprentissage-et-formation-14465d.jpg",
-    alt: "Éducation financière - Apprentissage et formation",
-  },
-  "declarations-impots": {
-    src: "/images/photos/education-financiere-apprentissage-et-formation-eb4e97.jpg",
-    alt: "Déclarations d'impôts - Consultation professionnelle",
-  },
-  "formation-recrutement": {
-    src: "/images/photos/education-financiere-apprentissage-et-formation-eaa682.jpg",
-    alt: "Formation et recrutement - Équipe professionnelle",
-  },
-};
+const EASE = [0.16, 1, 0.3, 1] as const;
 
-const africaImages: Record<string, { src: string; alt: string }> = {
-  "assurance-vie": {
-    src: "/images/assurance-vie.jpg",
-    alt: "Assurance Vie - Famille africaine unie",
-  },
-  "assurance-sante": {
-    src: "/images/photos/assurance-vie-famille-africaine-unie-7b2b1f.jpg",
-    alt: "Assurance Santé - Soins médicaux de qualité",
-  },
-  "micro-assurance": {
-    src: "/images/photos/assurance-vie-famille-africaine-unie-70af45.jpg",
-    alt: "Micro-assurance - Petits entrepreneurs africains",
-  },
-  "assurance-voyage": {
-    src: "/images/assurance-voyage.jpg",
-    alt: "Assurance Voyage - Voyager en toute sérénité",
-  },
-  "epargne-investissement": {
-    src: "/images/photos/micro-assurance-petits-entrepreneurs-africains-ed53a2.jpg",
-    alt: "Épargne et investissement - Croissance financière",
-  },
-};
+const cardThemes = [
+  { bg: "bg-ink-2 text-white", muted: "text-white/60", dot: "bg-primary-light", tag: "bg-primary text-white" },
+  { bg: "bg-white text-ink ring-1 ring-black/5", muted: "text-muted", dot: "bg-primary", tag: "bg-ink text-white" },
+  { bg: "bg-gradient-to-br from-primary-dark to-[#0c4d26] text-white", muted: "text-white/70", dot: "bg-white", tag: "bg-white text-primary-dark" },
+];
 
-export default function ProductsPreview() {
+function StackCard({
+  product,
+  index,
+  total,
+  progress,
+  stacked,
+}: {
+  product: (typeof productsCanada)[number];
+  index: number;
+  total: number;
+  progress: MotionValue<number>;
+  stacked: boolean;
+}) {
+  const targetScale = stacked ? 1 - (total - index) * 0.05 : 1;
+  const scale = useTransform(progress, [index / total, 1], [1, targetScale]);
+  const img = productImages[product.id];
+  const theme = cardThemes[index % cardThemes.length];
+
   return (
-    <section className="py-24 bg-surface">
-      <div className="max-w-7xl mx-auto px-6">
-        <SectionHeading
-          badge="Produits Canada"
-          title="Nos services au Canada"
-          subtitle="Des solutions adaptées pour votre réussite financière au Canada"
-        />
-
-        <div className="grid md:grid-cols-3 gap-8 mb-24">
-          {productsCanada.map((product, i) => {
-            const img = canadaImages[product.id];
-            return (
-              <AnimatedCard key={product.id} delay={i * 0.1}>
-                {img && (
-                  <div className="relative h-48 overflow-hidden group">
-                    <Image
-                      src={img.src}
-                      alt={img.alt}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-110"
-                      sizes="(max-width: 768px) 100vw, 33vw"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-dark/50 to-transparent" />
-                    <div className="absolute bottom-3 left-3 px-3 py-1 rounded-full text-xs font-semibold bg-primary/90 text-white backdrop-blur-sm">
-                      Canada
-                    </div>
-                  </div>
-                )}
-                <div className="p-8">
-                  <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-6">
-                    <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <h3 className="text-xl font-bold text-dark mb-3">{product.title}</h3>
-                  <p className="text-muted leading-relaxed mb-6">{product.description}</p>
-                  <ul className="space-y-2 mb-6">
-                    {product.features.slice(0, 3).map((f) => (
-                      <li key={f} className="flex items-center gap-2 text-sm text-muted">
-                        <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                        {f}
-                      </li>
-                    ))}
-                  </ul>
-                  <Button href={`/produits#${product.id}`} variant="ghost" size="sm">
-                    En savoir plus <ArrowRightIcon className="w-4 h-4 ml-1" />
-                  </Button>
-                </div>
-              </AnimatedCard>
-            );
-          })}
+    <div className="mb-6 md:sticky md:top-0 md:mb-0 md:flex md:h-screen md:items-center">
+      <motion.article
+        style={{ scale, top: stacked ? `calc(-4vh + ${index * 28}px)` : undefined }}
+        initial={{ opacity: 0, y: 80 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 1, ease: EASE }}
+        className={`relative grid w-full origin-top overflow-hidden rounded-[2rem] shadow-[0_40px_100px_-40px_rgba(5,13,9,0.55)] md:h-[70vh] md:min-h-[480px] md:grid-cols-2 ${theme.bg}`}
+      >
+        {img && (
+          <div className="group relative h-64 overflow-hidden md:h-full" data-cursor="Voir">
+            <Image
+              src={img.src}
+              alt={img.alt}
+              fill
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className="object-cover transition-transform duration-[1.6s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-110"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+            <span className={`absolute left-5 top-5 rounded-full px-3 py-1 text-xs font-semibold ${theme.tag}`}>Canada</span>
+          </div>
+        )}
+        <div className="flex flex-col justify-center p-8 md:p-12 lg:p-16">
+          <span className="font-display text-6xl font-light opacity-30 md:text-8xl">{String(index + 1).padStart(2, "0")}</span>
+          <h3 className="mt-4 text-3xl font-bold tracking-[-0.03em] md:text-5xl">{product.title}</h3>
+          <p className={`mt-5 max-w-md text-base leading-relaxed md:text-lg ${theme.muted}`}>{product.description}</p>
+          <ul className="mt-6 space-y-2.5">
+            {product.features.slice(0, 3).map((f) => (
+              <li key={f} className={`flex items-center gap-3 text-sm ${theme.muted}`}>
+                <span className={`h-1.5 w-1.5 rounded-full ${theme.dot}`} />
+                {f}
+              </li>
+            ))}
+          </ul>
+          <Link
+            href={`/produits#${product.id}`}
+            className="group mt-8 inline-flex w-fit items-center gap-3 text-sm font-semibold"
+          >
+            <span className="flex h-11 w-11 items-center justify-center rounded-full border border-current transition-all duration-500 group-hover:bg-current">
+              <ArrowRightIcon className="h-4 w-4 transition-colors duration-500 group-hover:text-primary-light" />
+            </span>
+            En savoir plus
+          </Link>
         </div>
+      </motion.article>
+    </div>
+  );
+}
 
-        <SectionHeading
-          badge="Produits Afrique & Haïti"
-          title="Nos services en Afrique et Haïti"
-          subtitle="Des solutions d'assurance et de finance adaptées aux réalités locales"
+function CanadaStack() {
+  const ref = useRef<HTMLDivElement>(null);
+  const isDesktop = useMediaQuery("(min-width: 768px)");
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
+
+  return (
+    <div ref={ref} className="relative">
+      {productsCanada.map((product, i) => (
+        <StackCard
+          key={product.id}
+          product={product}
+          index={i}
+          total={productsCanada.length}
+          progress={scrollYProgress}
+          stacked={isDesktop}
         />
+      ))}
+    </div>
+  );
+}
 
-        <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-6">
-          {productsAfrica.map((product, i) => {
-            const img = africaImages[product.id];
-            return (
-              <AnimatedCard key={product.id} delay={i * 0.08}>
-                {img && (
-                  <div className="relative h-36 overflow-hidden group">
-                    <Image
-                      src={img.src}
-                      alt={img.alt}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-110"
-                      sizes="(max-width: 768px) 50vw, 20vw"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-dark/50 to-transparent" />
-                    <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-accent/90 text-white backdrop-blur-sm">
-                      Afrique & Haïti
-                    </div>
-                  </div>
-                )}
-                <div className="p-6">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary-dark mb-4">
-                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-                    </svg>
-                  </div>
-                  <h3 className="text-lg font-bold text-dark mb-2">{product.title}</h3>
-                  <p className="text-sm text-muted leading-relaxed mb-4 line-clamp-3">{product.description}</p>
-                  <Button href={`/produits#${product.id}`} variant="ghost" size="sm" className="text-xs">
-                    Détails <ArrowRightIcon className="w-3 h-3 ml-1" />
-                  </Button>
-                </div>
-              </AnimatedCard>
-            );
-          })}
+function AfricaCard({ product, index }: { product: (typeof productsAfrica)[number]; index: number }) {
+  const img = productImages[product.id];
+  return (
+    <Link
+      href={`/produits#${product.id}`}
+      data-cursor="Détails"
+      className="glow-border group relative block h-[62vh] max-h-[560px] min-h-[420px] w-[78vw] flex-shrink-0 snap-center overflow-hidden rounded-[2rem] bg-ink-3 sm:w-[360px] lg:w-[400px]"
+    >
+      <div className="absolute inset-0 overflow-hidden rounded-[2rem]">
+        {img && (
+          <Image
+            src={img.src}
+            alt={img.alt}
+            fill
+            sizes="(max-width: 640px) 80vw, 400px"
+            className="object-cover transition-transform duration-[1.6s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-110"
+          />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/50 to-transparent transition-opacity duration-700 group-hover:opacity-90" />
+      </div>
+      <div className="relative flex h-full flex-col justify-between p-7">
+        <div className="flex items-center justify-between">
+          <span className="rounded-full bg-accent/90 px-3 py-1 text-[11px] font-semibold text-white backdrop-blur">Afrique & Haïti</span>
+          <span className="font-display text-3xl text-white/40">{String(index + 1).padStart(2, "0")}</span>
+        </div>
+        <div>
+          <h3 className="text-3xl font-bold tracking-[-0.03em] text-white">{product.title}</h3>
+          <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-white/70">{product.description}</p>
+          <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-primary-light">
+            Détails
+            <ArrowRightIcon className="h-4 w-4 transition-transform duration-500 group-hover:translate-x-2" />
+          </span>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+function AfricaHorizontal() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
+  const [height, setHeight] = useState<number | undefined>(undefined);
+  const distance = useMotionValue(0);
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end end"] });
+  const x = useTransform(() => -scrollYProgress.get() * distance.get());
+  const bar = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+
+  useEffect(() => {
+    if (!isDesktop) {
+      distance.set(0);
+      return;
+    }
+    const measure = () => {
+      const track = trackRef.current;
+      if (!track) return;
+      const d = Math.max(0, track.scrollWidth - window.innerWidth);
+      distance.set(d);
+      setHeight(d + window.innerHeight);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    if (trackRef.current) ro.observe(trackRef.current);
+    window.addEventListener("resize", measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, [isDesktop, distance]);
+
+  return (
+    <section ref={sectionRef} className="relative bg-ink text-white" style={{ height: isDesktop ? height : undefined }}>
+      <div className="film-grain pointer-events-none" />
+      <div className={`${isDesktop ? "sticky top-0 h-screen" : "py-24"} flex flex-col justify-center overflow-hidden`}>
+        <div className="absolute -left-40 top-1/3 h-[30rem] w-[30rem] rounded-full bg-accent/15 blur-[150px]" />
+        <div className="relative mx-auto mb-10 flex w-full max-w-7xl flex-col gap-6 px-6 lg:mb-14 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <span className="eyebrow mb-5 text-primary-light">Produits Afrique & Haïti</span>
+            <SplitText
+              text="Nos services en Afrique et Haïti"
+              highlight={["Haïti"]}
+              className="text-4xl font-bold leading-[1.02] tracking-[-0.035em] md:text-5xl lg:text-6xl"
+            />
+            <p className="mt-5 max-w-xl text-lg text-white/60">
+              Des solutions d&apos;assurance et de finance adaptées aux réalités locales
+            </p>
+          </div>
+          <div className="hidden w-64 lg:block">
+            <div className="mb-3 flex justify-between text-xs uppercase tracking-[0.25em] text-white/50">
+              <span>Faites défiler</span>
+              <span>{String(productsAfrica.length).padStart(2, "0")} offres</span>
+            </div>
+            <div className="h-[2px] overflow-hidden rounded-full bg-white/15">
+              <motion.div className="h-full bg-gradient-to-r from-primary-light to-accent" style={{ width: bar }} />
+            </div>
+          </div>
         </div>
 
         <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          className="text-center mt-12"
+          ref={trackRef}
+          style={isDesktop ? { x } : undefined}
+          className={`relative flex gap-5 px-6 lg:gap-7 lg:pl-[max(1.5rem,calc((100vw-80rem)/2+1.5rem))] lg:pr-[8vw] ${
+            isDesktop ? "w-max" : "no-scrollbar snap-x snap-mandatory overflow-x-auto pb-4"
+          }`}
         >
-          <Button href="/produits" variant="primary" size="lg">
-            Voir tous nos produits
-          </Button>
+          {productsAfrica.map((product, i) => (
+            <AfricaCard key={product.id} product={product} index={i} />
+          ))}
+          <div className="flex h-[62vh] max-h-[560px] min-h-[420px] w-[78vw] flex-shrink-0 snap-center flex-col items-center justify-center gap-6 rounded-[2rem] border border-white/10 text-center sm:w-[360px]">
+            <p className="display-italic px-8 text-3xl text-white/80">Une solution pour chaque besoin</p>
+            <Button href="/produits" variant="primary" size="lg">
+              Voir tous nos produits
+            </Button>
+          </div>
         </motion.div>
       </div>
     </section>
+  );
+}
+
+export default function ProductsPreview() {
+  return (
+    <>
+      <section className="relative bg-cream pb-16 pt-28 md:pb-24 md:pt-36">
+        <div className="mx-auto max-w-7xl px-6">
+          <SectionHeading
+            badge="Produits Canada"
+            title="Nos services au Canada"
+            subtitle="Des solutions adaptées pour votre réussite financière au Canada"
+            highlight={["Canada"]}
+          />
+          <CanadaStack />
+        </div>
+      </section>
+      <AfricaHorizontal />
+    </>
   );
 }

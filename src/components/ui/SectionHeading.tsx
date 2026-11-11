@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import SplitText from "@/components/immersive/SplitText";
 
 interface SectionHeadingProps {
   badge?: string;
@@ -8,7 +9,11 @@ interface SectionHeadingProps {
   subtitle?: string;
   center?: boolean;
   light?: boolean;
+  /** Mots du titre à mettre en valeur */
+  highlight?: string[];
 }
+
+const EASE = [0.16, 1, 0.3, 1] as const;
 
 export default function SectionHeading({
   badge,
@@ -16,31 +21,41 @@ export default function SectionHeading({
   subtitle,
   center = true,
   light = false,
+  highlight,
 }: SectionHeadingProps) {
+  // Par défaut, on met en valeur le dernier mot du titre.
+  const words = title.replace(/[?!.]/g, "").split(" ");
+  const emphasis = highlight ?? [words[words.length - 1]];
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.6 }}
-      className={`mb-16 ${center ? "text-center" : ""}`}
-    >
+    <div className={`mb-14 md:mb-20 ${center ? "text-center" : ""}`}>
       {badge && (
-        <span className="inline-block px-4 py-1.5 rounded-full text-sm font-semibold tracking-wide uppercase bg-primary/10 text-primary mb-4">
+        <motion.span
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: EASE }}
+          className={`eyebrow mb-6 ${light ? "text-primary-light" : "text-primary"} ${center ? "justify-center" : ""}`}
+        >
           {badge}
-        </span>
+        </motion.span>
       )}
-      <h2
-        className={`text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 ${light ? "text-white" : "text-dark"}`}
-      >
-        {title}
-      </h2>
+      <SplitText
+        text={title}
+        highlight={emphasis}
+        className={`text-4xl font-bold leading-[1.02] tracking-[-0.035em] md:text-5xl lg:text-6xl ${light ? "text-white" : "text-ink"}`}
+      />
       {subtitle && (
-        <p className={`text-lg max-w-2xl ${center ? "mx-auto" : ""} ${light ? "text-white/70" : "text-muted"}`}>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1, delay: 0.25, ease: EASE }}
+          className={`mt-6 max-w-2xl text-lg leading-relaxed md:text-xl ${center ? "mx-auto" : ""} ${light ? "text-white/65" : "text-muted"}`}
+        >
           {subtitle}
-        </p>
+        </motion.p>
       )}
-      <div className={`mt-6 h-1 w-20 rounded-full bg-primary ${center ? "mx-auto" : ""}`} />
-    </motion.div>
+    </div>
   );
 }

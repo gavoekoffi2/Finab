@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import SectionHeading from "@/components/ui/SectionHeading";
-import Button from "@/components/ui/Button";
+import PageHero from "@/components/immersive/PageHero";
 import { siteConfig } from "@/data/content";
 import { PhoneIcon, WhatsAppIcon } from "@/components/ui/Icons";
 
@@ -125,62 +125,43 @@ export default function CoordinationMedicaleClient() {
 
   return (
     <>
-      {/* Hero Section - Full width with medical theme */}
-      <section className="relative min-h-[70vh] flex items-center overflow-hidden">
-        <div className="absolute inset-0">
-          <Image
-            src="/images/photos/hopital-moderne-au-canada-b7646d.jpg"
-            alt="Hôpital moderne au Canada"
-            fill
-            className="object-cover"
-            priority
-          />
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-r from-dark/80 via-dark/50 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-dark/60 via-transparent to-dark/30" />
-
-        <div className="relative max-w-7xl mx-auto px-6 py-32 w-full">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="max-w-3xl"
+      {/* Ouverture cinéma - thème médical */}
+      <PageHero
+        eyebrow="Coordination Médicale"
+        title="AFRIQUE → Canada"
+        highlight={["Canada"]}
+        subtitle="Nous facilitons et sécurisons l'accès aux soins spécialisés au Canada pour les patients provenant de la RDC, d'Afrique centrale et d'Afrique de l'Ouest."
+        image="/images/photos/hopital-moderne-au-canada-b7646d.jpg"
+        imageAlt="Hôpital moderne au Canada"
+        tone="blue"
+        badge={
+          <span className="inline-flex items-center gap-2 rounded-full border border-blue-400/30 bg-blue-500/20 px-5 py-2 text-sm font-semibold text-blue-100 backdrop-blur-sm">
+            <span className="h-2 w-2 animate-pulse rounded-full bg-blue-400" />
+            Coordination Médicale Internationale
+          </span>
+        }
+      >
+        <p className="mb-8 text-xl font-light text-white/85 md:text-2xl">Sécurité &bull; Conformité &bull; Excellence</p>
+        <div className="flex flex-wrap gap-4">
+          <a
+            href="#demande"
+            className="rounded-full bg-blue-600 px-8 py-4 text-lg font-semibold text-white shadow-[0_10px_40px_-10px_rgba(37,99,235,0.8)] transition-all duration-500 hover:bg-blue-500 active:scale-95"
           >
-            <span className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-semibold bg-blue-500/20 backdrop-blur-sm text-blue-200 mb-6 border border-blue-400/30">
-              <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
-              Coordination Médicale Internationale
-            </span>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
-              AFRIQUE <span className="text-blue-400">&rarr;</span> Canada
-            </h1>
-            <p className="text-xl md:text-2xl text-white/80 font-light mb-4">
-              Sécurité &bull; Conformité &bull; Excellence
-            </p>
-            <p className="text-white/60 text-lg leading-relaxed mb-10 max-w-2xl">
-              Nous facilitons et sécurisons l&apos;accès aux soins spécialisés au Canada pour les patients provenant de la RDC, d&apos;Afrique centrale et d&apos;Afrique de l&apos;Ouest.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <a
-                href="#demande"
-                className="px-8 py-4 rounded-2xl bg-blue-600 text-white font-semibold text-lg hover:bg-blue-500 transition-all shadow-lg hover:shadow-xl hover:shadow-blue-600/25 hover:scale-105 active:scale-95"
-              >
-                Faire une demande
-              </a>
-              <a
-                href={siteConfig.whatsapp}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-8 py-4 rounded-2xl bg-green-600 text-white font-semibold text-lg hover:bg-green-500 transition-all shadow-lg hover:shadow-xl flex items-center gap-2"
-              >
-                <WhatsAppIcon className="w-5 h-5" /> WhatsApp
-              </a>
-            </div>
-          </motion.div>
+            Faire une demande
+          </a>
+          <a
+            href={siteConfig.whatsapp}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 rounded-full bg-green-600 px-8 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-500 hover:bg-green-500"
+          >
+            <WhatsAppIcon className="h-5 w-5" /> WhatsApp
+          </a>
         </div>
-      </section>
+      </PageHero>
 
       {/* Le Problème / Notre Solution */}
-      <section className="py-24 bg-white">
+      <section className="py-24 md:py-32 bg-cream">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <motion.div
@@ -191,7 +172,7 @@ export default function CoordinationMedicaleClient() {
               <span className="inline-block px-4 py-1.5 rounded-full text-sm font-semibold bg-red-50 text-red-600 mb-4">
                 Le problème
               </span>
-              <h2 className="text-3xl md:text-4xl font-bold text-dark mb-8">
+              <h2 className="text-3xl md:text-4xl font-bold text-ink mb-8">
                 Des défis majeurs pour les patients africains
               </h2>
               <ul className="space-y-4">
@@ -223,13 +204,13 @@ export default function CoordinationMedicaleClient() {
               <span className="inline-block px-4 py-1.5 rounded-full text-sm font-semibold bg-blue-50 text-blue-600 mb-4">
                 Notre solution
               </span>
-              <h2 className="text-3xl md:text-4xl font-bold text-dark mb-6">
+              <h2 className="text-3xl md:text-4xl font-bold text-ink mb-6">
                 Un service complet de conciergerie médicale
               </h2>
               <p className="text-muted leading-relaxed mb-6">
                 Un service complet de conciergerie médicale internationale, conforme aux normes canadiennes. Nous prenons en charge chaque étape de votre parcours médical, de la pré-qualification au suivi post-traitement.
               </p>
-              <div className="relative rounded-2xl overflow-hidden shadow-xl">
+              <div className="relative rounded-3xl overflow-hidden shadow-xl">
                 <Image
                   src="/images/photos/equipe-medicale-professionnelle-7b3669.jpg"
                   alt="Équipe médicale professionnelle"
@@ -245,7 +226,7 @@ export default function CoordinationMedicaleClient() {
       </section>
 
       {/* Nos Services */}
-      <section className="py-24 bg-surface">
+      <section className="py-24 md:py-32 bg-surface">
         <div className="max-w-7xl mx-auto px-6">
           <SectionHeading
             badge="Nos services"
@@ -262,7 +243,7 @@ export default function CoordinationMedicaleClient() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.08 }}
                 whileHover={{ y: -8 }}
-                className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all group"
+                className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all group"
               >
                 <div className="relative h-44 overflow-hidden">
                   <Image
@@ -278,7 +259,7 @@ export default function CoordinationMedicaleClient() {
                   </div>
                 </div>
                 <div className="p-6">
-                  <h3 className="text-lg font-bold text-dark mb-2">{service.title}</h3>
+                  <h3 className="text-lg font-bold text-ink mb-2">{service.title}</h3>
                   <p className="text-sm text-muted leading-relaxed">{service.description}</p>
                 </div>
               </motion.div>
@@ -319,9 +300,9 @@ export default function CoordinationMedicaleClient() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
                 whileHover={{ y: -5 }}
-                className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/10 text-center"
+                className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 border border-white/10 text-center"
               >
-                <div className="w-16 h-16 rounded-2xl bg-blue-500/20 flex items-center justify-center mx-auto mb-6">
+                <div className="w-16 h-16 rounded-3xl bg-blue-500/20 flex items-center justify-center mx-auto mb-6">
                   {item.icon === "star" && (
                     <svg className="w-8 h-8 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
@@ -352,7 +333,7 @@ export default function CoordinationMedicaleClient() {
       </section>
 
       {/* Parcours patient - Timeline */}
-      <section className="py-24 bg-white">
+      <section className="py-24 md:py-32 bg-cream">
         <div className="max-w-7xl mx-auto px-6">
           <SectionHeading
             badge="Parcours patient"
@@ -379,7 +360,7 @@ export default function CoordinationMedicaleClient() {
                   )}
                 </div>
                 <div className="flex-1 pb-8">
-                  <h3 className="text-lg font-bold text-dark mb-1">{step.title}</h3>
+                  <h3 className="text-lg font-bold text-ink mb-1">{step.title}</h3>
                   <p className="text-muted text-sm leading-relaxed">{step.description}</p>
                 </div>
               </motion.div>
@@ -389,7 +370,7 @@ export default function CoordinationMedicaleClient() {
       </section>
 
       {/* Partenaires cibles */}
-      <section className="py-24 bg-surface">
+      <section className="py-24 md:py-32 bg-surface">
         <div className="max-w-7xl mx-auto px-6">
           <SectionHeading
             badge="Nos partenaires"
@@ -406,14 +387,14 @@ export default function CoordinationMedicaleClient() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.08 }}
                 whileHover={{ scale: 1.05, y: -3 }}
-                className="bg-white rounded-2xl p-6 text-center shadow-sm hover:shadow-md transition-all border border-gray-100"
+                className="bg-white rounded-3xl p-6 text-center shadow-sm hover:shadow-md transition-all border border-gray-100"
               >
                 <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center mx-auto mb-3">
                   <svg className="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 0h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" />
                   </svg>
                 </div>
-                <p className="text-sm font-semibold text-dark">{partner}</p>
+                <p className="text-sm font-semibold text-ink">{partner}</p>
               </motion.div>
             ))}
           </div>
@@ -421,7 +402,7 @@ export default function CoordinationMedicaleClient() {
       </section>
 
       {/* Formulaire de demande */}
-      <section id="demande" className="py-24 bg-gradient-to-br from-blue-900 via-blue-800 to-dark relative overflow-hidden">
+      <section id="demande" className="scroll-mt-20 py-24 bg-gradient-to-br from-blue-900 via-blue-800 to-dark relative overflow-hidden">
         <div className="absolute inset-0 opacity-5">
           <Image
             src="/images/photos/coordination-medicale-internationale-580bf4.jpg"
@@ -549,19 +530,19 @@ export default function CoordinationMedicaleClient() {
                           onChange={(e) => setFormData({ ...formData, country: e.target.value })}
                           className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-blue-400/50 transition-all"
                         >
-                          <option value="" className="text-dark">Sélectionnez</option>
-                          <option value="RDC" className="text-dark">RDC (Congo)</option>
-                          <option value="Congo" className="text-dark">Congo Brazzaville</option>
-                          <option value="Cameroun" className="text-dark">Cameroun</option>
-                          <option value="Gabon" className="text-dark">Gabon</option>
-                          <option value="Côte d'Ivoire" className="text-dark">Côte d&apos;Ivoire</option>
-                          <option value="Sénégal" className="text-dark">Sénégal</option>
-                          <option value="Togo" className="text-dark">Togo</option>
-                          <option value="Bénin" className="text-dark">Bénin</option>
-                          <option value="Guinée" className="text-dark">Guinée</option>
-                          <option value="Mali" className="text-dark">Mali</option>
-                          <option value="Burkina Faso" className="text-dark">Burkina Faso</option>
-                          <option value="Autre" className="text-dark">Autre pays</option>
+                          <option value="" className="text-ink">Sélectionnez</option>
+                          <option value="RDC" className="text-ink">RDC (Congo)</option>
+                          <option value="Congo" className="text-ink">Congo Brazzaville</option>
+                          <option value="Cameroun" className="text-ink">Cameroun</option>
+                          <option value="Gabon" className="text-ink">Gabon</option>
+                          <option value="Côte d'Ivoire" className="text-ink">Côte d&apos;Ivoire</option>
+                          <option value="Sénégal" className="text-ink">Sénégal</option>
+                          <option value="Togo" className="text-ink">Togo</option>
+                          <option value="Bénin" className="text-ink">Bénin</option>
+                          <option value="Guinée" className="text-ink">Guinée</option>
+                          <option value="Mali" className="text-ink">Mali</option>
+                          <option value="Burkina Faso" className="text-ink">Burkina Faso</option>
+                          <option value="Autre" className="text-ink">Autre pays</option>
                         </select>
                       </div>
                     </div>

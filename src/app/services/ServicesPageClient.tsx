@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import SectionHeading from "@/components/ui/SectionHeading";
+import PageHero from "@/components/immersive/PageHero";
 import AnimatedCard from "@/components/ui/AnimatedCard";
 import Button from "@/components/ui/Button";
-import { productsCanada, productsAfrica, siteConfig } from "@/data/content";
+import { productsCanada, productsAfrica, productImages, siteConfig } from "@/data/content";
 import { ArrowRightIcon, WhatsAppIcon, SendIcon } from "@/components/ui/Icons";
 
 type Tab = "catalog" | "request" | "tracking" | "messages";
@@ -66,7 +68,7 @@ export default function ServicesPageClient() {
     service: "",
     description: "",
   });
-  const [requestFiles, setRequestFiles] = useState<FileList | null>(null);
+  const [, setRequestFiles] = useState<FileList | null>(null);
   const [requestSubmitted, setRequestSubmitted] = useState(false);
   const [tickets] = useState<Ticket[]>(demoTickets);
   const [messages, setMessages] = useState<ChatMessage[]>(demoMessages);
@@ -120,38 +122,27 @@ export default function ServicesPageClient() {
   return (
     <>
       {/* Header */}
-      <section className="bg-gradient-to-br from-dark via-primary-dark to-primary py-20">
-        <div className="max-w-7xl mx-auto px-6 text-center">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-5xl font-bold text-white mb-4"
-          >
-            Services & Espace Client
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-white/70 text-lg max-w-2xl mx-auto"
-          >
-            Consultez nos services, faites une demande, suivez vos dossiers et échangez avec notre équipe
-          </motion.p>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="Services"
+        title="Services & Espace Client"
+        highlight={["Client"]}
+        subtitle="Consultez nos services, faites une demande, suivez vos dossiers et échangez avec notre équipe"
+        image="/images/photos/partenariat-afrique-620699.jpg"
+        imageAlt="Accompagnement d'un client FINAB"
+      />
 
       {/* Tabs */}
-      <section className="py-8 bg-white border-b sticky top-[72px] z-30">
+      <section className="sticky top-0 z-30 border-b border-black/5 bg-cream/85 py-4 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="flex gap-2 overflow-x-auto pb-2">
+          <div className="no-scrollbar flex gap-2 overflow-x-auto">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold whitespace-nowrap transition-all cursor-pointer ${
+                className={`flex items-center gap-2 px-5 py-3 rounded-full text-sm font-semibold whitespace-nowrap transition-all duration-500 cursor-pointer ${
                   activeTab === tab.id
-                    ? "bg-primary text-white shadow-lg"
-                    : "bg-surface text-muted hover:bg-primary/5"
+                    ? "bg-ink text-white shadow-lg"
+                    : "bg-white text-muted ring-1 ring-black/5 hover:text-primary"
                 }`}
               >
                 <span>{tab.icon}</span>
@@ -163,7 +154,7 @@ export default function ServicesPageClient() {
       </section>
 
       {/* Content */}
-      <section className="py-16 bg-surface min-h-[60vh]">
+      <section className="min-h-[60vh] bg-cream py-20">
         <div className="max-w-7xl mx-auto px-6">
           <AnimatePresence mode="wait">
             {/* CATALOG TAB */}
@@ -178,20 +169,20 @@ export default function ServicesPageClient() {
                 <div className="flex justify-center gap-4 mb-12">
                   <button
                     onClick={() => setSelectedRegion("canada")}
-                    className={`px-6 py-3 rounded-xl font-semibold transition-all cursor-pointer ${
+                    className={`px-6 py-3 rounded-full font-semibold transition-all duration-500 cursor-pointer ${
                       selectedRegion === "canada"
-                        ? "bg-primary text-white shadow-lg"
-                        : "bg-white text-muted hover:bg-primary/5"
+                        ? "bg-primary text-white shadow-lg shadow-primary/30"
+                        : "bg-white text-muted ring-1 ring-black/5 hover:text-primary"
                     }`}
                   >
                     🍁 Canada
                   </button>
                   <button
                     onClick={() => setSelectedRegion("africa")}
-                    className={`px-6 py-3 rounded-xl font-semibold transition-all cursor-pointer ${
+                    className={`px-6 py-3 rounded-full font-semibold transition-all duration-500 cursor-pointer ${
                       selectedRegion === "africa"
-                        ? "bg-primary text-white shadow-lg"
-                        : "bg-white text-muted hover:bg-primary/5"
+                        ? "bg-primary text-white shadow-lg shadow-primary/30"
+                        : "bg-white text-muted ring-1 ring-black/5 hover:text-primary"
                     }`}
                   >
                     🌍 Afrique & Haïti
@@ -201,8 +192,20 @@ export default function ServicesPageClient() {
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {currentProducts.map((product, i) => (
                     <AnimatedCard key={product.id} delay={i * 0.08}>
+                      {productImages[product.id] && (
+                        <div className="relative h-48 overflow-hidden">
+                          <Image
+                            src={productImages[product.id].src}
+                            alt={productImages[product.id].alt}
+                            fill
+                            sizes="(max-width: 768px) 100vw, 33vw"
+                            className="object-cover transition-transform duration-[1.4s] group-hover:scale-110"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                        </div>
+                      )}
                       <div className="p-8">
-                        <h3 className="text-xl font-bold text-dark mb-3">{product.title}</h3>
+                        <h3 className="text-xl font-bold text-ink mb-3">{product.title}</h3>
                         <p className="text-muted leading-relaxed mb-4">{product.description}</p>
                         <ul className="space-y-2 mb-6">
                           {product.features.map((f) => (
@@ -244,9 +247,9 @@ export default function ServicesPageClient() {
                 className="max-w-3xl mx-auto"
               >
                 {requestSubmitted ? (
-                  <div className="bg-green-50 border border-green-200 rounded-2xl p-12 text-center">
+                  <div className="rounded-[2rem] bg-white p-12 text-center shadow-[0_40px_100px_-50px_rgba(5,13,9,0.45)] ring-1 ring-primary/30">
                     <div className="text-5xl mb-4">✅</div>
-                    <h3 className="text-2xl font-bold text-dark mb-2">Demande envoyée !</h3>
+                    <h3 className="text-2xl font-bold text-ink mb-2">Demande envoyée !</h3>
                     <p className="text-muted mb-2">Votre ticket de service a été créé avec succès.</p>
                     <p className="text-muted mb-6">Suivez son évolution dans l&apos;onglet &quot;Suivi&quot;.</p>
                     <div className="flex justify-center gap-4">
@@ -270,44 +273,44 @@ export default function ServicesPageClient() {
                       title="Demander un service"
                       subtitle="Remplissez le formulaire et notre équipe vous recontactera rapidement"
                     />
-                    <form onSubmit={handleRequestSubmit} className="bg-white rounded-2xl p-8 md:p-12 shadow-sm space-y-6">
+                    <form onSubmit={handleRequestSubmit} className="space-y-6 rounded-[2rem] bg-white p-8 shadow-[0_40px_100px_-50px_rgba(5,13,9,0.45)] ring-1 ring-black/5 md:p-12">
                       <div className="grid md:grid-cols-2 gap-6">
                         <div>
-                          <label className="block text-sm font-semibold text-dark mb-2">Nom complet *</label>
+                          <label className="block text-sm font-semibold text-ink mb-2">Nom complet *</label>
                           <input
                             type="text"
                             required
                             value={requestForm.name}
                             onChange={(e) => setRequestForm({ ...requestForm, name: e.target.value })}
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                            className="w-full px-4 py-3 rounded-2xl border border-black/10 bg-cream focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/15"
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-semibold text-dark mb-2">Email *</label>
+                          <label className="block text-sm font-semibold text-ink mb-2">Email *</label>
                           <input
                             type="email"
                             required
                             value={requestForm.email}
                             onChange={(e) => setRequestForm({ ...requestForm, email: e.target.value })}
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                            className="w-full px-4 py-3 rounded-2xl border border-black/10 bg-cream focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/15"
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-semibold text-dark mb-2">Téléphone</label>
+                          <label className="block text-sm font-semibold text-ink mb-2">Téléphone</label>
                           <input
                             type="tel"
                             value={requestForm.phone}
                             onChange={(e) => setRequestForm({ ...requestForm, phone: e.target.value })}
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                            className="w-full px-4 py-3 rounded-2xl border border-black/10 bg-cream focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/15"
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-semibold text-dark mb-2">Service souhaité *</label>
+                          <label className="block text-sm font-semibold text-ink mb-2">Service souhaité *</label>
                           <select
                             required
                             value={requestForm.service}
                             onChange={(e) => setRequestForm({ ...requestForm, service: e.target.value })}
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                            className="w-full px-4 py-3 rounded-2xl border border-black/10 bg-cream focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/15"
                           >
                             <option value="">Choisir un service</option>
                             <optgroup label="Canada">
@@ -324,18 +327,18 @@ export default function ServicesPageClient() {
                         </div>
                       </div>
                       <div>
-                        <label className="block text-sm font-semibold text-dark mb-2">Description de votre besoin *</label>
+                        <label className="block text-sm font-semibold text-ink mb-2">Description de votre besoin *</label>
                         <textarea
                           required
                           rows={5}
                           value={requestForm.description}
                           onChange={(e) => setRequestForm({ ...requestForm, description: e.target.value })}
-                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
+                          className="w-full px-4 py-3 rounded-2xl border border-black/10 bg-cream focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/15 resize-none"
                           placeholder="Décrivez votre besoin en détail..."
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-semibold text-dark mb-2">Pièces jointes</label>
+                        <label className="block text-sm font-semibold text-ink mb-2">Pièces jointes</label>
                         <input
                           type="file"
                           multiple
@@ -386,7 +389,7 @@ export default function ServicesPageClient() {
                         initial={{ opacity: 0, y: 10 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow"
+                        className="rounded-3xl bg-white p-6 shadow-[0_20px_60px_-35px_rgba(5,13,9,0.35)] ring-1 ring-black/5 transition-all duration-500 hover:-translate-y-1"
                       >
                         <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
                           <div>
@@ -396,13 +399,13 @@ export default function ServicesPageClient() {
                                 {statusLabels[ticket.status].label}
                               </span>
                             </div>
-                            <h3 className="text-lg font-bold text-dark">{ticket.service}</h3>
+                            <h3 className="text-lg font-bold text-ink">{ticket.service}</h3>
                           </div>
                           <span className="text-sm text-muted">
                             {new Date(ticket.date).toLocaleDateString("fr-FR")}
                           </span>
                         </div>
-                        <p className="text-sm text-muted bg-surface rounded-xl p-4">{ticket.lastMessage}</p>
+                        <p className="text-sm text-muted bg-cream rounded-2xl p-4">{ticket.lastMessage}</p>
                         <div className="mt-4 flex gap-3">
                           <Button onClick={() => setActiveTab("messages")} variant="ghost" size="sm">
                             Voir les échanges <ArrowRightIcon className="w-3 h-3 ml-1" />
@@ -429,9 +432,9 @@ export default function ServicesPageClient() {
                   subtitle="Discutez avec l'équipe FINAB"
                 />
 
-                <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+                <div className="overflow-hidden rounded-[2rem] bg-white shadow-[0_40px_100px_-50px_rgba(5,13,9,0.45)] ring-1 ring-black/5">
                   {/* Messages */}
-                  <div className="h-96 overflow-y-auto p-6 space-y-4">
+                  <div className="h-96 overflow-y-auto p-6 space-y-4" data-lenis-prevent>
                     {messages.map((msg) => (
                       <div
                         key={msg.id}
@@ -441,7 +444,7 @@ export default function ServicesPageClient() {
                           className={`max-w-[75%] rounded-2xl px-4 py-3 text-sm ${
                             msg.role === "user"
                               ? "bg-primary text-white rounded-br-md"
-                              : "bg-surface text-dark rounded-bl-md"
+                              : "bg-surface text-ink rounded-bl-md"
                           }`}
                         >
                           <p>{msg.text}</p>
@@ -460,12 +463,12 @@ export default function ServicesPageClient() {
                       value={newMessage}
                       onChange={(e) => setNewMessage(e.target.value)}
                       placeholder="Votre message..."
-                      className="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
+                      className="flex-1 px-4 py-3 rounded-2xl border border-black/10 bg-cream focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/15 text-sm"
                     />
                     <button
                       type="submit"
                       disabled={!newMessage.trim()}
-                      className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-white hover:bg-primary-light transition-colors disabled:opacity-40 cursor-pointer"
+                      className="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white hover:bg-primary-light transition-colors disabled:opacity-40 cursor-pointer"
                     >
                       <SendIcon className="w-5 h-5" />
                     </button>

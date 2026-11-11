@@ -5,6 +5,9 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import SectionHeading from "@/components/ui/SectionHeading";
 
+const EASE = [0.16, 1, 0.3, 1] as const;
+const DURATION = 4500;
+
 const parcoursImages = [
   {
     src: "/images/photos/soutien-aux-enfants-b29685.jpg",
@@ -91,186 +94,166 @@ const parcoursImages = [
 export default function ParcoursSection() {
   const [current, setCurrent] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
-  const sliderRef = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
+  const stripRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
   const touchStartX = useRef(0);
 
-  const next = useCallback(() => {
-    setCurrent((p) => (p + 1) % parcoursImages.length);
-  }, []);
+  const next = useCallback(() => setCurrent((p) => (p + 1) % parcoursImages.length), []);
+  const prev = useCallback(() => setCurrent((p) => (p - 1 + parcoursImages.length) % parcoursImages.length), []);
 
-  const prev = useCallback(() => {
-    setCurrent((p) => (p - 1 + parcoursImages.length) % parcoursImages.length);
-  }, []);
-
-  // Auto-play (pause on hover)
+  // Lecture automatique seulement quand la section est visible (pause au survol)
   useEffect(() => {
-    if (isHovered) return;
-    const interval = setInterval(next, 4000);
-    return () => clearInterval(interval);
-  }, [next, isHovered]);
+    const el = sectionRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), { threshold: 0.3 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
-  // Get visible slides for the filmstrip
-  const getVisibleSlides = () => {
-    const slides = [];
-    for (let i = -2; i <= 3; i++) {
-      const idx = (current + i + parcoursImages.length) % parcoursImages.length;
-      slides.push({ ...parcoursImages[idx], index: idx, offset: i });
-    }
-    return slides;
-  };
+  useEffect(() => {
+    if (isHovered || !inView) return;
+    const id = setInterval(next, DURATION);
+    return () => clearInterval(id);
+  }, [next, isHovered, inView, current]);
+
+  // Garde la vignette active centrée dans la pellicule (sans faire défiler la page)
+  useEffect(() => {
+    const strip = stripRef.current;
+    const thumb = strip?.children[current] as HTMLElement | undefined;
+    if (!strip || !thumb) return;
+    strip.scrollTo({ left: thumb.offsetLeft - strip.clientWidth / 2 + thumb.clientWidth / 2, behavior: "smooth" });
+  }, [current]);
+
+  const item = parcoursImages[current];
 
   return (
-    <section className="py-24 bg-navy relative overflow-hidden">
-      {/* Background effects */}
-      <div className="absolute inset-0">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/8 rounded-full blur-[120px]" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-primary-light/5 rounded-full blur-[120px]" />
-      </div>
+    <section ref={sectionRef} className="relative overflow-hidden bg-ink py-28 text-white md:py-36">
+      <div className="film-grain" />
+      <div className="breathe absolute left-1/4 top-0 h-96 w-96 rounded-full bg-primary/15 blur-[140px]" />
 
-      <div className="max-w-7xl mx-auto px-6 relative">
+      <div className="relative mx-auto max-w-7xl px-6">
         <SectionHeading
           badge="Notre Parcours"
           title="Le chemin de la réussite"
           subtitle="Revivez les moments forts de FINAB la solution à travers notre parcours en images"
           light
+          highlight={["réussite"]}
         />
 
-        {/* Main featured image */}
-        <div
-          className="relative mb-8"
+        <motion.div
+          initial={{ opacity: 0, scale: 0.92, y: 60 }}
+          whileInView={{ opacity: 1, scale: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.25 }}
+          transition={{ duration: 1.3, ease: EASE }}
+          className="relative"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
+          onTouchStart={(e) => {
+            touchStartX.current = e.targetTouches[0].clientX;
+          }}
+          onTouchEnd={(e) => {
+            const diff = touchStartX.current - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 40) {
+              if (diff > 0) next();
+              else prev();
+            }
+          }}
         >
-          <div className="relative aspect-[21/9] md:aspect-[21/8] rounded-3xl overflow-hidden group">
-            <AnimatePresence mode="sync">
+          <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-ink-3 sm:aspect-[16/10] md:aspect-[21/9]">
+            <AnimatePresence initial={false}>
               <motion.div
                 key={current}
-                initial={{ opacity: 0, scale: 1.05 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
                 className="absolute inset-0"
+                initial={{ clipPath: "inset(0 0 0 100%)" }}
+                animate={{ clipPath: "inset(0 0 0 0%)" }}
+                exit={{ opacity: 0.6 }}
+                transition={{ duration: 1.1, ease: [0.76, 0, 0.24, 1] }}
               >
                 <Image
-                  src={parcoursImages[current].src}
-                  alt={parcoursImages[current].title}
+                  src={item.src}
+                  alt={item.title}
                   fill
-                  className="object-cover transition-transform duration-[8s] group-hover:scale-105"
                   sizes="(max-width: 1280px) 100vw, 1280px"
                   quality={85}
+                  className={`kenburns kenburns-${(current % 4) + 1} object-cover`}
+                  style={{ ["--kb-duration" as string]: "7s" }}
                 />
               </motion.div>
             </AnimatePresence>
 
-            {/* Gradient overlay for text */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+            <div className="vignette" />
 
-            {/* Caption */}
-            <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
+            {/* Légende */}
+            <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-6 p-6 md:p-12">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={current}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.4 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  transition={{ duration: 0.7, ease: EASE }}
                 >
-                  <span className="text-primary-light text-sm font-semibold tracking-widest uppercase">
+                  <span className="text-xs font-semibold uppercase tracking-[0.3em] text-primary-light">
                     {String(current + 1).padStart(2, "0")} / {String(parcoursImages.length).padStart(2, "0")}
                   </span>
-                  <h3 className="text-2xl md:text-3xl font-bold text-white mt-2">
-                    {parcoursImages[current].title}
-                  </h3>
-                  <p className="text-white/60 text-sm md:text-base mt-1 max-w-lg">
-                    {parcoursImages[current].description}
-                  </p>
+                  <h3 className="mt-3 text-3xl font-bold tracking-[-0.03em] md:text-5xl">{item.title}</h3>
+                  <p className="mt-2 max-w-lg text-sm text-white/70 md:text-lg">{item.description}</p>
                 </motion.div>
               </AnimatePresence>
+
+              <div className="hidden gap-3 md:flex">
+                <button
+                  onClick={prev}
+                  className="glass flex h-14 w-14 cursor-pointer items-center justify-center rounded-full text-2xl transition-all hover:bg-white hover:text-ink"
+                  aria-label="Précédent"
+                >
+                  ‹
+                </button>
+                <button
+                  onClick={next}
+                  className="glass flex h-14 w-14 cursor-pointer items-center justify-center rounded-full text-2xl transition-all hover:bg-white hover:text-ink"
+                  aria-label="Suivant"
+                >
+                  ›
+                </button>
+              </div>
             </div>
 
-            {/* Navigation arrows */}
-            <button
-              onClick={prev}
-              className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full glass flex items-center justify-center text-white text-2xl hover:bg-white/20 transition-all cursor-pointer opacity-0 group-hover:opacity-100"
-              aria-label="Précédent"
-            >
-              ‹
-            </button>
-            <button
-              onClick={next}
-              className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full glass flex items-center justify-center text-white text-2xl hover:bg-white/20 transition-all cursor-pointer opacity-0 group-hover:opacity-100"
-              aria-label="Suivant"
-            >
-              ›
-            </button>
-
-            {/* Progress bar */}
-            <div className="absolute top-0 left-0 right-0 h-1 bg-white/10">
-              <motion.div
-                key={current}
-                initial={{ width: "0%" }}
-                animate={{ width: "100%" }}
-                transition={{ duration: isHovered ? 99999 : 4, ease: "linear" }}
-                className="h-full bg-primary-light"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Thumbnail filmstrip */}
-        <div
-          ref={sliderRef}
-          className="relative"
-          onTouchStart={(e) => { touchStartX.current = e.targetTouches[0].clientX; }}
-          onTouchEnd={(e) => {
-            const diff = touchStartX.current - e.changedTouches[0].clientX;
-            if (Math.abs(diff) > 40) { diff > 0 ? next() : prev(); }
-          }}
-        >
-          <div className="flex gap-3 overflow-hidden py-2">
-            {getVisibleSlides().map((slide) => (
-              <motion.button
-                key={`${slide.index}-${slide.offset}`}
-                layout
-                onClick={() => setCurrent(slide.index)}
-                className={`relative flex-shrink-0 rounded-xl overflow-hidden cursor-pointer transition-all duration-500 ${
-                  slide.index === current
-                    ? "w-[200px] h-[120px] md:w-[260px] md:h-[150px] ring-2 ring-primary-light ring-offset-2 ring-offset-navy"
-                    : "w-[140px] h-[90px] md:w-[180px] md:h-[110px] opacity-50 hover:opacity-80"
-                }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <Image
-                  src={slide.src}
-                  alt={slide.title}
-                  fill
-                  className="object-cover"
-                  sizes="260px"
-                  quality={60}
+            {/* Barre de progression */}
+            <div className="absolute inset-x-0 top-0 h-1 bg-white/10">
+              {inView && (
+                <motion.div
+                  key={`${current}-${isHovered}`}
+                  initial={{ width: "0%" }}
+                  animate={{ width: isHovered ? "0%" : "100%" }}
+                  transition={{ duration: isHovered ? 0.2 : DURATION / 1000, ease: "linear" }}
+                  className="h-full bg-gradient-to-r from-primary-light to-accent"
                 />
-                {slide.index === current && (
-                  <div className="absolute inset-0 bg-primary-light/10 border-b-2 border-accent" />
-                )}
-                {slide.index !== current && (
-                  <div className="absolute inset-0 bg-black/30" />
-                )}
-              </motion.button>
-            ))}
+              )}
+            </div>
           </div>
-        </div>
+        </motion.div>
 
-        {/* Dot indicators */}
-        <div className="flex justify-center gap-1.5 mt-6">
-          {parcoursImages.map((_, i) => (
+        {/* Pellicule */}
+        <div
+          ref={stripRef}
+          className="no-scrollbar mt-6 flex gap-3 overflow-x-auto py-3"
+          style={{ maskImage: "linear-gradient(90deg, transparent, black 8%, black 92%, transparent)" }}
+        >
+          {parcoursImages.map((slide, i) => (
             <button
-              key={i}
+              key={slide.src}
               onClick={() => setCurrent(i)}
-              className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
-                i === current ? "w-6 bg-primary-light" : "w-1.5 bg-white/20 hover:bg-white/40"
+              className={`relative h-20 w-32 flex-shrink-0 cursor-pointer overflow-hidden rounded-xl transition-all duration-500 md:h-24 md:w-40 ${
+                i === current ? "scale-105 ring-2 ring-primary-light ring-offset-2 ring-offset-ink" : "opacity-40 hover:opacity-80"
               }`}
-              aria-label={`Image ${i + 1}`}
-            />
+              aria-label={`Image ${i + 1} : ${slide.title}`}
+              aria-current={i === current}
+            >
+              <Image src={slide.src} alt="" fill sizes="160px" quality={50} className="object-cover" />
+            </button>
           ))}
         </div>
       </div>

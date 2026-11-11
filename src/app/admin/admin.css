@@ -1,4 +1,4 @@
-.admin-shell { min-height: calc(100vh - 120px); display: grid; place-items: center; padding: 70px 20px; background: #eef4ee; color: #123a32; }
+.admin-shell { min-height: calc(100vh - 120px); display: grid; place-items: center; padding: 150px 20px 70px; background: #eef4ee; color: #123a32; }
 .admin-login-card { width: min(460px, 100%); padding: 42px; border: 1px solid #dce7df; border-radius: 20px; background: #fff; box-shadow: 0 20px 60px rgba(16,47,42,.1); }
 .admin-kicker { color: #6f8b7f; font-size: 10px; font-weight: 900; letter-spacing: .16em; text-transform: uppercase; }
 .admin-login-card h1, .dashboard-header h1 { margin: 13px 0 10px; font-size: clamp(2rem, 5vw, 3.1rem); letter-spacing: -.06em; }
@@ -11,7 +11,7 @@
 .admin-login-card button:disabled { opacity: .6; cursor: wait; }
 .admin-login-card a { color: #658477; font-size: 12px; text-decoration: none; }
 .admin-error { color: #b3473c; font-size: 12px; }
-.dashboard-shell { min-height: calc(100vh - 120px); padding: 54px max(24px, calc((100% - 1160px) / 2)); background: #eef4ee; color: #123a32; }
+.dashboard-shell { min-height: calc(100vh - 120px); padding: 140px max(24px, calc((100% - 1160px) / 2)) 54px; background: #eef4ee; color: #123a32; }
 .dashboard-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 30px; margin-bottom: 35px; }
 .dashboard-header h1 { margin-bottom: 0; }
 .admin-ghost-button { border: 1px solid #cadbd0; border-radius: 999px; padding: 11px 17px; color: #45675a; background: transparent; cursor: pointer; font-weight: 800; }

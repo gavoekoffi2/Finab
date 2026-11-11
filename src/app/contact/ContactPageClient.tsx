@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import SectionHeading from "@/components/ui/SectionHeading";
+import PageHero from "@/components/immersive/PageHero";
 import Button from "@/components/ui/Button";
 import { siteConfig } from "@/data/content";
 import { PhoneIcon, MailIcon, MapPinIcon, WhatsAppIcon } from "@/components/ui/Icons";
@@ -28,57 +29,46 @@ export default function ContactPageClient() {
 
   return (
     <>
-      <section className="bg-gradient-to-br from-dark via-primary-dark to-primary py-20">
-        <div className="max-w-7xl mx-auto px-6 text-center">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-5xl font-bold text-white mb-4"
-          >
-            Contactez-nous
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-white/70 text-lg max-w-2xl mx-auto"
-          >
-            Nous sommes à votre écoute. N&apos;hésitez pas à nous contacter pour toute question.
-          </motion.p>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="Contact"
+        title="Contactez-nous"
+        highlight={["Contactez-nous"]}
+        subtitle="Nous sommes à votre écoute. N'hésitez pas à nous contacter pour toute question."
+        image="/images/photos/assurance-vie-famille-africaine-unie-7b2b1f.jpg"
+        imageAlt="Des mains qui se tiennent – FINAB à votre écoute"
+      />
 
-      <section className="py-24 bg-white">
+      <section className="bg-cream py-24 md:py-32">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid lg:grid-cols-3 gap-16">
             {/* Contact Info */}
             <div>
-              <h2 className="text-2xl font-bold text-dark mb-8">Nos coordonnées</h2>
+              <span className="eyebrow mb-8 text-primary">Nos coordonnées</span>
               <div className="space-y-6">
                 <a href={`tel:${siteConfig.phone}`} className="flex items-start gap-4 group">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
+                  <div className="w-14 h-14 rounded-2xl bg-white shadow-sm ring-1 ring-black/5 flex items-center justify-center flex-shrink-0 transition-all duration-500 group-hover:bg-primary group-hover:text-white [&>svg]:transition-colors group-hover:[&>svg]:text-white">
                     <PhoneIcon className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <p className="font-semibold text-dark">Téléphone</p>
+                    <p className="font-semibold text-ink">Téléphone</p>
                     <p className="text-muted">{siteConfig.phone}</p>
                   </div>
                 </a>
                 <a href={`mailto:${siteConfig.email}`} className="flex items-start gap-4 group">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
+                  <div className="w-14 h-14 rounded-2xl bg-white shadow-sm ring-1 ring-black/5 flex items-center justify-center flex-shrink-0 transition-all duration-500 group-hover:bg-primary group-hover:text-white [&>svg]:transition-colors group-hover:[&>svg]:text-white">
                     <MailIcon className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <p className="font-semibold text-dark">Email</p>
+                    <p className="font-semibold text-ink">Email</p>
                     <p className="text-muted">{siteConfig.email}</p>
                   </div>
                 </a>
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <div className="w-14 h-14 rounded-2xl bg-white shadow-sm ring-1 ring-black/5 flex items-center justify-center flex-shrink-0">
                     <MapPinIcon className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <p className="font-semibold text-dark">Adresse</p>
+                    <p className="font-semibold text-ink">Adresse</p>
                     <p className="text-muted">{siteConfig.address}</p>
                   </div>
                 </div>
@@ -88,26 +78,26 @@ export default function ContactPageClient() {
                   rel="noopener noreferrer"
                   className="flex items-start gap-4 group"
                 >
-                  <div className="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center flex-shrink-0 group-hover:bg-green-100 transition-colors">
+                  <div className="w-14 h-14 rounded-2xl bg-green-50 ring-1 ring-green-100 flex items-center justify-center flex-shrink-0 transition-all duration-500 group-hover:bg-green-500 group-hover:[&>svg]:text-white">
                     <WhatsAppIcon className="w-5 h-5 text-green-600" />
                   </div>
                   <div>
-                    <p className="font-semibold text-dark">WhatsApp</p>
+                    <p className="font-semibold text-ink">WhatsApp</p>
                     <p className="text-green-600">Discutez avec nous</p>
                   </div>
                 </a>
               </div>
 
               {/* Find an agent */}
-              <div className="mt-12 bg-surface rounded-2xl p-8">
-                <h3 className="text-lg font-bold text-dark mb-3">Trouver un agent</h3>
-                <p className="text-sm text-muted mb-4">
+              <div className="relative mt-12 overflow-hidden rounded-[2rem] bg-ink p-8 text-white"><div className="film-grain" /><div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-primary/30 blur-3xl" /><div className="relative">
+                <h3 className="text-2xl font-bold mb-3">Trouver un agent</h3>
+                <p className="text-sm text-white/65 mb-6">
                   Nos agents FINAB sont disponibles dans plusieurs villes au Canada, en Afrique et en Haïti.
                 </p>
                 <Button href={siteConfig.whatsapp} external variant="accent" size="sm">
                   Contacter un agent
                 </Button>
-              </div>
+              </div></div>
             </div>
 
             {/* Contact Form */}
@@ -116,17 +106,17 @@ export default function ContactPageClient() {
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="bg-green-50 border border-green-200 rounded-2xl p-12 text-center"
+                  className="rounded-[2rem] bg-gradient-to-br from-primary-dark to-primary p-12 text-center text-white shadow-2xl"
                 >
                   <div className="text-5xl mb-4">✅</div>
-                  <h3 className="text-2xl font-bold text-dark mb-2">Message envoyé !</h3>
-                  <p className="text-muted">Nous vous répondrons dans les plus brefs délais.</p>
+                  <h3 className="text-2xl font-bold mb-2">Message envoyé !</h3>
+                  <p className="text-white/75">Nous vous répondrons dans les plus brefs délais.</p>
                   <button
                     onClick={() => {
                       setSubmitted(false);
                       setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
                     }}
-                    className="mt-6 text-primary font-semibold hover:underline cursor-pointer"
+                    className="mt-6 font-semibold text-white underline-offset-4 hover:underline cursor-pointer"
                   >
                     Envoyer un autre message
                   </button>
@@ -136,13 +126,13 @@ export default function ContactPageClient() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   onSubmit={handleSubmit}
-                  className="bg-surface rounded-2xl p-8 md:p-12"
+                  className="rounded-[2rem] bg-white p-8 shadow-[0_40px_100px_-50px_rgba(5,13,9,0.45)] ring-1 ring-black/5 md:p-12"
                 >
                   <SectionHeading title="Envoyez-nous un message" center={false} />
 
                   <div className="grid md:grid-cols-2 gap-6 mb-6">
                     <div>
-                      <label className="block text-sm font-semibold text-dark mb-2">
+                      <label className="block text-sm font-semibold text-ink mb-2">
                         Nom complet *
                       </label>
                       <input
@@ -150,12 +140,12 @@ export default function ContactPageClient() {
                         required
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                        className="w-full px-4 py-3 rounded-2xl border border-black/10 bg-cream focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/15 transition-all"
                         placeholder="Votre nom"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-dark mb-2">
+                      <label className="block text-sm font-semibold text-ink mb-2">
                         Email *
                       </label>
                       <input
@@ -163,31 +153,31 @@ export default function ContactPageClient() {
                         required
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                        className="w-full px-4 py-3 rounded-2xl border border-black/10 bg-cream focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/15 transition-all"
                         placeholder="votre@email.com"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-dark mb-2">
+                      <label className="block text-sm font-semibold text-ink mb-2">
                         Téléphone
                       </label>
                       <input
                         type="tel"
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                        className="w-full px-4 py-3 rounded-2xl border border-black/10 bg-cream focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/15 transition-all"
                         placeholder="+1 (xxx) xxx-xxxx"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-dark mb-2">
+                      <label className="block text-sm font-semibold text-ink mb-2">
                         Sujet *
                       </label>
                       <select
                         required
                         value={formData.subject}
                         onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                        className="w-full px-4 py-3 rounded-2xl border border-black/10 bg-cream focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/15 transition-all"
                       >
                         <option value="">Choisir un sujet</option>
                         <option>Information générale</option>
@@ -201,7 +191,7 @@ export default function ContactPageClient() {
                   </div>
 
                   <div className="mb-6">
-                    <label className="block text-sm font-semibold text-dark mb-2">
+                    <label className="block text-sm font-semibold text-ink mb-2">
                       Message *
                     </label>
                     <textarea
@@ -209,7 +199,7 @@ export default function ContactPageClient() {
                       rows={6}
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all resize-none"
+                      className="w-full px-4 py-3 rounded-2xl border border-black/10 bg-cream focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/15 transition-all resize-none"
                       placeholder="Votre message..."
                     />
                   </div>

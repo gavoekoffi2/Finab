@@ -161,7 +161,7 @@ export default function Chatbot() {
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <div className="flex-1 overflow-y-auto p-4 space-y-4" data-lenis-prevent>
               {messages.map((msg) => (
                 <div
                   key={msg.id}
