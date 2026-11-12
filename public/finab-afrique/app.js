@@ -54,7 +54,7 @@
     document.querySelector('#step-counter').textContent = `ÉTAPE ${index + 1} SUR 6`;
     document.querySelector('#progress').value = index + 1;
     previous.hidden = index === 0;
-    next.textContent = index === steps.length - 1 ? (collectionOpen ? (paymentVerified ? 'Envoyer ma candidature' : (paymentSessionId ? 'Vérifier le paiement' : `Payer ${configuredFeeCad || '60,42'} $ CAD et envoyer`)) : 'Candidatures ouvertes') : 'Continuer →';
+    next.textContent = index === steps.length - 1 ? (collectionOpen ? (paymentVerified ? 'Envoyer ma candidature' : (paymentSessionId ? 'Vérifier le paiement' : `Payer ${configuredFeeCad || '60,42'} $ CAD et envoyer`)) : 'Candidatures fermées') : 'Continuer →';
     next.disabled = !configLoaded || (index === steps.length - 1 && !collectionOpen);
     reset.disabled = false;
     error.hidden = true;
@@ -363,13 +363,14 @@
     configLoaded = true;
     document.querySelector('#availability').textContent = collectionOpen
       ? 'Candidatures ouvertes · frais d’étude obligatoires avant envoi'
-      : 'Informations de candidature disponibles');
+      : 'Candidatures temporairement fermées · consultation du parcours uniquement';
     document.querySelector('#demo-warning').textContent = collectionOpen
       ? `Frais obligatoires d’étude de dossier : ${amountCad} $ CAD (${amountXof} F CFA). Vos réponses restent temporairement dans ce navigateur et ne sont transmises à FINAB qu’après confirmation du paiement Stripe côté serveur. Le paiement ne garantit ni sélection ni recrutement.`
       : `Candidatures temporairement fermées : les frais obligatoires seront de ${amountCad} $ CAD (${amountXof} F CFA). Stripe et les conditions ne sont pas encore activés; aucune candidature ne peut être envoyée. À l’ouverture, le paiement devra être confirmé côté serveur. Les frais ne garantissent ni sélection ni recrutement.`;
     clearDemo(false);
     const params = new URLSearchParams(location.search);
     const isReturn = params.get('payment') === 'return';
+    const isCancel = params.get('payment') === 'cancel';
     const draft = readPendingDraft();
     if (!collectionOpen) return;
     if (!draft) {
@@ -398,6 +399,12 @@
       paymentSessionId = String(callbackId);
       paymentVerified = false;
       savePendingDraft(collectFields(), submissionId, paymentSessionId);
+    }
+    if (isCancel) {
+      clearPaymentQuery();
+      error.textContent = 'Paiement annulé : aucun montant n’a été débité. Vos réponses sont conservées; appuyez sur le bouton pour reprendre le paiement.';
+      error.hidden = false;
+      return;
     }
     if (paymentSessionId) {
       try {

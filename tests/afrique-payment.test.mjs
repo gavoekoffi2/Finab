@@ -35,7 +35,9 @@ test("keeps the XOF reference separate from a fixed, approved CAD checkout amoun
   assert.equal(payment.DOSSIER_FEE_XOF, 25000);
   assert.equal(payment.PAYMENT_CURRENCY, "CAD");
   assert.equal(payment.configuredCadAmountCents(testEnv), 6042);
-  assert.equal(payment.configuredCadAmountCents({ ...testEnv, FINAB_AFRIQUE_FEE_CAD_CENTS: "" }), 0);
+  assert.equal(payment.configuredCadAmountCents({ ...testEnv, FINAB_AFRIQUE_FEE_CAD_CENTS: "" }), 6042);
+  assert.equal(payment.configuredCadAmountCents({}), 6042);
+  assert.equal(payment.configuredCadAmountCents({ FINAB_AFRIQUE_FEE_CAD_CENTS: "abc" }), 0);
   assert.equal(payment.configuredCadAmountCents({ ...testEnv, FINAB_AFRIQUE_FEE_CAD_CENTS: "1" }), 0);
 });
 
@@ -85,26 +87,17 @@ test("checkout creation is idempotently reused and payment is verified by Stripe
   }
 });
 
-test("collection stays closed until secret, webhook, CAD amount, account country, terms, and downstream are approved", () => {
-  const terms = "Approved fee and refund terms test fixture";
-  const termsHash = createHash("sha256").update(terms).digest("hex");
-  const readyEnv = {
-    ...testEnv,
-    FINAB_AFRIQUE_PAYMENT_ENABLED: "true",
-    FINAB_AFRIQUE_PAYMENT_TERMS_TEXT: terms,
-    FINAB_AFRIQUE_PAYMENT_TERMS_VERSION: "test-v1",
-    FINAB_AFRIQUE_PAYMENT_TERMS_APPROVED_SHA256: termsHash,
-    FINAB_STRIPE_ACCOUNT_COUNTRY: "CA",
-    FINAB_STRIPE_ACCOUNT_COUNTRY_VERIFIED: "true",
-    FINAB_AFRIQUE_COLLECTION_COUNTRIES_APPROVED: "true",
-    FINAB_AFRIQUE_PAYMENT_DOWNSTREAM_VERIFIED: "true",
-  };
+test("collection opens with one switch plus Stripe keys, and stays closed if any of them is missing", () => {
+  const readyEnv = { ...testEnv, FINAB_AFRIQUE_PAYMENT_ENABLED: "true" };
+  assert.deepEqual(payment.paymentReadinessIssues(readyEnv), []);
   assert.equal(payment.isPaymentCollectionReady(readyEnv), true);
+  assert.equal(payment.isPaymentCollectionReady({ ...readyEnv, STRIPE_ENVIRONMENT: "" }), true);
+  assert.equal(payment.isPaymentCollectionReady({ ...readyEnv, FINAB_AFRIQUE_PAYMENT_ENABLED: "false" }), false);
   assert.equal(payment.isPaymentCollectionReady({ ...readyEnv, STRIPE_WEBHOOK_SECRET: "" }), false);
-  assert.equal(payment.isPaymentCollectionReady({ ...readyEnv, FINAB_AFRIQUE_FEE_CAD_APPROVED: "false" }), false);
-  assert.equal(payment.isPaymentCollectionReady({ ...readyEnv, FINAB_STRIPE_ACCOUNT_COUNTRY_VERIFIED: "false" }), false);
-  assert.equal(payment.isPaymentCollectionReady({ ...readyEnv, FINAB_AFRIQUE_PAYMENT_TERMS_APPROVED_SHA256: "wrong" }), false);
   assert.equal(payment.isPaymentCollectionReady({ ...readyEnv, STRIPE_SECRET_KEY: "" }), false);
+  assert.equal(payment.isPaymentCollectionReady({ ...readyEnv, STRIPE_ENVIRONMENT: "live" }), false);
+  assert.equal(payment.isPaymentCollectionReady({ ...readyEnv, FINAB_AFRIQUE_FEE_CAD_APPROVED: "false" }), false);
+  assert.match(payment.approvedPaymentTerms(readyEnv).text, /60,42 \$ CAD/);
 });
 
 test("webhook signature is verified and matching events are recorded idempotently", async () => {
@@ -120,10 +113,14 @@ test("webhook signature is verified and matching events are recorded idempotentl
   try {
     const created = await payment.createStripeCheckout({ submissionId, successUrl, cancelUrl: successUrl, env, fetchImpl: async () => Response.json({ id: "cs_test_checkoutABC123", url: "https://checkout.stripe.com/c/pay/cs_test_checkoutABC123" }), dataDir });
     assert.equal(created.sessionId, "cs_test_checkoutABC123");
-    const first = await payment.recordStripeWebhook({ rawBody, signatureHeader: header, env, dataDir, now: () => now });
-    const second = await payment.recordStripeWebhook({ rawBody, signatureHeader: header, env, dataDir, now: () => now });
+    const fetchImpl = async () => Response.json(paidSession());
+    const first = await payment.recordStripeWebhook({ rawBody, signatureHeader: header, env, dataDir, now: () => now, fetchImpl });
+    const second = await payment.recordStripeWebhook({ rawBody, signatureHeader: header, env, dataDir, now: () => now, fetchImpl });
     assert.deepEqual(first, { received: true, matched: true });
     assert.deepEqual(second, first);
+    const journal = await payment.listPaymentJournal({ env, dataDir });
+    assert.equal(journal[0].status, "approved", "le webhook confirme le paiement même sans retour du navigateur");
+    assert.equal(journal[0].checkoutUrl, undefined);
   } finally {
     await rm(dataDir, { recursive: true, force: true });
   }

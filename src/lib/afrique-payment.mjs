@@ -1,4 +1,4 @@
-import { createHmac, createHash, timingSafeEqual } from "node:crypto";
+import { createHmac, timingSafeEqual } from "node:crypto";
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
 
@@ -8,43 +8,63 @@ const UUID_V4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f
 const STRIPE_SESSION_ID = /^cs_(?:test|live)_[A-Za-z0-9]+$/;
 let journalQueue = Promise.resolve();
 
+export const DEFAULT_FEE_CAD_CENTS = 6042;
+export const CONTACT_EMAIL = "info@finablasolution.cloud";
+
+// Montant fixe en centimes CAD. 6042 = 60,42 $ CAD (référence 25 000 XOF au taux du 10 novembre 2026).
 export function configuredCadAmountCents(env = process.env) {
-  const value = String(env.FINAB_AFRIQUE_FEE_CAD_CENTS || "");
+  if (env.FINAB_AFRIQUE_FEE_CAD_APPROVED === "false") return 0;
+  const raw = env.FINAB_AFRIQUE_FEE_CAD_CENTS;
+  const value = raw === undefined || raw === "" ? String(DEFAULT_FEE_CAD_CENTS) : String(raw);
   if (!/^\d{1,8}$/.test(value)) return 0;
   const amount = Number(value);
   return Number.isSafeInteger(amount) && amount >= 50 ? amount : 0;
 }
 
+export function formatCad(cents) {
+  return `${(cents / 100).toFixed(2).replace(".", ",")} $ CAD`;
+}
+
+export const DEFAULT_PAYMENT_TERMS_VERSION = "2026-11-v1";
+export function defaultPaymentTerms(amountCadCents = DEFAULT_FEE_CAD_CENTS) {
+  return `Les frais d’étude de dossier de ${formatCad(amountCadCents)} (référence : 25 000 F CFA) couvrent uniquement l’examen de votre candidature par FINAB. `
+    + "Ils ne garantissent ni sélection, ni embauche, ni revenu. Le paiement est traité de façon sécurisée par Stripe et débité en dollars canadiens; votre banque peut appliquer ses propres frais. "
+    + "Une fois le paiement confirmé, les frais ne sont pas remboursables, sauf en cas de double paiement ou d’erreur technique : "
+    + `écrivez alors à ${CONTACT_EMAIL} avec votre référence de candidature pour obtenir le remboursement du montant concerné.`;
+}
+
+// Conditions de paiement : texte par défaut intégré, remplaçable par FINAB_AFRIQUE_PAYMENT_TERMS_TEXT.
 export function approvedPaymentTerms(env = process.env) {
-  const text = env.FINAB_AFRIQUE_PAYMENT_TERMS_TEXT || "";
-  const version = env.FINAB_AFRIQUE_PAYMENT_TERMS_VERSION || "";
-  const hash = createHash("sha256").update(text).digest("hex");
-  const ready = text.trim().length > 0 && text.length <= 10000
-    && /^[a-zA-Z0-9._-]{1,30}$/.test(version)
-    && env.FINAB_AFRIQUE_PAYMENT_TERMS_APPROVED_SHA256 === hash;
+  const custom = (env.FINAB_AFRIQUE_PAYMENT_TERMS_TEXT || "").trim();
+  const text = custom || defaultPaymentTerms(configuredCadAmountCents(env) || DEFAULT_FEE_CAD_CENTS);
+  const version = custom ? (env.FINAB_AFRIQUE_PAYMENT_TERMS_VERSION || "personnalise") : DEFAULT_PAYMENT_TERMS_VERSION;
+  const ready = text.length > 0 && text.length <= 10000 && /^[a-zA-Z0-9._-]{1,30}$/.test(version);
   return { ready, text: ready ? text : "", version: ready ? version : "" };
 }
 
 function stripeEnvironment(env) {
-  const environment = env.STRIPE_ENVIRONMENT || "";
-  const secretKey = env.STRIPE_SECRET_KEY || "";
-  if (!["test", "live"].includes(environment)) return null;
-  if (!new RegExp(`^sk_${environment}_[A-Za-z0-9]+$`).test(secretKey)) return null;
-  return { environment, secretKey };
+  const secretKey = (env.STRIPE_SECRET_KEY || "").trim();
+  const match = /^sk_(test|live)_[A-Za-z0-9]+$/.exec(secretKey);
+  if (!match) return null;
+  // STRIPE_ENVIRONMENT est facultatif ; s'il est renseigné il doit correspondre au préfixe de la clé.
+  const declared = (env.STRIPE_ENVIRONMENT || "").trim();
+  if (declared && declared !== match[1]) return null;
+  return { environment: match[1], secretKey };
+}
+
+// Le paiement est prêt dès que : interrupteur activé + clé Stripe cohérente + secret webhook + montant valide.
+export function paymentReadinessIssues(env = process.env) {
+  const issues = [];
+  if (env.FINAB_AFRIQUE_PAYMENT_ENABLED !== "true") issues.push("FINAB_AFRIQUE_PAYMENT_ENABLED n’est pas à true");
+  if (!stripeEnvironment(env)) issues.push("STRIPE_SECRET_KEY absente ou incohérente avec STRIPE_ENVIRONMENT (test/live)");
+  if (!/^whsec_[A-Za-z0-9_+/=-]+$/.test(env.STRIPE_WEBHOOK_SECRET || "")) issues.push("STRIPE_WEBHOOK_SECRET absent ou invalide");
+  if (!configuredCadAmountCents(env)) issues.push("montant CAD invalide (FINAB_AFRIQUE_FEE_CAD_CENTS)");
+  if (!approvedPaymentTerms(env).ready) issues.push("conditions de paiement invalides");
+  return issues;
 }
 
 export function isPaymentCollectionReady(env = process.env) {
-  const stripe = stripeEnvironment(env);
-  return env.FINAB_AFRIQUE_PAYMENT_ENABLED === "true"
-    && Boolean(stripe)
-    && /^whsec_[A-Za-z0-9_+/=-]+$/.test(env.STRIPE_WEBHOOK_SECRET || "")
-    && configuredCadAmountCents(env) > 0
-    && env.FINAB_AFRIQUE_FEE_CAD_APPROVED === "true"
-    && /^[A-Z]{2}$/.test(env.FINAB_STRIPE_ACCOUNT_COUNTRY || "")
-    && env.FINAB_STRIPE_ACCOUNT_COUNTRY_VERIFIED === "true"
-    && approvedPaymentTerms(env).ready
-    && env.FINAB_AFRIQUE_COLLECTION_COUNTRIES_APPROVED === "true"
-    && env.FINAB_AFRIQUE_PAYMENT_DOWNSTREAM_VERIFIED === "true";
+  return paymentReadinessIssues(env).length === 0;
 }
 
 function validateReturnUrl(value) {
@@ -138,7 +158,11 @@ async function stripeJson(fetchImpl, url, secretKey, init = {}) {
   });
   let body;
   try { body = await response.json(); } catch { throw new Error("REPONSE_STRIPE_INVALIDE"); }
-  if (!response.ok) throw new Error("REQUETE_STRIPE_REFUSEE");
+  if (!response.ok) {
+    // Journal serveur utile au diagnostic (message Stripe, jamais la clé).
+    console.error("[finab-afrique] Stripe a refusé la requête :", response.status, body?.error?.type || "", body?.error?.code || "", body?.error?.message || "");
+    throw new Error("REQUETE_STRIPE_REFUSEE");
+  }
   return body;
 }
 
@@ -151,7 +175,7 @@ function requireStripeConfig(env) {
 export async function createStripeCheckout({ submissionId, successUrl, cancelUrl, env = process.env, fetchImpl = globalThis.fetch, dataDir = undefined }) {
   const { secretKey } = requireStripeConfig(env);
   const amountCadCents = configuredCadAmountCents(env);
-  if (!amountCadCents || env.FINAB_AFRIQUE_FEE_CAD_APPROVED !== "true") throw new Error("MONTANT_CAD_NON_APPROUVE");
+  if (!amountCadCents) throw new Error("MONTANT_CAD_NON_APPROUVE");
   if (!UUID_V4.test(String(submissionId || ""))) throw new Error("IDENTIFIANT_INVALIDE");
   const file = journalPath(dataDir, env);
   const reservation = await withJournal(file, (rows) => {
@@ -216,6 +240,14 @@ export async function verifyStripePayment({ sessionId, submissionId, env = proce
       const providerStatus = String(session?.payment_status || session?.status || "unverified").toLowerCase();
       current.status = verified ? "approved" : (session?.payment_status === "paid" || session?.status === "complete") ? "manual_review" : session?.status === "open" ? "pending" : providerStatus;
       current.updatedAt = new Date().toISOString();
+      if (verified) {
+        current.paidAt = current.paidAt || new Date().toISOString();
+        const email = session?.customer_details?.email;
+        if (typeof email === "string" && email.length <= 200) current.payerEmail = email;
+        const name = session?.customer_details?.name;
+        if (typeof name === "string" && name.length <= 200) current.payerName = name;
+        if (typeof session?.payment_intent === "string") current.paymentIntentId = session.payment_intent;
+      }
     }
   });
   return verified;
@@ -236,7 +268,7 @@ export function verifyStripeWebhookSignature(rawBody, signatureHeader, secret, n
   });
 }
 
-export async function recordStripeWebhook({ rawBody, signatureHeader, env = process.env, dataDir = undefined, now = Date.now }) {
+export async function recordStripeWebhook({ rawBody, signatureHeader, env = process.env, dataDir = undefined, now = Date.now, fetchImpl = globalThis.fetch }) {
   const secret = env.STRIPE_WEBHOOK_SECRET || "";
   if (!verifyStripeWebhookSignature(rawBody, signatureHeader, secret, now())) throw new Error("SIGNATURE_WEBHOOK_INVALIDE");
   let event;
@@ -245,7 +277,7 @@ export async function recordStripeWebhook({ rawBody, signatureHeader, env = proc
   const session = event.data?.object;
   if (!session || typeof session !== "object" || !STRIPE_SESSION_ID.test(String(session.id || ""))) return { received: true, matched: false };
   const file = journalPath(dataDir, env);
-  return withJournal(file, (rows) => {
+  const outcome = await withJournal(file, (rows) => {
     const record = rows.find((row) => row.sessionId === session.id);
     if (!record) return { received: true, matched: false };
     record.webhookEventIds = Array.isArray(record.webhookEventIds) ? record.webhookEventIds : [];
@@ -255,6 +287,23 @@ export async function recordStripeWebhook({ rawBody, signatureHeader, env = proc
       record.webhookNotice = ["checkout.session.completed", "checkout.session.async_payment_succeeded"].includes(event.type) ? "completion_notice" : event.type;
       record.updatedAt = new Date().toISOString();
     }
-    return { received: true, matched: true };
+    return { received: true, matched: true, submissionId: record.submissionId, status: record.status };
   });
+  // Paiement terminé : confirmation immédiate auprès de Stripe, même si le candidat a fermé son navigateur.
+  if (outcome.matched && outcome.status !== "approved" && PAYMENT_EVENTS.includes(event.type)) {
+    try {
+      await verifyStripePayment({ sessionId: session.id, submissionId: outcome.submissionId, env, fetchImpl, dataDir });
+    } catch (error) {
+      console.error("[finab-afrique] Vérification Stripe après webhook impossible :", error instanceof Error ? error.message : error);
+    }
+  }
+  return { received: true, matched: outcome.matched };
+}
+
+const PAYMENT_EVENTS = ["checkout.session.completed", "checkout.session.async_payment_succeeded"];
+
+// Lecture seule du journal des paiements (tableau de bord admin).
+export async function listPaymentJournal({ env = process.env, dataDir = undefined } = {}) {
+  const file = journalPath(dataDir, env);
+  return withJournal(file, (rows) => rows.map((row) => { const copy = { ...row }; delete copy.checkoutUrl; delete copy.webhookEventIds; return copy; }));
 }

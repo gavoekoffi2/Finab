@@ -43,3 +43,10 @@
 .user-list div { display: flex; justify-content: space-between; gap: 15px; padding: 13px; border-top: 1px solid #e5ede7; font-size: 12px; }
 .user-list span { color: #789187; }
 @media (max-width: 760px) { .dashboard-shell { padding: 35px 17px; } .dashboard-header { flex-direction: column; } .dashboard-stats { grid-template-columns: repeat(2, 1fr); } .dashboard-panel { padding: 18px; } .create-user-form { grid-template-columns: 1fr; } .user-list div { flex-direction: column; gap: 5px; } }
+.afrique-total { display: block; margin-top: 6px; color: #6f8b7f; font-size: 12px; }
+.afrique-export { display: inline-flex; align-items: center; border: 1px solid #cadbd0; border-radius: 999px; padding: 11px 17px; color: #123a32; font-size: 11px; font-weight: 800; text-decoration: none; }
+.afrique-alert { margin-bottom: 18px; padding: 15px 17px; border: 1px solid #f0c9a6; border-radius: 10px; background: #fff6ec; color: #7a4a1d; font-size: 12px; line-height: 1.6; }
+.afrique-alert ul { margin: 8px 0 0; padding-left: 18px; }
+.afrique-details { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px 22px; margin: 0 0 14px; padding: 18px; border-radius: 10px; background: #f3f8f3; font-size: 12px; }
+.afrique-details dt { color: #799084; font-size: 10px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+.afrique-details dd { margin: 4px 0 0; color: #123a32; white-space: pre-wrap; overflow-wrap: anywhere; }

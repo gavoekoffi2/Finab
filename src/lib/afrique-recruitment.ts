@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto';
-import { approvedPaymentTerms, configuredCadAmountCents, DOSSIER_FEE_XOF, isPaymentCollectionReady, PAYMENT_CURRENCY, verifyStripePayment } from './afrique-payment.mjs';
+import { approvedPaymentTerms, configuredCadAmountCents, CONTACT_EMAIL, DOSSIER_FEE_XOF, isPaymentCollectionReady, PAYMENT_CURRENCY, verifyStripePayment } from './afrique-payment.mjs';
+import { markForwarded, saveApplication } from './afrique-applications.mjs';
 
 // Exact endpoint supplied by FINAB. No client-provided destination is accepted.
 export const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzEU0-qsRP4MgZGEqKUM7VQ6wC4loIQi2g9aU4oN7Gz-oboKLaI-_T8DVb4rCECXq1vww/exec';
@@ -10,17 +11,24 @@ const allowed = new Set([...Object.keys(limits),...bools,'hours','submissionId',
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 const maxBytes = 65536;
 
+export const DEFAULT_NOTICE_VERSION = '2026-11-v1';
+export const DEFAULT_NOTICE_TEXT = 'FINAB La Solution utilise les informations de ce formulaire uniquement pour étudier votre candidature au recrutement de conseillers financiers en Afrique et pour vous recontacter. '
+  + 'Elles sont enregistrées sur le serveur de FINAB et dans un tableur interne accessible à la seule équipe de recrutement, et conservées au plus 24 mois après la fin du processus. '
+  + 'Le paiement est traité par Stripe : FINAB ne reçoit jamais vos coordonnées bancaires. '
+  + `Vous pouvez demander l’accès, la correction ou la suppression de vos données en écrivant à ${CONTACT_EMAIL}.`;
+
+// Un seul interrupteur : FINAB_AFRIQUE_PAYMENT_ENABLED=true (+ clés Stripe). FINAB_AFRIQUE_OPEN=false permet de fermer sans toucher à Stripe.
 export function recruitmentConfiguration(env: NodeJS.ProcessEnv = process.env) {
-  const text = env.FINAB_AFRIQUE_NOTICE_TEXT || '';
-  const version = env.FINAB_AFRIQUE_NOTICE_VERSION || '';
+  const customText = (env.FINAB_AFRIQUE_NOTICE_TEXT || '').trim();
+  const text = customText || DEFAULT_NOTICE_TEXT;
+  const version = customText ? (env.FINAB_AFRIQUE_NOTICE_VERSION || 'personnalise') : DEFAULT_NOTICE_VERSION;
   const hash = createHash('sha256').update(text).digest('hex');
-  const noticeReady = env.FINAB_AFRIQUE_OPEN === 'true' && text.trim().length > 0 && text.length <= 20000 && /^[a-zA-Z0-9._-]{1,30}$/.test(version) && env.FINAB_AFRIQUE_NOTICE_APPROVED_SHA256 === hash;
+  const noticeReady = env.FINAB_AFRIQUE_OPEN !== 'false' && text.length <= 20000 && /^[a-zA-Z0-9._-]{1,30}$/.test(version);
   const terms = approvedPaymentTerms(env);
-  const paymentDownstreamReady = env.FINAB_AFRIQUE_PAYMENT_DOWNSTREAM_VERIFIED === 'true';
   const paymentReady = isPaymentCollectionReady(env);
   const open = noticeReady && paymentReady;
-  const feeCadCents = env.FINAB_AFRIQUE_FEE_CAD_APPROVED === 'true' ? configuredCadAmountCents(env) : 0;
-  return {open, paymentReady, paymentDownstreamReady, feeXof:DOSSIER_FEE_XOF, currency:PAYMENT_CURRENCY, feeCadCents, feeCad:feeCadCents ? (feeCadCents / 100).toFixed(2) : '', privacyVersion:noticeReady ? `${version}:${hash}` : '', notice:noticeReady ? text : '', paymentTermsVersion:terms.version, paymentTerms:terms.text};
+  const feeCadCents = configuredCadAmountCents(env);
+  return {open, paymentReady, paymentDownstreamReady:true, feeXof:DOSSIER_FEE_XOF, currency:PAYMENT_CURRENCY, feeCadCents, feeCad:feeCadCents ? (feeCadCents / 100).toFixed(2) : '', privacyVersion:noticeReady ? `${version}:${hash.slice(0, 16)}` : '', notice:noticeReady ? text : '', paymentTermsVersion:terms.version, paymentTerms:terms.text};
 }
 function json(data: object, status = 200, extra: Record<string,string> = {}) {
   return Response.json(data, {status, headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff',...extra}});
@@ -77,10 +85,10 @@ export function createHandlers(deps: {env?:NodeJS.ProcessEnv; fetch?:typeof fetc
       const origin=env.FINAB_PUBLIC_ORIGIN || 'https://finablasolution.cloud';
       if(request.headers.get('origin')!==origin) return json({ok:false,code:'ORIGINE_REFUSEE'},403);
       if(request.headers.get('content-type')?.split(';')[0].trim().toLowerCase()!=='application/json') return json({ok:false,code:'FORMAT_INVALIDE'},415);
-      // Trust this header ONLY when the reverse proxy overwrites it, never appends.
-      const trustedHeader=env.FINAB_AFRIQUE_TRUSTED_IP_HEADER;
-      const ip = trustedHeader ? request.headers.get(trustedHeader)?.slice(0,128) || 'unknown' : 'shared';
-      if(!consume('global',60) || !consume(`client:${ip}`,5)) return json({ok:false,code:'TROP_DE_TENTATIVES'},429,{'Retry-After':'600'});
+      // Traefik remplace X-Real-Ip. L'envoi exige de toute façon un paiement Stripe vérifié.
+      const trustedHeader=env.FINAB_AFRIQUE_TRUSTED_IP_HEADER || 'x-real-ip';
+      const ip = request.headers.get(trustedHeader)?.slice(0,128) || 'unknown';
+      if(!consume('global',300) || !consume(`client:${ip}`,20)) return json({ok:false,code:'TROP_DE_TENTATIVES'},429,{'Retry-After':'600'});
       if(Number(request.headers.get('content-length')||0)>maxBytes) return json({ok:false,code:'CORPS_TROP_VOLUMINEUX'},413);
       let data: unknown;
       try { data=JSON.parse(await boundedText(request.body)); }
@@ -91,21 +99,32 @@ export function createHandlers(deps: {env?:NodeJS.ProcessEnv; fetch?:typeof fetc
         const paid=await verifyStripePayment({sessionId:paymentId,submissionId:String(data.submissionId),env,fetchImpl:transport});
         if(!paid) return json({ok:false,code:'PAIEMENT_NON_CONFIRME'},402);
       } catch { return json({ok:false,code:'PAIEMENT_NON_CONFIRME'},402); }
+      const reference=`FA27-${data.submissionId}`;
+      const applicationData={...data};
+      delete applicationData.paymentSessionId;
+      delete applicationData.website;
+      const verifiedApplication={...applicationData,paymentSessionId:paymentId,paymentStatus:'approved',paymentAmountReferenceXof:DOSSIER_FEE_XOF,paymentAmountCadCents:config.feeCadCents,paymentCurrency:PAYMENT_CURRENCY,paymentVerifiedAt:new Date(now()).toISOString()};
+      let saved;
       try {
-        const applicationData={...data};
-        delete applicationData.paymentSessionId;
-        const verifiedApplication={...applicationData,paymentSessionId:paymentId,paymentStatus:'approved',paymentAmountReferenceXof:DOSSIER_FEE_XOF,paymentAmountCadCents:config.feeCadCents,paymentCurrency:PAYMENT_CURRENCY,paymentVerifiedAt:new Date(now()).toISOString()};
-        const response=await transport(APPS_SCRIPT_URL,{
-          method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(verifiedApplication),
-          redirect:'follow',cache:'no-store',signal:AbortSignal.timeout(55000),
-        });
-        if(!response.ok || !response.headers.get('content-type')?.toLowerCase().includes('application/json')) throw new Error('UNCONFIRMED');
-        const reply=JSON.parse(await boundedText(response.body));
-        const reference=`FA27-${data.submissionId}`;
-        if(reply.ok!==true || reply.reference!==reference) throw new Error('UNCONFIRMED');
-        // Receipt is not proof of email delivery. Do not expose upstream internals.
-        return json({ok:true,reference});
-      } catch { return json({ok:false,code:'ENREGISTREMENT_NON_CONFIRME'},502); }
+        saved=await saveApplication(verifiedApplication,{env});
+      } catch (error) {
+        console.error('[finab-afrique] Enregistrement local de la candidature impossible :', error instanceof Error ? error.message : error);
+        return json({ok:false,code:'ENREGISTREMENT_NON_CONFIRME'},502);
+      }
+      if(saved.created && env.FINAB_AFRIQUE_APPS_SCRIPT_ENABLED!=='false') {
+        // Copie vers le Google Sheet : best effort, n'empêche jamais la confirmation au candidat.
+        try {
+          const response=await transport(env.FINAB_AFRIQUE_APPS_SCRIPT_URL || APPS_SCRIPT_URL,{
+            method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...verifiedApplication,reference}),
+            redirect:'follow',cache:'no-store',signal:AbortSignal.timeout(20000),
+          });
+          await markForwarded(String(data.submissionId),response.ok?'envoyee':`erreur_${response.status}`,{env});
+        } catch (error) {
+          console.error('[finab-afrique] Copie vers Google Sheet impossible :', error instanceof Error ? error.message : error);
+          await markForwarded(String(data.submissionId),'erreur',{env}).catch(()=>undefined);
+        }
+      }
+      return json({ok:true,reference});
     },
   };
 }
