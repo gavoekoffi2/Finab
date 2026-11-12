@@ -1,0 +1,158 @@
+GUIDE POUR HERMÈS — INSTALLER CLAUDE CODE SUR LE VPS FINAB
+Date : 12 novembre 2026
+
+OBJECTIF
+Installer Claude Code sur le VPS de FINAB (finablasolution.cloud) pour que le
+propriétaire puisse piloter Claude directement sur les fichiers du serveur depuis
+l'application Claude (téléphone ou navigateur), sans que Hermès ait à tout faire
+à la main. Ensuite, Claude suit le rapport docs/RAPPORT-PAIEMENT-AFRIQUE-HERMES.txt
+pour finir l'activation du paiement Stripe.
+
+POINT CLÉ : CONNEXION AU COMPTE DU PROPRIÉTAIRE ET AU BON PROJET
+- Claude Code doit être connecté au COMPTE CLAUDE DU PROPRIÉTAIRE (pas à un compte
+  d'Hermès). À la première ouverture, c'est le propriétaire qui ouvre le lien de
+  connexion et valide avec son compte (étape 4). C'est ce qui permet ensuite de
+  piloter la session depuis son application Claude (étape 5).
+- Claude Code doit être lancé DANS LE PROJET sur lequel on travaille :
+  dossier /home/finablasolution (dépôt GitHub gavoekoffi2/Finab, branche
+  claude/ecstatic-hypatia-9c24ck). Toujours faire "cd /home/finablasolution"
+  avant de taper "claude", sinon il travaillera sur le mauvais dossier.
+- Vérification : dans la session, demander « Quel est le dossier courant et la
+  branche git ? ». Réponse attendue : /home/finablasolution et un dépôt relié à
+  gavoekoffi2/Finab.
+
+RÈGLES DE SÉCURITÉ (à respecter avant tout)
+- Ne jamais écrire de clé Stripe (sk_live_..., whsec_...), de mot de passe ou de clé
+  SSH dans un chat, dans GitHub ou dans un fichier du dépôt.
+- Les clés Stripe se mettent uniquement dans /opt/finablasolution/afrique.env,
+  saisies par le propriétaire ou par Hermès directement sur le serveur.
+- Claude demande une autorisation avant les commandes sensibles : lire chaque
+  commande avant d'accepter, surtout docker et git. Ne pas utiliser le mode
+  « tout autoriser » (--dangerously-skip-permissions) sur ce serveur de production.
+- Faire une sauvegarde avant de toucher au site (voir étape 1).
+
+------------------------------------------------------------
+ÉTAPE 0 — PRÉREQUIS
+------------------------------------------------------------
+- Accès SSH au VPS avec un utilisateur qui peut aller dans /home/finablasolution
+  et lancer docker (idéalement un utilisateur normal membre du groupe docker, pas root).
+- Connexion Internet sortante depuis le VPS (claude.ai, api.anthropic.com, github.com).
+- Un compte Claude (celui du propriétaire) pour se connecter à la première ouverture.
+- tmux installé (sinon : sudo apt-get install -y tmux).
+
+Vérifier :
+    whoami
+    cd /home/finablasolution && pwd
+    docker ps
+    git --version
+    curl -sS -m 10 -o /dev/null -w "%{http_code}\n" https://claude.ai
+
+------------------------------------------------------------
+ÉTAPE 1 — SAUVEGARDE (avant toute modification)
+------------------------------------------------------------
+    cd /home/finablasolution
+    git status
+    sudo cp /opt/finablasolution/afrique.env /opt/finablasolution/afrique.env.bak-$(date +%F)
+    sudo cp /opt/finablasolution/.env /opt/finablasolution/.env.bak-$(date +%F)
+    sudo tar czf /root/finab-data-$(date +%F).tgz /opt/finablasolution/data
+
+Si "git status" montre des fichiers non suivis ou modifiés (Dockerfile, fichiers
+Lonato, etc.), les laisser tels quels et ne pas les supprimer.
+
+------------------------------------------------------------
+ÉTAPE 2 — INSTALLER CLAUDE CODE
+------------------------------------------------------------
+Méthode recommandée (installeur officiel) :
+    curl -fsSL https://claude.ai/install.sh | bash
+
+Puis recharger le terminal et vérifier :
+    source ~/.bashrc
+    claude --version
+
+Méthode de secours si la première échoue (nécessite Node.js 18 ou plus) :
+    node -v
+    npm install -g @anthropic-ai/claude-code
+    claude --version
+
+Si la commande "claude" est introuvable, ajouter le dossier d'installation au PATH
+(l'installeur affiche le chemin, souvent ~/.local/bin) :
+    echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+    source ~/.bashrc
+
+------------------------------------------------------------
+ÉTAPE 3 — OUVRIR UNE SESSION QUI NE S'ARRÊTE PAS
+------------------------------------------------------------
+Pour que Claude continue de tourner même si la connexion SSH se coupe :
+    tmux new -s claude
+
+(Pour quitter tmux sans arrêter Claude : Ctrl+B puis D.
+ Pour y revenir plus tard : tmux attach -t claude)
+
+------------------------------------------------------------
+ÉTAPE 4 — PREMIÈRE CONNEXION
+------------------------------------------------------------
+    cd /home/finablasolution
+    claude
+
+- Claude affiche un lien de connexion. Comme le VPS n'a pas de navigateur, copier
+  ce lien et l'ouvrir sur le téléphone ou l'ordinateur du propriétaire, se connecter
+  à son compte Claude, puis recopier le code affiché dans le terminal du VPS.
+- Si Claude demande de faire confiance au dossier /home/finablasolution : accepter
+  (c'est bien le dossier du site).
+- Quitter ensuite avec /exit.
+
+------------------------------------------------------------
+ÉTAPE 5 — ACTIVER LE PILOTAGE À DISTANCE
+------------------------------------------------------------
+Toujours dans tmux, dans /home/finablasolution :
+    claude remote-control
+
+La session du VPS apparaît alors dans l'application Claude Code du propriétaire
+(téléphone, navigateur web claude.ai/code ou application de bureau). Laisser cette
+commande tourner dans tmux. Si l'option n'existe pas dans la version installée,
+mettre à jour (claude update) ou, à défaut, lancer simplement "claude" dans tmux
+et laisser le propriétaire donner ses instructions via une connexion SSH.
+
+------------------------------------------------------------
+ÉTAPE 6 — DONNER LE TRAVAIL À CLAUDE
+------------------------------------------------------------
+Dans la session (ou à coller par le propriétaire) :
+
+  « Lis docs/RAPPORT-PAIEMENT-AFRIQUE-HERMES.txt et
+    docs/afrique-stripe-activation.md, puis aide-moi à activer le paiement Stripe
+    de la page /afrique/recrutement sur ce serveur. Ne demande jamais mes clés
+    dans le chat : je les saisirai moi-même dans /opt/finablasolution/afrique.env. »
+
+Si ces fichiers ne sont pas encore sur le serveur, les récupérer d'abord :
+    cd /home/finablasolution
+    git fetch origin claude/ecstatic-hypatia-9c24ck
+    git status
+    git pull origin claude/ecstatic-hypatia-9c24ck
+
+Rappels importants du rapport :
+- Branche à déployer : claude/ecstatic-hypatia-9c24ck (contient code-serveur + corrections).
+- Après modification de afrique.env, le conteneur doit être RECRÉÉ :
+    docker compose -f docker-compose.prod.yml up -d --build --force-recreate
+  Un simple redémarrage ne relit pas les fichiers .env.
+- Vérification finale :
+    curl -s https://finablasolution.cloud/api/afrique/recrutement
+  Attendu : "open":true et "paymentReady":true.
+- Faire d'abord un essai avec sk_test_ (carte 4242 4242 4242 4242), puis passer en live.
+
+------------------------------------------------------------
+DÉPANNAGE
+------------------------------------------------------------
+- "claude: command not found" : voir le PATH à l'étape 2.
+- Le lien de connexion ne s'ouvre pas : le copier en entier (il peut passer sur
+  plusieurs lignes) et l'ouvrir sur un autre appareil.
+- Erreur de réseau lors de l'installation : vérifier que le pare-feu du VPS autorise
+  les connexions sortantes HTTPS (port 443).
+- "permission denied" sur docker : l'utilisateur doit être dans le groupe docker
+  (sudo usermod -aG docker $USER, puis se reconnecter).
+- Claude ne voit pas les bons fichiers : vérifier qu'il a été lancé depuis
+  /home/finablasolution (pwd).
+
+POUR DÉSINSTALLER (si besoin)
+    rm -f ~/.local/bin/claude
+    rm -rf ~/.claude
+(Cela ne touche ni au site, ni aux données dans /opt/finablasolution.)
