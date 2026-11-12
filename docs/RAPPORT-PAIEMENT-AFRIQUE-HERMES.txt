@@ -1,0 +1,150 @@
+RAPPORT DE PASSATION — PAIEMENT STRIPE, PAGE RECRUTEMENT AFRIQUE (FINAB)
+Destinataire : Hermès (agent sur le VPS)
+Date : 12 novembre 2026
+
+============================================================
+1. RÉSUMÉ
+============================================================
+Le paiement Stripe de la page https://finablasolution.cloud/afrique/recrutement
+est terminé côté code et poussé sur GitHub. Il n'est PAS encore actif en ligne :
+il faut renseigner les clés Stripe sur le VPS puis redéployer.
+
+Dépôt   : https://github.com/gavoekoffi2/Finab
+Branche : claude/ecstatic-hypatia-9c24ck
+Base    : branche code-serveur (commit faa1d27), reprise telle quelle.
+
+La branche contient code-serveur + les corrections. Une ancienne sauvegarde
+(commit 6d0bc6a) figure dans l'historique, mais une fusion "-s ours" (commit
+de463d5) a écarté tout son contenu : l'arborescence est identique à
+code-serveur + le commit 520b6f2. code-serveur est un ancêtre de la branche,
+donc un "git pull" depuis code-serveur se fait en avance rapide (fast-forward).
+
+Fonctionnement : montant fixe de 60,42 $ CAD (référence 25 000 F CFA, 6042 cents),
+débité en CAD via Stripe Checkout hébergé.
+
+============================================================
+2. POURQUOI LE SYSTÈME NE MARCHAIT PAS
+============================================================
+a) public/finab-afrique/app.js (ligne 366) contenait une parenthèse en trop :
+   erreur de syntaxe, le script de la page plantait entièrement.
+b) Le bouton de la dernière étape affichait « Candidatures ouvertes » alors que la
+   collecte était fermée (et le bandeau un texte neutre).
+c) L'ouverture exigeait une dizaine de variables, dont des empreintes SHA-256 du
+   texte de confidentialité et des conditions. Il suffisait qu'une seule manque
+   pour que tout reste fermé.
+d) La candidature finale partait uniquement vers le Google Apps Script. Si le
+   script ne répondait pas exactement {ok:true, reference:"FA27-<id>"}, le
+   candidat avait payé mais son dossier était refusé.
+
+============================================================
+3. MODIFICATIONS (commit 520b6f2)
+============================================================
+- public/finab-afrique/app.js
+  * erreur de syntaxe corrigée ;
+  * libellés corrects quand c'est fermé : « Candidatures fermées » et
+    « Candidatures temporairement fermées · consultation du parcours uniquement » ;
+  * message clair au retour d'un paiement annulé (?payment=cancel).
+- public/finab-afrique/index.html : texte statique neutre en attendant la configuration.
+- src/lib/afrique-payment.mjs
+  * Ouvert si : FINAB_AFRIQUE_PAYMENT_ENABLED=true + STRIPE_SECRET_KEY (sk_test_/sk_live_)
+    + STRIPE_WEBHOOK_SECRET (whsec_) + montant valide ;
+  * STRIPE_ENVIRONMENT facultatif (déduit de la clé ; s'il est présent, il doit correspondre) ;
+  * montant par défaut 6042 cents ; FINAB_AFRIQUE_FEE_CAD_APPROVED=false bloque ;
+  * conditions de paiement intégrées (version 2026-11-v1), remplaçables par
+    FINAB_AFRIQUE_PAYMENT_TERMS_TEXT ;
+  * le webhook (checkout.session.completed / async_payment_succeeded) revérifie la
+    session auprès de Stripe et marque le paiement "approved" ;
+  * erreurs Stripe journalisées (message seulement, jamais la clé) ;
+  * nouvelle fonction listPaymentJournal().
+- src/lib/afrique-recruitment.ts
+  * avis de confidentialité intégré (version 2026-11-v1), remplaçable par
+    FINAB_AFRIQUE_NOTICE_TEXT ; FINAB_AFRIQUE_OPEN=false ferme la collecte ;
+  * POST : paiement vérifié chez Stripe -> enregistrement LOCAL d'abord -> copie vers
+    l'Apps Script en "best effort" (délai max 20 s). Une panne du Sheet ne bloque plus ;
+  * idempotent (même submissionId = même confirmation) ;
+  * limite de débit basée sur l'en-tête X-Real-Ip (Traefik).
+- src/lib/afrique-applications.mjs (nouveau) : registre des candidatures dans
+  <FINAB_DATA_DIR>/afrique-candidatures.json, soit /opt/finablasolution/data/ sur le VPS.
+- src/app/api/admin/afrique-candidatures/route.ts (nouveau) : GET (liste + paiements
+  sans formulaire + paiements à vérifier), GET ?format=csv (export Excel), PATCH (statut).
+  Réservé aux rôles owner et admin.
+- src/app/admin/dashboard/AfriqueCandidatures.tsx (nouveau) + admin.css + page.tsx :
+  section « Candidatures Afrique » du tableau de bord /admin.
+- Tests : tests/afrique-payment.test.mjs mis à jour, tests/afrique-recruitment-flow.test.mjs
+  ajouté ; script "npm test". Résultat : 11/11 OK. "npm run build" OK.
+- docs/afrique-stripe-activation.md réécrit (guide d'activation).
+
+Fichiers de données sur le VPS (dans /opt/finablasolution/data) :
+- afrique-payment-sessions.json : journal des sessions Stripe
+  (statuts creating / pending / approved / manual_review)
+- afrique-candidatures.json : candidatures payées (statuts nouvelle / en_etude /
+  retenue / non_retenue ; forwardStatus = état de la copie vers le Sheet)
+
+============================================================
+4. ACTIONS À FAIRE SUR LE VPS
+============================================================
+Étape 1 — Dans Stripe (https://dashboard.stripe.com)
+  - Développeurs > Clés API : récupérer la clé secrète (sk_test_... pour l'essai,
+    sk_live_... pour la production).
+  - Développeurs > Webhooks > Ajouter un endpoint :
+      URL : https://finablasolution.cloud/api/afrique/recrutement/payment/webhook
+      Événements : checkout.session.completed, checkout.session.async_payment_succeeded
+    Récupérer le secret de signature whsec_...
+  - Le mode test et le mode live ont chacun leur propre webhook et leur propre whsec_.
+
+Étape 2 — Dans /opt/finablasolution/afrique.env
+  Ne jamais committer ces valeurs ni les écrire dans un chat ou un log.
+      STRIPE_SECRET_KEY=sk_live_...
+      STRIPE_WEBHOOK_SECRET=whsec_...
+      FINAB_AFRIQUE_PAYMENT_ENABLED=true
+      FINAB_AFRIQUE_OPEN=true
+  Ces anciennes lignes bloquent : les supprimer ou les mettre à true.
+      FINAB_AFRIQUE_FEE_CAD_APPROVED=false
+      FINAB_AFRIQUE_OPEN=false
+  Si STRIPE_ENVIRONMENT est présent, il doit correspondre à la clé (live/test).
+  Les autres anciennes variables (*_SHA256, pays, DOWNSTREAM_VERIFIED, etc.) sont ignorées.
+  docker-compose.prod.yml charge déjà /opt/finablasolution/afrique.env.
+
+Étape 3 — Redéployer
+      cd /home/finablasolution
+      git pull origin claude/ecstatic-hypatia-9c24ck
+      npm ci
+      npm test
+      npm run build
+      docker compose -f docker-compose.prod.yml up -d --build --force-recreate
+  Le --force-recreate est indispensable : sans lui, le conteneur ne relit pas les
+  fichiers .env. C'est très probablement pour ça que la clé live n'était pas chargée.
+  Attention aux fichiers locaux non suivis (Dockerfile, fichiers Lonato) :
+  vérifier "git status" avant le pull.
+
+Étape 4 — Vérifier
+      curl -s https://finablasolution.cloud/api/afrique/recrutement
+  Attendu : "open":true et "paymentReady":true.
+  Si "paymentReady":false, une valeur de l'étape 2 est manquante ou incohérente.
+
+Étape 5 — Essai conseillé avant d'encaisser
+  - Mettre une clé sk_test_ et le whsec_ du webhook de test, puis redéployer (étape 3).
+  - Payer avec la carte 4242 4242 4242 4242 (date future, CVC quelconque).
+  - Vérifier la candidature dans /admin > Candidatures Afrique, et la ligne dans le Google Sheet.
+  - Passer ensuite à sk_live_ + whsec_ live, puis redéployer à nouveau.
+
+Pour fermer temporairement : FINAB_AFRIQUE_OPEN=false, puis
+      docker compose -f docker-compose.prod.yml up -d --force-recreate
+
+============================================================
+5. POINTS D'ATTENTION
+============================================================
+- Aucun vrai paiement Stripe n'a pu être fait depuis l'environnement de développement
+  (pas de clés) : les appels à Stripe ont été simulés dans les tests. L'essai de
+  l'étape 5 est donc nécessaire.
+- Les URL de retour Stripe sont limitées à https://finablasolution.cloud/afrique/recrutement
+  (validateReturnUrl). Un autre domaine nécessite de modifier le code.
+- Textes rédigés par Claude, à faire valider par FINAB :
+    * conditions de paiement : frais non remboursables, sauf double paiement ou
+      erreur technique (contact info@finablasolution.cloud) ;
+    * avis de confidentialité : données conservées au plus 24 mois.
+- L'Apps Script reçoit désormais aussi le champ "reference" (FA27-<submissionId>).
+  Sa réponse n'est plus exigée ; l'état de la copie est visible dans le tableau de
+  bord (forwardStatus : envoyee / erreur_XXX / erreur).
+- Lint : la page dashboard/page.tsx avait déjà une erreur react-hooks/set-state-in-effect
+  avant ces changements ; elle n'a pas été modifiée.
