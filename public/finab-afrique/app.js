@@ -331,18 +331,40 @@
   async function initialize() {
     const policyNode = document.querySelector('#payment-policy');
     let config = null;
+    let approvedCountries = [];
     try {
       const response = await fetch('/api/afrique/recrutement', {cache:'no-store', credentials:'omit', redirect:'error'});
       if (!response.ok || !(response.headers.get('content-type') || '').includes('application/json')) throw new Error('closed');
       config = await response.json();
-      collectionOpen = config.open === true && config.paymentReady === true && typeof config.notice === 'string' && config.notice.trim().length > 0 && typeof config.privacyVersion === 'string' && config.privacyVersion.length > 0;
+      approvedCountries = Array.isArray(config.collectionCountries)
+        ? [...new Set(config.collectionCountries.filter(name => typeof name === 'string' && name.trim()).map(name => name.trim()))]
+        : [];
+      collectionOpen = config.open === true && config.paymentReady === true && approvedCountries.length > 0
+        && typeof config.notice === 'string' && config.notice.trim().length > 0
+        && typeof config.privacyVersion === 'string' && config.privacyVersion.length > 0
+        && typeof config.paymentTerms === 'string' && config.paymentTerms.trim().length > 0
+        && typeof config.paymentTermsVersion === 'string' && config.paymentTermsVersion.length > 0;
       privacyVersion = collectionOpen ? config.privacyVersion : '';
       if (collectionOpen) {
         document.querySelector('#privacy-notice').textContent = config.notice;
         document.querySelector('#consent-notice').textContent = config.notice;
         document.querySelector('#notice-version').textContent = `Version de la notice : ${privacyVersion}`;
-        if (policyNode && typeof config.paymentTerms === 'string') policyNode.textContent = config.paymentTerms;
-        if (policyNode && config.paymentTermsVersion) policyNode.textContent += ` (version ${config.paymentTermsVersion}).`;
+        if (policyNode) policyNode.textContent = `${config.paymentTerms} (version ${config.paymentTermsVersion}).`;
+        const publishedTerms = document.querySelector('#public-fee-conditions');
+        const feeFaq = document.querySelector('#fee-faq');
+        if (publishedTerms) publishedTerms.textContent = config.paymentTerms;
+        if (feeFaq) feeFaq.textContent = config.paymentTerms;
+        const countryPlaceholder = country.querySelector('option[value=""]')?.cloneNode(true);
+        country.replaceChildren(...(countryPlaceholder ? [countryPlaceholder] : []));
+        approvedCountries.forEach(name => {
+          const option = document.createElement('option');
+          option.value = name; option.textContent = name;
+          country.append(option);
+        });
+        const countriesList = document.querySelector('#countries-list');
+        if (countriesList) countriesList.replaceChildren(...approvedCountries.map(name => {
+          const item = document.createElement('li'); item.textContent = name; return item;
+        }));
       }
     } catch { collectionOpen = false; }
     const amountCad = config && /^\d+\.\d{2}$/.test(String(config.feeCad)) ? String(config.feeCad).replace('.', ',') : '60,42';
@@ -354,19 +376,33 @@
     const xofStepNode = document.querySelector('#fee-xof-step');
     const rateNode = document.querySelector('#fee-rate');
     const rateStepNode = document.querySelector('#fee-rate-step');
+    const feeOpenStatus = document.querySelector('#fee-open-status');
+    const conditionsTitle = document.querySelector('#fee-conditions-title');
+    const heroLead = document.querySelector('#hero-lead');
     if (cadNode) cadNode.textContent = `${amountCad} $ CAD`;
     if (xofNode) xofNode.textContent = `${amountXof} F CFA`;
     if (cadStepNode) cadStepNode.textContent = `${amountCad} $ CAD`;
     if (xofStepNode) xofStepNode.textContent = `${amountXof} F CFA`;
-    if (rateNode) rateNode.textContent = `Équivalent indicatif au taux de référence du 10 novembre 2026 (1 CAD = 413,80 XOF). Le débit Stripe reste fixe à ${amountCad} $ CAD; votre banque peut appliquer des frais de carte ou de conversion.`;
-    if (rateStepNode) rateStepNode.textContent = `Référence métier : ${amountXof} XOF. Équivalence indicative au taux de référence du 10 novembre 2026; le débit reste fixe à ${amountCad} $ CAD, sans conversion dynamique au paiement.`;
+    if (feeOpenStatus) feeOpenStatus.textContent = collectionOpen
+      ? 'Le paiement éventuel sera effectué en CAD sur la page sécurisée Stripe; les candidatures sont ouvertes.'
+      : 'Non payable actuellement; aucune candidature ni aucun paiement n’est accepté sur ce site.';
+    if (conditionsTitle) conditionsTitle.textContent = collectionOpen
+      ? `Conditions approuvées · version ${config.paymentTermsVersion}`
+      : 'Montant de référence indicatif — non payable à ce stade';
+    if (heroLead && collectionOpen) heroLead.textContent = 'Les candidatures sont ouvertes. Consultez les conditions, la notice de confidentialité et les pays admissibles avant de commencer votre parcours.';
+    if (rateNode) rateNode.textContent = collectionOpen
+      ? `Montant de référence : ${amountXof} XOF; le débit Stripe est fixe en CAD à ${amountCad} $. Les frais éventuels de la banque peuvent varier.`
+      : `Montant indicatif proposé au taux de référence du 10 novembre 2026 (1 CAD = 413,80 XOF). Le site est actuellement fermé et n’accepte aucun paiement.`;
+    if (rateStepNode) rateStepNode.textContent = collectionOpen
+      ? `Référence métier : ${amountXof} XOF. Le montant débité reste fixe en CAD à ${amountCad} $, sans conversion dynamique par Stripe.`
+      : `Référence métier proposée : ${amountXof} XOF. Équivalence indicative au taux de référence du 10 novembre 2026; aucun paiement n’est accepté tant que les validations et l’ouverture ne sont pas confirmées.`;
     configLoaded = true;
     document.querySelector('#availability').textContent = collectionOpen
       ? 'Candidatures ouvertes · frais d’étude obligatoires avant envoi'
       : 'Candidatures temporairement fermées · consultation du parcours uniquement';
     document.querySelector('#demo-warning').textContent = collectionOpen
       ? `Frais obligatoires d’étude de dossier : ${amountCad} $ CAD (${amountXof} F CFA). Vos réponses restent temporairement dans ce navigateur et ne sont transmises à FINAB qu’après confirmation du paiement Stripe côté serveur. Le paiement ne garantit ni sélection ni recrutement.`
-      : `Candidatures temporairement fermées : les frais obligatoires seront de ${amountCad} $ CAD (${amountXof} F CFA). Stripe et les conditions ne sont pas encore activés; aucune candidature ne peut être envoyée. À l’ouverture, le paiement devra être confirmé côté serveur. Les frais ne garantissent ni sélection ni recrutement.`;
+      : `Candidatures temporairement fermées. Montant de référence envisagé : ${amountCad} $ CAD (${amountXof} F CFA), à titre indicatif et sous réserve de validations dans chaque pays. Aucune candidature ni aucun paiement n’est accepté actuellement.`;
     clearDemo(false);
     const params = new URLSearchParams(location.search);
     const isReturn = params.get('payment') === 'return';

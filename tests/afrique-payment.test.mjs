@@ -8,12 +8,22 @@ import * as payment from "../src/lib/afrique-payment.mjs";
 
 const submissionId = "123e4567-e89b-42d3-a456-426614174000";
 const successUrl = "https://finablasolution.cloud/afrique/recrutement";
+const testTermsText = "Conditions de test approuvées : frais de 60,42 $ CAD.";
 const testEnv = {
-  STRIPE_SECRET_KEY: "sk_test_examplekey123",
+  STRIPE_SECRET_KEY: "sk_test_unitTest123",
   STRIPE_ENVIRONMENT: "test",
   STRIPE_WEBHOOK_SECRET: "whsec_test_secret123",
+  FINAB_AFRIQUE_PAYMENT_ENABLED: "true",
   FINAB_AFRIQUE_FEE_CAD_CENTS: "6042",
   FINAB_AFRIQUE_FEE_CAD_APPROVED: "true",
+  FINAB_AFRIQUE_PAYMENT_TERMS_TEXT: testTermsText,
+  FINAB_AFRIQUE_PAYMENT_TERMS_VERSION: "test-v1",
+  FINAB_AFRIQUE_PAYMENT_TERMS_APPROVED_SHA256: createHash("sha256").update(testTermsText).digest("hex"),
+  FINAB_STRIPE_ACCOUNT_COUNTRY: "CA",
+  FINAB_STRIPE_ACCOUNT_COUNTRY_VERIFIED: "true",
+  FINAB_AFRIQUE_COLLECTION_COUNTRIES_APPROVED: "true",
+  FINAB_AFRIQUE_COLLECTION_COUNTRIES_JSON: '["Togo"]',
+  FINAB_AFRIQUE_PAYMENT_DOWNSTREAM_VERIFIED: "true",
 };
 
 function paidSession(overrides = {}) {
@@ -87,17 +97,50 @@ test("checkout creation is idempotently reused and payment is verified by Stripe
   }
 });
 
-test("collection opens with one switch plus Stripe keys, and stays closed if any of them is missing", () => {
+test("collection requires every explicit merchant, amount, terms, country, and downstream approval", () => {
   const readyEnv = { ...testEnv, FINAB_AFRIQUE_PAYMENT_ENABLED: "true" };
   assert.deepEqual(payment.paymentReadinessIssues(readyEnv), []);
   assert.equal(payment.isPaymentCollectionReady(readyEnv), true);
-  assert.equal(payment.isPaymentCollectionReady({ ...readyEnv, STRIPE_ENVIRONMENT: "" }), true);
+  assert.equal(payment.isPaymentCollectionReady({ ...readyEnv, STRIPE_ENVIRONMENT: "" }), false);
   assert.equal(payment.isPaymentCollectionReady({ ...readyEnv, FINAB_AFRIQUE_PAYMENT_ENABLED: "false" }), false);
   assert.equal(payment.isPaymentCollectionReady({ ...readyEnv, STRIPE_WEBHOOK_SECRET: "" }), false);
   assert.equal(payment.isPaymentCollectionReady({ ...readyEnv, STRIPE_SECRET_KEY: "" }), false);
   assert.equal(payment.isPaymentCollectionReady({ ...readyEnv, STRIPE_ENVIRONMENT: "live" }), false);
   assert.equal(payment.isPaymentCollectionReady({ ...readyEnv, FINAB_AFRIQUE_FEE_CAD_APPROVED: "false" }), false);
+  assert.equal(payment.isPaymentCollectionReady({ ...readyEnv, FINAB_STRIPE_ACCOUNT_COUNTRY: "" }), false);
+  assert.equal(payment.isPaymentCollectionReady({ ...readyEnv, FINAB_STRIPE_ACCOUNT_COUNTRY_VERIFIED: "false" }), false);
+  assert.equal(payment.isPaymentCollectionReady({ ...readyEnv, FINAB_AFRIQUE_COLLECTION_COUNTRIES_APPROVED: "false" }), false);
+  assert.equal(payment.isPaymentCollectionReady({ ...readyEnv, FINAB_AFRIQUE_COLLECTION_COUNTRIES_JSON: "[]" }), false);
+  assert.equal(payment.isPaymentCollectionReady({ ...readyEnv, FINAB_AFRIQUE_COLLECTION_COUNTRIES_JSON: '["Autre pays africain"]' }), false);
+  assert.deepEqual(payment.approvedCollectionCountries(readyEnv), ["Togo"]);
+  assert.equal(payment.isPaymentCollectionReady({ ...readyEnv, FINAB_AFRIQUE_PAYMENT_DOWNSTREAM_VERIFIED: "false" }), false);
+  assert.equal(payment.isPaymentCollectionReady({ ...readyEnv, FINAB_AFRIQUE_PAYMENT_TERMS_APPROVED_SHA256: "" }), false);
+  assert.equal(payment.isPaymentCollectionReady({ ...readyEnv, FINAB_AFRIQUE_PAYMENT_TERMS_APPROVED_SHA256: "0".repeat(64) }), false);
   assert.match(payment.approvedPaymentTerms(readyEnv).text, /60,42 \$ CAD/);
+});
+
+test("a live Stripe key needs a separate explicit live-collection approval", () => {
+  const readyEnv = { ...testEnv, FINAB_AFRIQUE_PAYMENT_ENABLED: "true", STRIPE_SECRET_KEY: "sk_live_unitTest123", STRIPE_ENVIRONMENT: "live" };
+  assert.equal(payment.isPaymentCollectionReady(readyEnv), false);
+  assert.equal(payment.isPaymentCollectionReady({ ...readyEnv, FINAB_AFRIQUE_LIVE_COLLECTION_APPROVED: "true" }), true);
+});
+
+test("checkout creation never calls Stripe when any readiness approval is missing", async () => {
+  const dataDir = await mkdtemp(join(tmpdir(), "finab-afrique-gated-checkout-"));
+  let calls = 0;
+  try {
+    await assert.rejects(payment.createStripeCheckout({
+      submissionId,
+      successUrl,
+      cancelUrl: successUrl,
+      env: { ...testEnv, FINAB_AFRIQUE_PAYMENT_ENABLED: "true", FINAB_AFRIQUE_COLLECTION_COUNTRIES_APPROVED: "false" },
+      fetchImpl: async () => { calls += 1; return Response.json({ id: "cs_test_unexpected123", url: "https://checkout.stripe.com/c/pay/cs_test_unexpected123" }); },
+      dataDir,
+    }), /PAIEMENT_NON_PRET/);
+    assert.equal(calls, 0);
+  } finally {
+    await rm(dataDir, { recursive: true, force: true });
+  }
 });
 
 test("webhook signature is verified and matching events are recorded idempotently", async () => {

@@ -1,15 +1,43 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import * as payment from "../src/lib/afrique-payment.mjs";
 import { listApplications } from "../src/lib/afrique-applications.mjs";
-import { createHandlers, recruitmentConfiguration } from "../src/lib/afrique-recruitment.ts";
+import { DEFAULT_NOTICE_TEXT, DEFAULT_NOTICE_VERSION, createHandlers, recruitmentConfiguration } from "../src/lib/afrique-recruitment.ts";
 
 const submissionId = "123e4567-e89b-42d3-a456-426614174000";
 const origin = "https://finablasolution.cloud";
 const sessionId = "cs_test_flowABC123";
+const approvedNoticeHash = createHash("sha256").update(DEFAULT_NOTICE_TEXT).digest("hex");
+const approvedTerms = payment.defaultPaymentTerms(6042);
+const approvedTermsHash = createHash("sha256").update(approvedTerms).digest("hex");
+
+function approvedEnv(dataDir = "") {
+  return {
+    STRIPE_SECRET_KEY: "sk_test_flowFake123",
+    STRIPE_ENVIRONMENT: "test",
+    STRIPE_WEBHOOK_SECRET: "whsec_flow123",
+    FINAB_AFRIQUE_PAYMENT_ENABLED: "true",
+    FINAB_AFRIQUE_OPEN: "true",
+    FINAB_AFRIQUE_FEE_CAD_CENTS: "6042",
+    FINAB_AFRIQUE_FEE_CAD_APPROVED: "true",
+    FINAB_AFRIQUE_PAYMENT_TERMS_TEXT: approvedTerms,
+    FINAB_AFRIQUE_PAYMENT_TERMS_VERSION: "2026-11-v1",
+    FINAB_AFRIQUE_PAYMENT_TERMS_APPROVED_SHA256: approvedTermsHash,
+    FINAB_STRIPE_ACCOUNT_COUNTRY: "CA",
+    FINAB_STRIPE_ACCOUNT_COUNTRY_VERIFIED: "true",
+    FINAB_AFRIQUE_NOTICE_TEXT: DEFAULT_NOTICE_TEXT,
+    FINAB_AFRIQUE_NOTICE_VERSION: DEFAULT_NOTICE_VERSION,
+    FINAB_AFRIQUE_NOTICE_APPROVED_SHA256: approvedNoticeHash,
+    FINAB_AFRIQUE_COLLECTION_COUNTRIES_APPROVED: "true",
+    FINAB_AFRIQUE_COLLECTION_COUNTRIES_JSON: '["Togo"]',
+    FINAB_AFRIQUE_PAYMENT_DOWNSTREAM_VERIFIED: "true",
+    FINAB_DATA_DIR: dataDir,
+  };
+}
 
 function application(privacyVersion) {
   return {
@@ -24,7 +52,7 @@ function application(privacyVersion) {
 
 test("parcours complet : paiement vérifié, candidature enregistrée localement même si le Google Sheet est en panne", async () => {
   const dataDir = await mkdtemp(join(tmpdir(), "finab-afrique-flow-"));
-  const env = { STRIPE_SECRET_KEY: "sk_test_flowkey123", STRIPE_WEBHOOK_SECRET: "whsec_flow123", FINAB_AFRIQUE_PAYMENT_ENABLED: "true", FINAB_DATA_DIR: dataDir };
+  const env = approvedEnv(dataDir);
   let sheetCalls = 0;
   const fetchImpl = async (url) => {
     const target = String(url);
@@ -66,7 +94,7 @@ test("parcours complet : paiement vérifié, candidature enregistrée localement
 
 test("sans paiement confirmé, la candidature est refusée et rien n'est enregistré", async () => {
   const dataDir = await mkdtemp(join(tmpdir(), "finab-afrique-unpaid-"));
-  const env = { STRIPE_SECRET_KEY: "sk_test_flowkey123", STRIPE_WEBHOOK_SECRET: "whsec_flow123", FINAB_AFRIQUE_PAYMENT_ENABLED: "true", FINAB_DATA_DIR: dataDir };
+  const env = approvedEnv(dataDir);
   try {
     const config = recruitmentConfiguration(env);
     const { POST } = createHandlers({ env, fetch: async () => { throw new Error("aucun appel attendu"); } });
@@ -85,4 +113,48 @@ test("fermé par défaut tant que l'interrupteur et les clés ne sont pas en pla
   assert.equal(recruitmentConfiguration({}).open, false);
   assert.equal(recruitmentConfiguration({ STRIPE_SECRET_KEY: "sk_live_abc", STRIPE_WEBHOOK_SECRET: "whsec_x" }).open, false);
   assert.equal(recruitmentConfiguration({ STRIPE_SECRET_KEY: "sk_live_abc", STRIPE_WEBHOOK_SECRET: "whsec_x", FINAB_AFRIQUE_PAYMENT_ENABLED: "true", FINAB_AFRIQUE_OPEN: "false" }).open, false);
+});
+
+test("collecte reste fermée tant que chaque approbation explicite ne correspond pas", () => {
+  const approved = approvedEnv();
+  assert.equal(recruitmentConfiguration(approved).open, true);
+  assert.deepEqual(recruitmentConfiguration(approved).collectionCountries, ["Togo"]);
+  assert.equal(recruitmentConfiguration({ ...approved, FINAB_AFRIQUE_COLLECTION_COUNTRIES_JSON: "[]" }).open, false);
+  const missingOpenSwitch = { ...approved };
+  delete missingOpenSwitch.FINAB_AFRIQUE_OPEN;
+  assert.equal(recruitmentConfiguration(missingOpenSwitch).open, false);
+  assert.equal(recruitmentConfiguration({ ...approved, FINAB_AFRIQUE_NOTICE_APPROVED_SHA256: "" }).open, false);
+  for (const change of [
+    { FINAB_AFRIQUE_PAYMENT_TERMS_APPROVED_SHA256: "" },
+    { FINAB_STRIPE_ACCOUNT_COUNTRY_VERIFIED: "false" },
+    { FINAB_STRIPE_ACCOUNT_COUNTRY: "" },
+    { FINAB_AFRIQUE_COLLECTION_COUNTRIES_APPROVED: "false" },
+    { FINAB_AFRIQUE_PAYMENT_DOWNSTREAM_VERIFIED: "false" },
+    { FINAB_AFRIQUE_FEE_CAD_APPROVED: "false" },
+  ]) {
+    const config = recruitmentConfiguration({ ...approved, ...change });
+    assert.equal(config.open, false);
+    assert.equal(config.paymentReady, false);
+  }
+  assert.equal(recruitmentConfiguration({ ...approved, FINAB_AFRIQUE_PAYMENT_DOWNSTREAM_VERIFIED: "false" }).paymentDownstreamReady, false);
+});
+
+test("les candidatures hors de la liste approuvée sont rejetées avant tout appel Stripe", async () => {
+  const dataDir = await mkdtemp(join(tmpdir(), "finab-afrique-country-gate-"));
+  const env = approvedEnv(dataDir);
+  let stripeCalls = 0;
+  try {
+    const config = recruitmentConfiguration(env);
+    const { POST } = createHandlers({ env, fetch: async () => { stripeCalls += 1; throw new Error("aucun appel attendu"); } });
+    const outsideApprovedList = { ...application(config.privacyVersion), country: "Guinée" };
+    const response = await POST(new Request(`${origin}/api/afrique/recrutement`, {
+      method: "POST", headers: { origin, "content-type": "application/json", "idempotency-key": submissionId },
+      body: JSON.stringify(outsideApprovedList),
+    }));
+    assert.equal(response.status, 400);
+    assert.equal(stripeCalls, 0);
+    assert.equal((await listApplications({ env })).length, 0);
+  } finally {
+    await rm(dataDir, { recursive: true, force: true });
+  }
 });

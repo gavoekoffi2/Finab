@@ -1,4 +1,4 @@
-import { createHmac, timingSafeEqual } from "node:crypto";
+import { createHash, createHmac, timingSafeEqual } from "node:crypto";
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
 
@@ -10,6 +10,21 @@ let journalQueue = Promise.resolve();
 
 export const DEFAULT_FEE_CAD_CENTS = 6042;
 export const CONTACT_EMAIL = "info@finablasolution.cloud";
+export const AFRIQUE_COLLECTION_COUNTRIES = Object.freeze([
+  "Guinée", "Burkina Faso", "Togo", "Bénin", "Côte d'Ivoire", "Sénégal", "Mali", "Niger", "Cameroun", "Tchad",
+  "Gabon", "Congo-Brazzaville", "République démocratique du Congo", "République centrafricaine", "Madagascar", "Burundi",
+  "Rwanda", "Djibouti", "Comores", "Mauritanie",
+]);
+
+export function approvedCollectionCountries(env = process.env) {
+  const raw = String(env.FINAB_AFRIQUE_COLLECTION_COUNTRIES_JSON || "").trim();
+  if (!raw || raw.length > 2000) return [];
+  let parsed;
+  try { parsed = JSON.parse(raw); } catch { return []; }
+  if (!Array.isArray(parsed) || parsed.length < 1 || parsed.length > AFRIQUE_COLLECTION_COUNTRIES.length) return [];
+  if (parsed.some((country) => typeof country !== "string" || !AFRIQUE_COLLECTION_COUNTRIES.includes(country))) return [];
+  return [...new Set(parsed)];
+}
 
 // Montant fixe en centimes CAD. 6042 = 60,42 $ CAD (référence 25 000 XOF au taux du 10 novembre 2026).
 export function configuredCadAmountCents(env = process.env) {
@@ -33,33 +48,42 @@ export function defaultPaymentTerms(amountCadCents = DEFAULT_FEE_CAD_CENTS) {
     + `écrivez alors à ${CONTACT_EMAIL} avec votre référence de candidature pour obtenir le remboursement du montant concerné.`;
 }
 
-// Conditions de paiement : texte par défaut intégré, remplaçable par FINAB_AFRIQUE_PAYMENT_TERMS_TEXT.
+// Conditions : un texte par défaut peut être utilisé, mais uniquement après approbation explicite de son empreinte SHA-256.
 export function approvedPaymentTerms(env = process.env) {
   const custom = (env.FINAB_AFRIQUE_PAYMENT_TERMS_TEXT || "").trim();
   const text = custom || defaultPaymentTerms(configuredCadAmountCents(env) || DEFAULT_FEE_CAD_CENTS);
-  const version = custom ? (env.FINAB_AFRIQUE_PAYMENT_TERMS_VERSION || "personnalise") : DEFAULT_PAYMENT_TERMS_VERSION;
-  const ready = text.length > 0 && text.length <= 10000 && /^[a-zA-Z0-9._-]{1,30}$/.test(version);
+  const version = custom ? (env.FINAB_AFRIQUE_PAYMENT_TERMS_VERSION || "") : DEFAULT_PAYMENT_TERMS_VERSION;
+  const hash = createHash("sha256").update(text).digest("hex");
+  const ready = text.trim().length > 0 && text.length <= 10000
+    && /^[a-zA-Z0-9._-]{1,30}$/.test(version)
+    && env.FINAB_AFRIQUE_PAYMENT_TERMS_APPROVED_SHA256 === hash;
   return { ready, text: ready ? text : "", version: ready ? version : "" };
 }
 
 function stripeEnvironment(env) {
   const secretKey = (env.STRIPE_SECRET_KEY || "").trim();
-  const match = /^sk_(test|live)_[A-Za-z0-9]+$/.exec(secretKey);
-  if (!match) return null;
-  // STRIPE_ENVIRONMENT est facultatif ; s'il est renseigné il doit correspondre au préfixe de la clé.
   const declared = (env.STRIPE_ENVIRONMENT || "").trim();
-  if (declared && declared !== match[1]) return null;
+  const match = /^sk_(test|live)_[A-Za-z0-9]+$/.exec(secretKey);
+  if (!match || !["test", "live"].includes(declared) || declared !== match[1]) return null;
   return { environment: match[1], secretKey };
 }
 
-// Le paiement est prêt dès que : interrupteur activé + clé Stripe cohérente + secret webhook + montant valide.
+// Chaque approbation financière, juridique et opérationnelle est explicite et vérifiée côté serveur.
 export function paymentReadinessIssues(env = process.env) {
   const issues = [];
+  const stripe = stripeEnvironment(env);
   if (env.FINAB_AFRIQUE_PAYMENT_ENABLED !== "true") issues.push("FINAB_AFRIQUE_PAYMENT_ENABLED n’est pas à true");
-  if (!stripeEnvironment(env)) issues.push("STRIPE_SECRET_KEY absente ou incohérente avec STRIPE_ENVIRONMENT (test/live)");
+  if (!stripe) issues.push("STRIPE_SECRET_KEY et STRIPE_ENVIRONMENT absents ou incohérents");
   if (!/^whsec_[A-Za-z0-9_+/=-]+$/.test(env.STRIPE_WEBHOOK_SECRET || "")) issues.push("STRIPE_WEBHOOK_SECRET absent ou invalide");
   if (!configuredCadAmountCents(env)) issues.push("montant CAD invalide (FINAB_AFRIQUE_FEE_CAD_CENTS)");
-  if (!approvedPaymentTerms(env).ready) issues.push("conditions de paiement invalides");
+  if (env.FINAB_AFRIQUE_FEE_CAD_APPROVED !== "true") issues.push("montant CAD non approuvé");
+  if (env.FINAB_STRIPE_ACCOUNT_COUNTRY !== "CA") issues.push("pays du compte Stripe différent de CA ou non renseigné");
+  if (env.FINAB_STRIPE_ACCOUNT_COUNTRY_VERIFIED !== "true") issues.push("pays du compte Stripe non vérifié");
+  if (!approvedPaymentTerms(env).ready) issues.push("conditions de paiement non approuvées ou empreinte incorrecte");
+  if (env.FINAB_AFRIQUE_COLLECTION_COUNTRIES_APPROVED !== "true") issues.push("pays de collecte non approuvés");
+  if (!approvedCollectionCountries(env).length) issues.push("liste explicite des pays de collecte absente ou invalide");
+  if (env.FINAB_AFRIQUE_PAYMENT_DOWNSTREAM_VERIFIED !== "true") issues.push("traitement downstream non vérifié");
+  if (stripe?.environment === "live" && env.FINAB_AFRIQUE_LIVE_COLLECTION_APPROVED !== "true") issues.push("collecte live non approuvée explicitement");
   return issues;
 }
 
@@ -173,6 +197,7 @@ function requireStripeConfig(env) {
 }
 
 export async function createStripeCheckout({ submissionId, successUrl, cancelUrl, env = process.env, fetchImpl = globalThis.fetch, dataDir = undefined }) {
+  if (!isPaymentCollectionReady(env)) throw new Error("PAIEMENT_NON_PRET");
   const { secretKey } = requireStripeConfig(env);
   const amountCadCents = configuredCadAmountCents(env);
   if (!amountCadCents) throw new Error("MONTANT_CAD_NON_APPROUVE");
