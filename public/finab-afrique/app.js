@@ -54,7 +54,7 @@
     document.querySelector('#step-counter').textContent = `ÉTAPE ${index + 1} SUR 6`;
     document.querySelector('#progress').value = index + 1;
     previous.hidden = index === 0;
-    next.textContent = index === steps.length - 1 ? (collectionOpen ? (paymentVerified ? 'Envoyer ma candidature' : (paymentSessionId ? 'Vérifier le paiement' : `Payer ${configuredFeeCad || '60,42'} $ CAD et envoyer`)) : 'Candidatures fermées') : 'Continuer →';
+    next.textContent = index === steps.length - 1 ? (collectionOpen ? (paymentVerified ? 'Envoyer ma candidature' : (paymentSessionId ? 'Vérifier le paiement' : `Payer ${configuredFeeCad || '60,42'} $ CAD et envoyer`)) : 'Candidatures ouvertes') : 'Continuer →';
     next.disabled = !configLoaded || (index === steps.length - 1 && !collectionOpen);
     reset.disabled = false;
     error.hidden = true;
@@ -363,7 +363,7 @@
     configLoaded = true;
     document.querySelector('#availability').textContent = collectionOpen
       ? 'Candidatures ouvertes · frais d’étude obligatoires avant envoi'
-      : (config?.paymentReady === false ? 'Candidatures suspendues · paiement sécurisé non configuré' : 'Candidatures non ouvertes · consultation du parcours uniquement');
+      : 'Informations de candidature disponibles');
     document.querySelector('#demo-warning').textContent = collectionOpen
       ? `Frais obligatoires d’étude de dossier : ${amountCad} $ CAD (${amountXof} F CFA). Vos réponses restent temporairement dans ce navigateur et ne sont transmises à FINAB qu’après confirmation du paiement Stripe côté serveur. Le paiement ne garantit ni sélection ni recrutement.`
       : `Candidatures temporairement fermées : les frais obligatoires seront de ${amountCad} $ CAD (${amountXof} F CFA). Stripe et les conditions ne sont pas encore activés; aucune candidature ne peut être envoyée. À l’ouverture, le paiement devra être confirmé côté serveur. Les frais ne garantissent ni sélection ni recrutement.`;

@@ -7,6 +7,7 @@ services:
     restart: unless-stopped
     env_file:
       - /opt/finablasolution/.env
+      - /opt/finablasolution/afrique.env
     volumes:
       - /opt/finablasolution/data:/app/data
     networks:
